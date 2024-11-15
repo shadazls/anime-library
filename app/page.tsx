@@ -9,13 +9,71 @@ import { GithubIcon } from "@/components/icons";
 
 import { SearchInput } from "@/components/SearchInput";
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Select, SelectItem } from "@nextui-org/select";
 import { animals } from "./fakeData";
 
 export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="mt-8 flex gap-4">
-        <SearchInput />
+        <SearchInput/>
+
+        <Autocomplete
+          label="Genres"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The genres of the anime"
+        ></Autocomplete>
+
+        <Autocomplete
+          label="Scores"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The score of the anime"
+        ></Autocomplete>
+
+        <Autocomplete
+          label="Episodes"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The number of episodes of the anime"
+        ></Autocomplete>
+
+        <Autocomplete
+          label="Producers"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The production companies or producers of the anime"
+        ></Autocomplete>
+
+        <Autocomplete
+          label="Licensors"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The licensors of the anime (e.g., streaming platforms)"
+        ></Autocomplete>
+
+        <Autocomplete
+          label="Type"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The type of the anime (e.g., TV series, movie, OVA, etc.)"
+        ></Autocomplete>
+        
+        <Autocomplete
+          label="Airing Status"
+          labelPlacement="outside"
+          placeholder="Any"
+          className="max-w-xs"
+          description="The status of the anime (e.g., Finished Airing, Currently Airing, etc.)"
+        ></Autocomplete>
+
         {/* <Autocomplete
           label="Favorite Animal"
           placeholder="Search an animal"
