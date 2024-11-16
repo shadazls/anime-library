@@ -51,14 +51,16 @@ export default function Home() {
   }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 mx-24">
+    <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
+      <h1 className="text-6xl font-bold mt-48">Chainsaw Man</h1>
+      <p className="text-xl w-1/4">Denji has a simple dream -- to live a happy and peaceful life, spending time with a girl</p>
       {/* Barre de recherche et filtres */}
-      <div className="mt-8 flex gap-4">
+      {/* <div className="mt-20 flex gap-4">
         <FilterOptions />
-      </div>
+      </div> */}
 
-      <h3 className="mt-8 text-2xl font-bold">Top Anime</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <h3 className="mt-48 text-2xl font-bold">Trending Now</h3>
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
         {loading ? (
           new Array(6).fill(null).map((_, index) => (
             <Image
@@ -84,8 +86,8 @@ export default function Home() {
         )}
       </div>
 
-      <h3 className="mt-8 text-2xl font-bold">Most Popular Anime</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <h3 className="mt-14 text-2xl font-bold">Popular this season</h3>
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
         {loading ? (
           new Array(6).fill(null).map((_, index) => (
             <Image
@@ -111,8 +113,8 @@ export default function Home() {
         )}
       </div>
 
-      <h3 className="mt-8 text-2xl font-bold">All Time Popular</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <h3 className="mt-14 text-2xl font-bold">All Time Popular</h3>
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
         {loading ? (
           new Array(6).fill(null).map((_, index) => (
             <Image

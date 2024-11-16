@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Kurosaw",
+  description: "Kurosaw is a web application that allows you to search for animes and get information about them.",
   navItems: [
     {
       label: "Home",

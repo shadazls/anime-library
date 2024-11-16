@@ -8,7 +8,7 @@ export const GET = async () => {
         const animesByFavorites = await Anime.find()
             .select('Name Favorites image_url -_id')
             .sort({ Favorites: -1 })
-            .limit(6);
+            .limit(18);
 
         return new Response(JSON.stringify(animesByFavorites), {
             status: 200,
