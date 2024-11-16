@@ -140,6 +140,14 @@ export default function Home() {
           ))
         )}
       </div>
+      <Button
+        className="mt-8 text-base font-medium text-black bg-white"
+        variant="flat"
+        radius="sm"
+        size="lg"
+      >
+        Show More
+      </Button>
     </section>
   );
 }
