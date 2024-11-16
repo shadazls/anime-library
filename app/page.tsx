@@ -1,24 +1,47 @@
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
+"use client";
 
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
-
-import { SearchInput } from "@/components/SearchInput";
-import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Select, SelectItem } from "@nextui-org/select";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import { useEffect, useState } from "react";
+import { Card, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
-import { Button, ButtonGroup } from "@nextui-org/button";
+import { Button } from "@nextui-org/button";
+import { Autocomplete } from "@nextui-org/autocomplete";
+import { SearchInput } from "@/components/SearchInput";
+
+// Définir une interface pour représenter un anime
+interface Anime {
+  Name: string; // Nom de l'anime
+  image_url: string; // URL de l'image de l'anime
+}
 
 export default function Home() {
+  const [animes, setAnimes] = useState<Anime[]>([]); // État pour stocker les animés
+  const [loading, setLoading] = useState(true); // Indicateur de chargement
+
+  useEffect(() => {
+    // Récupère les animés classés par Rank
+    const fetchAnimes = async () => {
+      try {
+        const response = await fetch("/api/animes/ranked");
+        if (!response.ok) {
+          throw new Error("Failed to fetch animes");
+        }
+        const data = await response.json();
+        setAnimes(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnimes();
+  }, []);
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      {/* Barre de recherche et filtres */}
       <div className="mt-8 flex gap-4">
-        <SearchInput/>
+        <SearchInput />
 
         <Autocomplete
           label="Genres"
@@ -67,66 +90,43 @@ export default function Home() {
           className="max-w-xs"
           description="The type of the anime (e.g., TV series, movie, OVA, etc.)"
         ></Autocomplete>
-        
-        {/* <Autocomplete
-          label="Airing Status"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The status of the anime (e.g., Finished Airing, Currently Airing, etc.)"
-        ></Autocomplete> */}
-
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
-        </Snippet>
       </div>
-      <div className="mt-8 flex gap-4">
-        <Card
-          isBlurred
-          isFooterBlurred
-          radius="lg"
-          className="border-none"
-        >
-          <Image
-            width={225}
-            alt="Anime image"
-            src="https://cdn.myanimelist.net/images/anime/4/19644.jpg"
-          />
-          <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-            <p className="text-tiny text-white/80">ONE PIECE</p>
-            <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-              EDIT
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card
-          isPressable
-          isFooterBlurred
-          isHoverable
-          radius="lg"
-          className="border-none"
-        >
-          <Image
-            width={225}
-            alt="Anime image"
-            src="https://cdn.myanimelist.net/images/anime/1439/93480.jpg"
-          />
-          <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-            <div>
-              <p className="text-black text-medium">One Piece</p>
-            </div>
-            <Button className="text-tiny" color="primary" radius="full" size="sm">
-              EDIT
-            </Button>
-          </CardFooter>
-        </Card>
-        <Image
-          width={225}
-          alt="Anime image"
-          src="https://cdn.myanimelist.net/images/anime/7/20310.jpg"
-        />
+
+      <h3 className="mt-8 text-2xl font-bold">Top Anime</h3>
+
+      {/* Liste des cartes */}
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          animes.map((anime) => (
+            <Card
+              key={anime.Name}
+              isBlurred
+              isFooterBlurred
+              radius="lg"
+              className="border-none"
+            >
+              <Image
+                width={225}
+                alt={`Image of ${anime.Name}`}
+                src={anime.image_url || "https://via.placeholder.com/225"}
+              />
+              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                <p className="text-tiny text-white/80">{anime.Name}</p>
+                <Button
+                  className="text-tiny text-white bg-black/20"
+                  variant="flat"
+                  color="default"
+                  radius="lg"
+                  size="sm"
+                >
+                  EDIT
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        )}
       </div>
     </section>
   );
