@@ -6,6 +6,7 @@ import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import FilterOptions from "@/components/FilterOptions"; // Composant des filtres
 import { SearchInput } from "@/components/SearchInput";
+import { Divider } from "@nextui-org/divider";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -73,7 +74,7 @@ export default function Home() {
           ))
         ) : (
           topAnimes.map((anime) => (
-            <Card key={anime.Name} isBlurred isFooterBlurred radius="lg" className="border-none">
+            <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
               <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                 <p className="text-tiny text-white/80">{anime.Name}</p>
@@ -100,7 +101,7 @@ export default function Home() {
           ))
         ) : (
           popularAnimes.map((anime) => (
-            <Card key={anime.Name} isBlurred isFooterBlurred radius="lg" className="border-none">
+            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
               <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                 <p className="text-tiny text-white/80">{anime.Name}</p>
@@ -127,7 +128,7 @@ export default function Home() {
           ))
         ) : (
           allTimePopularAnimes.map((anime) => (
-            <Card key={anime.Name} isBlurred isFooterBlurred radius="lg" className="border-none">
+            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
               <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                 <p className="text-tiny text-white/80">{anime.Name}</p>
