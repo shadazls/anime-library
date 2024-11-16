@@ -60,7 +60,15 @@ export default function Home() {
       <h3 className="mt-8 text-2xl font-bold">Top Anime</h3>
       <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {loading ? (
-          <p>Loading...</p>
+          new Array(6).fill(null).map((_, index) => (
+            <Image
+                key={index}
+                width={225}
+                height={320}
+                alt={`Loading image ${index + 1}`}
+                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+              />
+          ))
         ) : (
           topAnimes.map((anime) => (
             <Card key={anime.Name} isBlurred isFooterBlurred radius="lg" className="border-none">
@@ -79,7 +87,15 @@ export default function Home() {
       <h3 className="mt-8 text-2xl font-bold">Most Popular Anime</h3>
       <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {loading ? (
-          <p>Loading...</p>
+          new Array(6).fill(null).map((_, index) => (
+            <Image
+                key={index}
+                width={225}
+                height={320}
+                alt={`Loading image ${index + 1}`}
+                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+              />
+          ))
         ) : (
           popularAnimes.map((anime) => (
             <Card key={anime.Name} isBlurred isFooterBlurred radius="lg" className="border-none">
@@ -98,7 +114,15 @@ export default function Home() {
       <h3 className="mt-8 text-2xl font-bold">All Time Popular</h3>
       <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {loading ? (
-          <p>Loading...</p>
+          new Array(6).fill(null).map((_, index) => (
+            <Image
+                key={index}
+                width={225}
+                height={320}
+                alt={`Loading image ${index + 1}`}
+                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+              />
+          ))
         ) : (
           allTimePopularAnimes.map((anime) => (
             <Card key={anime.Name} isBlurred isFooterBlurred radius="lg" className="border-none">
