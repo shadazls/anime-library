@@ -1,1 +1,0 @@
-export const animals = {label: "Cat", value: "cat"}
