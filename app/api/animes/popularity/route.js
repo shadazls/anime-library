@@ -5,12 +5,12 @@ export const GET = async () => {
     try {
         await connectDB();
 
-        const animesByRank = await Anime.find()
+        const animesByPopularity = await Anime.find()
             .select('Name Popularity image_url -_id')
-            .sort({ Popularity: 1 })
+            .sort({ Popularity: -1 })
             .limit(6);
 
-        return new Response(JSON.stringify(animesByRank), {
+        return new Response(JSON.stringify(animesByPopularity), {
             status: 200,
         });
     } catch (error) {
