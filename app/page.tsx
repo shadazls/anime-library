@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardFooter } from "@nextui-org/card";
+import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
-import { Autocomplete } from "@nextui-org/autocomplete";
+import AnimeFilter from "@/components/AnimeFilter"; // Import du composant AnimeFilter
 import { SearchInput } from "@/components/SearchInput";
+import FilterOptions from "@/components/FilterOptions";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -38,64 +39,15 @@ export default function Home() {
   }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 mx-24">
       {/* Barre de recherche et filtres */}
       <div className="mt-8 flex gap-4">
-        <SearchInput />
-
-        <Autocomplete
-          label="Genres"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The genres of the anime"
-        ></Autocomplete>
-
-        <Autocomplete
-          label="Scores"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The score of the anime"
-        ></Autocomplete>
-
-        <Autocomplete
-          label="Episodes"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The number of episodes of the anime"
-        ></Autocomplete>
-
-        <Autocomplete
-          label="Producers"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The production companies or producers of the anime"
-        ></Autocomplete>
-
-        <Autocomplete
-          label="Licensors"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The licensors of the anime (e.g., streaming platforms)"
-        ></Autocomplete>
-
-        <Autocomplete
-          label="Type"
-          labelPlacement="outside"
-          placeholder="Any"
-          className="max-w-xs"
-          description="The type of the anime (e.g., TV series, movie, OVA, etc.)"
-        ></Autocomplete>
+        <FilterOptions />
       </div>
 
       <h3 className="mt-8 text-2xl font-bold">Top Anime</h3>
 
-      {/* Liste des cartes */}
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -128,6 +80,8 @@ export default function Home() {
           ))
         )}
       </div>
+
+      <h3 className="mt-8 text-2xl font-bold">Popularity</h3>
     </section>
   );
 }
