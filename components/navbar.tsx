@@ -85,16 +85,20 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex gap-4">
           <Button
-            className="text-sm font-normal text-white bg-default-100"
+            className="text-sm font-medium text-white bg-default-100"
             variant="flat"
             radius="sm"
+            as={NextLink}
+            href="/login"
           >
             Log In
           </Button>
           <Button
-            className="text-sm font-normal text-black bg-white"
+            className="text-sm font-medium text-black bg-white"
             variant="flat"
             radius="sm"
+            as={NextLink}
+            href="/register"
           >
             Get Started
           </Button>
