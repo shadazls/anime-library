@@ -31,7 +31,7 @@ export const POST = async (req: Request) => {
 
     // Définir le token dans un cookie sécurisé
     const headers = new Headers();
-    headers.append("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=3600; SameSite=Strict;`);
+    headers.append("Set-Cookie", `token=${token}; Path=/; Max-Age=3600; SameSite=Strict;`);
 
     return new Response("Logged in successfully", { status: 200, headers });
 

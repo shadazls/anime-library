@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -25,8 +27,10 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
+import useAuth from "../lib/useAuth"; // Importer le hook d'authentification
 
 export const Navbar = () => {
+  const isAuthenticated = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
   const searchInput = (
     <Input
       aria-label="Search"
@@ -83,26 +87,32 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-        <NavbarItem className="hidden md:flex gap-4">
-          <Button
-            className="text-sm font-medium text-white bg-default-100"
-            variant="flat"
-            radius="sm"
-            as={NextLink}
-            href="/login"
-          >
-            Log In
-          </Button>
-          <Button
-            className="text-sm font-medium text-black bg-white"
-            variant="flat"
-            radius="sm"
-            as={NextLink}
-            href="/register"
-          >
-            Get Started
-          </Button>
-        </NavbarItem>
+        {!isAuthenticated ? (
+          <NavbarItem className="hidden md:flex gap-4">
+            <Button
+              className="text-sm font-medium text-white bg-default-100"
+              variant="flat"
+              radius="sm"
+              as={NextLink}
+              href="/login"
+            >
+              Log In
+            </Button>
+            <Button
+              className="text-sm font-medium text-black bg-white"
+              variant="flat"
+              radius="sm"
+              as={NextLink}
+              href="/register"
+            >
+              Get Started
+            </Button>
+          </NavbarItem>
+        ) : (
+          <NavbarItem className="hidden md:flex gap-4">
+            <p className="text-white">Connecté</p>
+          </NavbarItem>
+        )}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
