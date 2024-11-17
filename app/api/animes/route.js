@@ -8,7 +8,7 @@ export const GET = async (request) => {
         // Récupère les paramètres de la requête (page et limit)
         const url = new URL(request.url);
         const page = parseInt(url.searchParams.get('page')) || 1; // Par défaut page 1
-        const limit = parseInt(url.searchParams.get('limit')) || 10; // Par défaut 10 éléments par page
+        const limit = parseInt(url.searchParams.get('limit')) || 18; // Par défaut 10 éléments par page
 
         // Calcule le nombre de documents à ignorer
         const skip = (page - 1) * limit;

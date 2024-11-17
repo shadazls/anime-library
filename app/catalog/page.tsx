@@ -7,6 +7,8 @@ import { Button } from "@nextui-org/button";
 import FilterOptions from "@/components/FilterOptions"; // Composant des filtres
 import { SearchInput } from "@/components/SearchInput";
 import { Divider } from "@nextui-org/divider";
+import { Pagination } from "@nextui-org/pagination";
+import { Tabs, Tab } from "@nextui-org/tabs";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -19,12 +21,13 @@ export default function CatalogPage() {
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [currentPage, setCurrentPage] = useState(1); // Page actuelle
   const [totalPages, setTotalPages] = useState(1); // Nombre total de pages
+  const [itemsPerPage, setItemsPerPage] = useState(18); // Nombre d'animés par page (valeur initiale)
+  const [selectedTab, setSelectedTab] = useState<string>("18"); // Tab sélectionné
 
   // Fonction de récupération des animes avec pagination
-  const fetchAnimes = async (page: number) => {
+  const fetchAnimes = async (page: number, limit: number) => {
     try {
       setLoading(true);
-      const limit = 12; // Nombre d'animés par page
       const response = await fetch(`/api/animes?page=${page}&limit=${limit}`);
       
       if (!response.ok) {
@@ -41,14 +44,33 @@ export default function CatalogPage() {
     }
   };
 
-  // Charger les animes quand la page change
+  // Charger les animes quand la page ou le nombre d'animés par page change
   useEffect(() => {
-    fetchAnimes(currentPage);
-  }, [currentPage]);
+    fetchAnimes(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
     document.body.style.background = '#121212';
   }, []);
+
+  // Fonction pour changer le nombre d'animés par page en fonction du Tab sélectionné
+  const handleTabChange = (key: React.Key) => {
+    setSelectedTab(key as string); // Convertir React.Key en string
+    switch (key) {
+      case "18":
+        setItemsPerPage(18);
+        break;
+      case "36":
+        setItemsPerPage(36);
+        break;
+      case "54":
+        setItemsPerPage(54);
+        break;
+      default:
+        setItemsPerPage(18); // Valeur par défaut
+    }
+    setCurrentPage(1); // Réinitialise à la première page quand le nombre d'animés par page change
+  };
 
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
@@ -56,6 +78,13 @@ export default function CatalogPage() {
 
       {/* Barre de filtres */}
       <FilterOptions />
+      <div className="flex justify-end">
+        <Tabs aria-label="Options" onSelectionChange={handleTabChange}>
+          <Tab key="18" title="18" />
+          <Tab key="36" title="36" />
+          <Tab key="54" title="54" />
+        </Tabs>
+      </div>
 
       {/* Affichage des animés */}
       <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
@@ -85,22 +114,15 @@ export default function CatalogPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between mt-8">
-        <Button 
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
-          disabled={currentPage === 1} 
-          className="bg-black text-white"
-        >
-          Previous
-        </Button>
-        <p className="text-white">{`Page ${currentPage} of ${totalPages}`}</p>
-        <Button 
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
-          disabled={currentPage === totalPages} 
-          className="bg-black text-white"
-        >
-          Next
-        </Button>
+      <div className="flex justify-center">
+        <Pagination
+          initialPage={currentPage}
+          total={totalPages}
+          onChange={(page) => setCurrentPage(page)}
+          className="mt-8"
+          size="lg"
+          showControls
+        />
       </div>
     </section>
   );
