@@ -9,6 +9,8 @@ import { SearchInput } from "@/components/SearchInput";
 import { Divider } from "@nextui-org/divider";
 import { Pagination } from "@nextui-org/pagination";
 import { Tabs, Tab } from "@nextui-org/tabs";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
+import { SortIcon } from "@/components/icons";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -74,20 +76,49 @@ export default function CatalogPage() {
 
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
-      <h1 className="text-6xl font-bold mt-48">Anime Catalog</h1>
+      <h1 className="text-6xl font-bold">Anime Catalog</h1>
 
       {/* Barre de filtres */}
-      <FilterOptions />
-      <div className="flex justify-end">
-        <Tabs aria-label="Options" onSelectionChange={handleTabChange}>
-          <Tab key="18" title="18" />
-          <Tab key="36" title="36" />
-          <Tab key="54" title="54" />
-        </Tabs>
+      <FilterOptions /><div className="max-w-md">
+        
       </div>
+        <div className="flex h-10 space-x-4 justify-end">
+          <div className="flex flex-col h-96">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button 
+                  variant="bordered"
+                  startContent={<SortIcon className="" />}
+                >
+                  Title
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem key="title">Title</DropdownItem>
+                <DropdownItem key="popularity">Popularity</DropdownItem>
+                <DropdownItem key="rank">Rank</DropdownItem>
+                <DropdownItem key="score">Score</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            <p className="text-foreground-400 mt-1 text-xs">
+              Sort by
+            </p>
+          </div>
+          <Divider orientation="vertical" />
+          <div className="flex flex-col items-end">
+            <Tabs aria-label="Options" onSelectionChange={handleTabChange}>
+              <Tab key="18" title="18" />
+              <Tab key="36" title="36" />
+              <Tab key="54" title="54" />
+            </Tabs>
+            <p className="text-foreground-400 mt-1 text-xs">
+              Number of items per page
+            </p>
+          </div>
+        </div>
 
       {/* Affichage des animés */}
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
         {loading ? (
           new Array(12).fill(null).map((_, index) => (
             <Image
