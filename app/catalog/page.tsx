@@ -2,6 +2,7 @@
 
 import { title } from "@/components/primitives";
 import { useEffect } from "react";
+import FilterOptions from "@/components/FilterOptions";
 
 export default function CatalogPage() {
 
@@ -11,7 +12,7 @@ export default function CatalogPage() {
 
   return (
     <div>
-      <h1 className={title()}>Catalog</h1>
+      <FilterOptions></FilterOptions>
     </div>
   );
 }
