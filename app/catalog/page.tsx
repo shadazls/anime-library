@@ -30,6 +30,15 @@ export default function CatalogPage() {
   const [selectedTab, setSelectedTab] = useState<string>("18"); // Tab sélectionné
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [formData, setFormData] = useState({
+    Name: "",
+    image_url: "",
+    english_name: "",
+    other_name: "",
+    synopsis: "",
+    genres: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Fonction de récupération des animes avec pagination
   const fetchAnimes = async (page: number, limit: number) => {
@@ -59,6 +68,33 @@ export default function CatalogPage() {
   useEffect(() => {
     document.body.style.background = '#121212';
   }, []);
+
+  const handleFormChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleAddAnime = async () => {
+    setErrorMessage(""); // Reset error message
+    try {
+      const response = await fetch("/api/animes/addNewAnime", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add anime");
+      }
+
+      // Ferme le modal et recharge les animes
+      onOpenChange();
+      fetchAnimes(currentPage, itemsPerPage);
+    } catch (error: any) {
+      setErrorMessage(error.message || "An error occurred");
+    }
+  };
 
   // Fonction pour changer le nombre d'animés par page en fonction du Tab sélectionné
   const handleTabChange = (key: React.Key) => {
@@ -100,32 +136,54 @@ export default function CatalogPage() {
                   <ModalBody className="overflow-auto" style={{ maxHeight: "70vh"}}>
                     {/* Champs principaux */}
                     <Input
-                      required
                       autoFocus
                       label="Name"
                       placeholder="Enter the name of the anime"
                       variant="bordered"
+                      isRequired
+                      value={formData.Name}
+                      onValueChange={(value) => handleFormChange("Name", value)}
+                    />
+                    <Input
+                      label="Image URL"
+                      placeholder="Enter the URL for the anime's image"
+                      variant="bordered"
+                      isRequired
+                      value={formData.image_url}
+                      onValueChange={(value) => handleFormChange("image_url", value)}
                     />
                     <Input
                       label="English name"
                       placeholder="Enter the English name of the anime"
                       variant="bordered"
+                      value={formData.english_name}
+                      onValueChange={(value) => handleFormChange("english_name", value)}
                     />
                     <Input
                       label="Other name"
                       placeholder="Enter the other name of the anime"
                       variant="bordered"
+                      value={formData.other_name}
+                      onValueChange={(value) => handleFormChange("other_name", value)}
                     />
                     <Textarea
                       label="Synopsis"
                       placeholder="Enter the synopsis"
                       variant="bordered"
+                      value={formData.synopsis}
+                      onValueChange={(value) => handleFormChange("synopsis", value)}
                     />
                     <Input
                       label="Genres"
                       placeholder="Enter the genres (e.g., Action, Sci-Fi)"
                       variant="bordered"
+                      value={formData.genres}
+                      onValueChange={(value) => handleFormChange("genres", value)}
                     />
+                    {errorMessage && (
+                      <p className="text-red-500 mt-2">{errorMessage}</p>
+                    )}
+
 
                     {/* Bouton pour basculer l'affichage des champs avancés */}
                     <button
@@ -204,11 +262,6 @@ export default function CatalogPage() {
                           placeholder="Enter the duration (e.g., 24 min per ep)"
                           variant="bordered"
                         />
-                        <Input
-                          label="Image URL"
-                          placeholder="Enter the URL for the anime's image"
-                          variant="bordered"
-                        />
                       </div>
                     )}
                   </ModalBody>
@@ -217,7 +270,7 @@ export default function CatalogPage() {
                     <Button color="danger" variant="flat" onPress={onClose}>
                       Close
                     </Button>
-                    <Button color="primary" onPress={onClose}>
+                    <Button color="primary" onPress={handleAddAnime}>
                       Confirm
                     </Button>
                   </ModalFooter>
