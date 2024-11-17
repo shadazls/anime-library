@@ -119,7 +119,7 @@ export default function Home() {
       <h3 className="mt-14 text-2xl font-bold">All Time Popular</h3>
       <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
         {loading ? (
-          new Array(6).fill(null).map((_, index) => (
+          new Array(18).fill(null).map((_, index) => (
             <Image
                 key={index}
                 width={225}
