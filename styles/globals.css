@@ -9,6 +9,13 @@ body {
   background-size: auto;
 }
 
+.background-main {
+  background-image: url('/bgChainsawman.jpg');
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+
 .bg-test {
   background-color: #121212;
 }

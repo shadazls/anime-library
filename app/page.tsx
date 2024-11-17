@@ -22,6 +22,7 @@ export default function Home() {
 
   // Fonction de récupération des animes
   useEffect(() => {
+    document.body.style.background = 'url(/bgChainsawman.jpg) no-repeat center top';
     const fetchAnimes = async () => {
       try {
         const [rankResponse, popularityResponse, allTimeResponse] = await Promise.all([
