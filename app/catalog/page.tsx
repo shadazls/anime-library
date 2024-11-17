@@ -11,7 +11,10 @@ import { Pagination } from "@nextui-org/pagination";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 import { SortIcon } from "@/components/icons";
-
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
+import { Input } from "@nextui-org/input";
+import { useDisclosure } from "@nextui-org/react";
+import { Textarea } from "@nextui-org/input";
 // Définir une interface pour représenter un anime
 interface Anime {
   Name: string;
@@ -25,6 +28,8 @@ export default function CatalogPage() {
   const [totalPages, setTotalPages] = useState(1); // Nombre total de pages
   const [itemsPerPage, setItemsPerPage] = useState(18); // Nombre d'animés par page (valeur initiale)
   const [selectedTab, setSelectedTab] = useState<string>("18"); // Tab sélectionné
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Fonction de récupération des animes avec pagination
   const fetchAnimes = async (page: number, limit: number) => {
@@ -82,6 +87,145 @@ export default function CatalogPage() {
       <FilterOptions />
       <div className="max-w-md"></div>
         <div className="flex h-10 space-x-4 justify-end">
+          <Button onPress={onOpen} color="primary">Add an anime</Button>
+          <Modal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            placement="top-center"
+          >
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex flex-col gap-1">Add an anime</ModalHeader>
+                  <ModalBody className="overflow-auto" style={{ maxHeight: "70vh"}}>
+                    {/* Champs principaux */}
+                    <Input
+                      required
+                      autoFocus
+                      label="Name"
+                      placeholder="Enter the name of the anime"
+                      variant="bordered"
+                    />
+                    <Input
+                      label="English name"
+                      placeholder="Enter the English name of the anime"
+                      variant="bordered"
+                    />
+                    <Input
+                      label="Other name"
+                      placeholder="Enter the other name of the anime"
+                      variant="bordered"
+                    />
+                    <Textarea
+                      label="Synopsis"
+                      placeholder="Enter the synopsis"
+                      variant="bordered"
+                    />
+                    <Input
+                      label="Genres"
+                      placeholder="Enter the genres (e.g., Action, Sci-Fi)"
+                      variant="bordered"
+                    />
+
+                    {/* Bouton pour basculer l'affichage des champs avancés */}
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvanced(!showAdvanced)}
+                      style={{
+                        marginTop: "1rem",
+                        padding: "0.5rem 1rem",
+                        background: "#0070f3",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {showAdvanced ? "Hide Advanced Creation" : "Advanced Creation"}
+                    </button>
+
+                    {/* Champs avancés */}
+                    {showAdvanced && (
+                      <div className="flex flex-col gap-3" style={{ marginTop: "1rem" }}>
+                        <Input
+                          label="Score"
+                          type="number"
+                          placeholder="Enter the score (e.g., 8.75)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Type"
+                          placeholder="Enter the type (e.g., TV, Movie)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Episodes"
+                          type="number"
+                          placeholder="Enter the number of episodes"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Aired"
+                          placeholder="Enter the aired dates (e.g., Apr 3, 1998 to Apr 24, 1999)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Premiered"
+                          placeholder="Enter the season and year (e.g., spring 1998)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Status"
+                          placeholder="Enter the status (e.g., Finished Airing)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Producers"
+                          placeholder="Enter the producers (e.g., Bandai Visual)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Licensors"
+                          placeholder="Enter the licensors (e.g., Funimation)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Studios"
+                          placeholder="Enter the studios (e.g., Sunrise)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Source"
+                          placeholder="Enter the source (e.g., Original, Manga)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Duration"
+                          placeholder="Enter the duration (e.g., 24 min per ep)"
+                          variant="bordered"
+                        />
+                        <Input
+                          label="Image URL"
+                          placeholder="Enter the URL for the anime's image"
+                          variant="bordered"
+                        />
+                      </div>
+                    )}
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button color="danger" variant="flat" onPress={onClose}>
+                      Close
+                    </Button>
+                    <Button color="primary" onPress={onClose}>
+                      Confirm
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+          <Divider orientation="vertical"></Divider>
           <div className="flex flex-col h-96">
             <Dropdown>
               <DropdownTrigger>
