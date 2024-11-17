@@ -79,9 +79,8 @@ export default function CatalogPage() {
       <h1 className="text-6xl font-bold">Anime Catalog</h1>
 
       {/* Barre de filtres */}
-      <FilterOptions /><div className="max-w-md">
-        
-      </div>
+      <FilterOptions />
+      <div className="max-w-md"></div>
         <div className="flex h-10 space-x-4 justify-end">
           <div className="flex flex-col h-96">
             <Dropdown>
