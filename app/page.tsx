@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
+import { set } from "mongoose";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -20,6 +21,8 @@ export default function Home() {
   const [movieAnimes, setMovieAnimes] = useState<Anime[]>([]);
   const [episodesAnimes, setEpisodesAnimes] = useState<Anime[]>([]);
   const [premieredAnimes, setPremieredAnimes] = useState<Anime[]>([]);
+  const [statusAnimes, setStatusAnimes] = useState<Anime[]>([]);
+  const [producerAnimes, setProducerAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(true); // Indicateur de chargement
 
   // Fonction de récupération des animes
@@ -28,7 +31,7 @@ export default function Home() {
     // document.body.classList.add("background-main")#121212
     const fetchAnimes = async () => {
       try {
-        const [rankResponse, popularityResponse, allTimeResponse, scoreResponse, actionResponse, movieResponse, episodesResponse, premieredResponse] = await Promise.all([
+        const [rankResponse, popularityResponse, allTimeResponse, scoreResponse, actionResponse, movieResponse, episodesResponse, premieredResponse, statusReponse, producerResponse] = await Promise.all([
           fetch("/api/animes/ranked"),
           fetch("/api/animes/popularity"),
           fetch("/api/animes/favorites"),
@@ -36,7 +39,9 @@ export default function Home() {
           fetch("/api/animes/animesByGenre?genre=Action"),
           fetch("/api/animes/animesByType?type=Movie"),
           fetch("/api/animes/animesByEpisodes?episodes=12"),
-          fetch("/api/animes/animesByPremiered?year=2000")
+          fetch("/api/animes/animesByPremiered?year=2000"),
+          fetch("/api/animes/animesByStatus?status=Finished Airing"),
+          fetch("/api/animes/animesByProducer?producer=Shueisha")
         ]);
 
         if (
@@ -47,7 +52,9 @@ export default function Home() {
           !actionResponse.ok ||
           !movieResponse.ok ||
           !episodesResponse.ok ||
-          !premieredResponse.ok
+          !premieredResponse.ok ||
+          !statusReponse.ok ||
+          !producerResponse.ok
         ) {
           throw new Error("Failed to fetch animes");
         }
@@ -60,6 +67,8 @@ export default function Home() {
         const movieData = await movieResponse.json();
         const episodesData = await episodesResponse.json();
         const premieredData = await premieredResponse.json();
+        const statusData = await statusReponse.json();
+        const producerData = await producerResponse.json();
 
         setTopAnimes(rankData);
         setPopularAnimes(popularityData);
@@ -69,6 +78,8 @@ export default function Home() {
         setMovieAnimes(movieData.animes);
         setEpisodesAnimes(episodesData.animes);
         setPremieredAnimes(premieredData.animes);
+        setStatusAnimes(statusData.animes);
+        setProducerAnimes(producerData.animes);
       } catch (error) {
         console.error(error);
       } finally {
@@ -260,6 +271,60 @@ export default function Home() {
           ))
         ) : (
           premieredAnimes.map((anime) => (
+            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                <p className="text-tiny text-white/80">{anime.Name}</p>
+                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                  EDIT
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        )}
+      </div>
+
+      <h3 className="mt-14 text-2xl font-bold">Anime that has finished airing</h3>
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+        {loading ? (
+          new Array(6).fill(null).map((_, index) => (
+            <Image
+              key={index}
+              width={225}
+              height={320}
+              alt={`Loading image ${index + 1}`}
+              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+            />
+          ))
+        ) : (
+          statusAnimes.map((anime) => (
+            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                <p className="text-tiny text-white/80">{anime.Name}</p>
+                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                  EDIT
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        )}
+      </div>
+
+      <h3 className="mt-14 text-2xl font-bold">Anime produced by Shueisha</h3>
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+        {loading ? (
+          new Array(6).fill(null).map((_, index) => (
+            <Image
+              key={index}
+              width={225}
+              height={320}
+              alt={`Loading image ${index + 1}`}
+              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+            />
+          ))
+        ) : (
+          producerAnimes.map((anime) => (
             <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
               <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
