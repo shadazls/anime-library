@@ -4,15 +4,25 @@ import { Button } from "@nextui-org/button";
 import AnimeFilter from "./AnimeFilter";
 import FilterIcon from "./FilterIcon";
 
-const FilterOptions: React.FC = () => {
+interface FilterOptionsProps {
+  onSearch: (searchText: string) => void;
+}
+
+const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
   const [genres, setGenres] = useState<{ label: string, value: string }[]>([]); // Format des genres
   const [producers, setProducers] = useState<{ label: string, value: string }[]>([]); // Format des producteurs
   const [licensors, setLicensors] = useState<{ label: string, value: string }[]>([]); // Format des licensors
   const [types, setTypes] = useState<{ label: string, value: string }[]>([]); // Format des types
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+  const [searchText, setSearchText] = useState<string>("");
 
   const toggleFiltersVisibility = () => {
     setIsFiltersVisible((prevState) => !prevState);
+  };
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);  // Met à jour l'état local
+    onSearch(text); // Passe le texte à la page parent (animeCatalog)
   };
 
   const scoreOptions = [
@@ -125,7 +135,7 @@ const FilterOptions: React.FC = () => {
 
   return (
     <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
-      <SearchInput />
+      <SearchInput searchText={searchText} onSearch={handleSearch}/>
       <AnimeFilter 
         label="Genres"
         placeholder="Any"

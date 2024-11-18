@@ -41,20 +41,27 @@ export default function AnimeCatalogPage() {
     genres: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [searchText, setSearchText] = useState<string>("");  // L'état du texte de recherche
 
-  // Fonction de récupération des animes avec pagination
-  const fetchAnimes = async (page: number, limit: number) => {
+  // Fonction de récupération des animes avec pagination et recherche
+  const fetchAnimes = async (page: number, limit: number, name: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/animes?page=${page}&limit=${limit}`);
-      
+      const query = new URLSearchParams({
+        page: String(page),
+        limit: String(limit),
+        name: name || "",  // Si searchText est vide, on envoie une chaîne vide
+      }).toString();
+
+      const response = await fetch(`/api/animes?${query}`);
+
       if (!response.ok) {
         throw new Error("Failed to fetch animes");
       }
 
       const data = await response.json();
-      setAnimes(data.animes); // Mettez à jour l'état des animés
-      setTotalPages(data.totalPages); // Mettez à jour le nombre total de pages
+      setAnimes(data.animes);  // Mise à jour des animes récupérés
+      setTotalPages(data.totalPages);  // Mise à jour du nombre total de pages
     } catch (error) {
       console.error(error);
     } finally {
@@ -62,9 +69,19 @@ export default function AnimeCatalogPage() {
     }
   };
 
+  // Utiliser le texte de recherche pour récupérer les animes chaque fois que searchText change
+  useEffect(() => {
+    fetchAnimes(currentPage, 18, searchText);  // Par exemple, 18 animes par page
+  }, [searchText, currentPage]);  // Déclenche à chaque changement de searchText
+
+  // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
+  const handleSearch = (text: string) => {
+    setSearchText(text);  // Met à jour l'état du texte de recherche
+  };
+
   // Charger les animes quand la page ou le nombre d'animés par page change
   useEffect(() => {
-    fetchAnimes(currentPage, itemsPerPage);
+    fetchAnimes(currentPage, itemsPerPage, searchText);
   }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
@@ -92,7 +109,7 @@ export default function AnimeCatalogPage() {
 
       // Ferme le modal et recharge les animes
       onOpenChange();
-      fetchAnimes(currentPage, itemsPerPage);
+      fetchAnimes(currentPage, itemsPerPage, searchText);
     } catch (error: any) {
       setErrorMessage(error.message || "An error occurred");
     }
@@ -122,7 +139,7 @@ export default function AnimeCatalogPage() {
       <h1 className="text-6xl font-bold">Anime Catalog</h1>
 
       {/* Barre de filtres */}
-      <FilterOptions />
+      <FilterOptions onSearch={handleSearch}/>
       <div className="max-w-md"></div>
         <div className="flex h-10 space-x-4 justify-end">
           <Button onPress={onOpen} color="primary">Add an anime</Button>
