@@ -15,7 +15,7 @@ export const GET = async () => {
         });
     } catch (error) {
         console.error(error);
-        return new Response('Failed to fetch animes by rank', {
+        return new Response('Failed to fetch animes by popularity', {
             status: 500,
         });
     }
