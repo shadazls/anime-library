@@ -21,7 +21,7 @@ interface Anime {
   image_url: string;
 }
 
-export default function CatalogPage() {
+export default function AnimeCatalogPage() {
   const [animes, setAnimes] = useState<Anime[]>([]); // Animes récupérés avec pagination
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [currentPage, setCurrentPage] = useState(1); // Page actuelle

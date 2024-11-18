@@ -1,4 +1,4 @@
-export default function CatalogLayout({
+export default function AnimeCatalogLayout({
   children,
 }: {
   children: React.ReactNode;

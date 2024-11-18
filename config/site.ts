@@ -9,12 +9,12 @@ export const siteConfig = {
       href: "/",
     },
     {
-      label: "Catalog",
-      href: "/catalog",
+      label: "Anime",
+      href: "/animeCatalog",
     },
     {
-      label: "News",
-      href: "/news",
+      label: "Manga",
+      href: "/mangaCatalog",
     },
     {
       label: "Collections",
