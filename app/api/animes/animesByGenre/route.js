@@ -16,7 +16,6 @@ export const GET = async (req) => {
 
     const animesByGenre = await Anime.find({ Genres: genre })
       .select('Name image_url Genres -_id')
-      .sort({ Score: -1 })
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByGenre }), {
