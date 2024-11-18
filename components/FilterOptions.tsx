@@ -26,10 +26,10 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
   };
 
   const scoreOptions = [
-    { label: "> 2.5/10", value: "2.5" },
-    { label: "> 5/10", value: "5" },
-    { label: "> 7.5/10", value: "7.5" },
-    { label: "< 2.5/10", value: "2.5" },
+    { label: "> 2.5/10", value: ">2.5" },
+    { label: "> 5/10", value: ">5" },
+    { label: "> 7.5/10", value: ">7.5" },
+    { label: "< 2.5/10", value: "<2.5" },
   ];
 
   const episodeOptions = [
