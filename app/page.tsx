@@ -537,6 +537,7 @@ export default function Home() {
           ))
         )}
       </div>
+      
       <Link href="/animeCatalog">
         <Button
           className="mt-8 text-base font-medium text-black bg-white w-full"

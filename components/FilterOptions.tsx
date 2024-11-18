@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { SearchInput } from "@/components/SearchInput";
+import { Button } from "@nextui-org/button";
 import AnimeFilter from "./AnimeFilter";
+import FilterIcon from "./FilterIcon";
 
 const FilterOptions: React.FC = () => {
   const [genres, setGenres] = useState<{ label: string, value: string }[]>([]); // Format des genres
   const [producers, setProducers] = useState<{ label: string, value: string }[]>([]); // Format des producteurs
   const [licensors, setLicensors] = useState<{ label: string, value: string }[]>([]); // Format des licensors
   const [types, setTypes] = useState<{ label: string, value: string }[]>([]); // Format des types
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+
+  const toggleFiltersVisibility = () => {
+    setIsFiltersVisible((prevState) => !prevState);
+  };
 
   const scoreOptions = [
     { label: "> 2.5/10", value: "2.5" },
@@ -117,7 +124,7 @@ const FilterOptions: React.FC = () => {
   }, []);
 
   return (
-    <div className="mt-8 flex gap-4">
+    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
       <SearchInput />
       <AnimeFilter 
         label="Genres"
@@ -138,23 +145,131 @@ const FilterOptions: React.FC = () => {
         options={episodeOptions}
       />
       <AnimeFilter 
-        label="Producers"
+        label="Status"
         placeholder="Any"
-        description="The production companies or producers of the anime"
-        options={producers} // Passer les producteurs récupérés dynamiquement
+        description="The current status of the anime"
+        options={[
+          { label: "Finished Airing", value: "Finished Airing" },
+          { label: "Airing", value: "Airing" },
+          { label: "Not Yet Aired", value: "Not Yet Aired" },
+          // Add more options as needed
+        ]}
       />
       <AnimeFilter 
-        label="Licensors"
+        label="Rating"
         placeholder="Any"
-        description="The licensors of the anime (e.g., streaming platforms)"
-        options={licensors} // Passer les licensors récupérés dynamiquement
+        description="The age rating of the anime"
+        options={[]}
       />
-      <AnimeFilter 
-        label="Type"
-        placeholder="Any"
-        description="The type of the anime (e.g., TV series, movie, OVA, etc.)"
-        options={types} // Passer les types récupérés dynamiquement
-      />
+      <Button color="default" variant="bordered" className="self-center" onClick={toggleFiltersVisibility}>
+        Advanced Filters
+      </Button>
+      {isFiltersVisible && (
+        <>
+          <AnimeFilter 
+            label="Producers"
+            placeholder="Any"
+            description="The production companies or producers of the anime"
+            options={producers} // Passer les producteurs récupérés dynamiquement
+          />
+          <AnimeFilter 
+            label="Licensors"
+            placeholder="Any"
+            description="The licensors of the anime (e.g., streaming platforms)"
+            options={licensors} // Passer les licensors récupérés dynamiquement
+          />
+          <AnimeFilter 
+            label="Type"
+            placeholder="Any"
+            description="The type of the anime (e.g., TV series, movie, OVA, etc.)"
+            options={types} // Passer les types récupérés dynamiquement
+          />
+          <AnimeFilter 
+            label="Studios"
+            placeholder="Any"
+            description="The studios that produced the anime"
+            options={[]}
+          />
+          <AnimeFilter 
+            label="Source"
+            placeholder="Any"
+            description="The original source material of the anime"
+            options={[]}
+          />
+          <AnimeFilter 
+            label="Duration"
+            placeholder="Any"
+            description="The duration of each episode"
+            options={[]}
+          />
+          <AnimeFilter 
+            label="Aired"
+            placeholder="Any"
+            description="The airing period of the anime"
+            options={[
+              { label: "Apr 3, 1998 to Apr 24, 1999", value: "Apr 3, 1998 to Apr 24, 1999" },
+              { label: "Mar 1, 2010 to Mar 30, 2011", value: "Mar 1, 2010 to Mar 30, 2011" },
+              // Add more options as needed
+            ]}
+          />
+
+          <AnimeFilter 
+            label="Premiered"
+            placeholder="Any"
+            description="The season and year the anime premiered"
+            options={[
+              { label: "Spring 1998", value: "spring 1998" },
+              { label: "Winter 2010", value: "winter 2010" },
+              // Add more options as needed
+            ]}
+          />
+
+          <AnimeFilter 
+            label="Rank"
+            placeholder="Any"
+            description="The ranking of the anime"
+            options={[
+              { label: "> 40", value: "40" },
+              { label: "> 100", value: "100" },
+              { label: "< 1000", value: "1000" },
+              // Add more options as needed
+            ]}
+          />
+
+          <AnimeFilter 
+            label="Favorites"
+            placeholder="Any"
+            description="The number of favorites"
+            options={[
+              { label: "> 1000", value: "1000" },
+              { label: "< 10000", value: "10000" },
+              // Add more options as needed
+            ]}
+          />
+
+          <AnimeFilter 
+            label="Scored By"
+            placeholder="Any"
+            description="The number of users who scored the anime"
+            options={[
+              { label: "> 50000", value: "50000" },
+              { label: "< 1000000", value: "1000000" },
+              // Add more options as needed
+            ]}
+          />
+
+          <AnimeFilter 
+            label="Members"
+            placeholder="Any"
+            description="The number of members following the anime"
+            options={[
+              { label: "> 10000", value: "10000" },
+              { label: "< 100000", value: "100000" },
+              // Add more options as needed
+            ]}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -15,6 +15,8 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextu
 import { Input } from "@nextui-org/input";
 import { useDisclosure } from "@nextui-org/react";
 import { Textarea } from "@nextui-org/input";
+import FilterIcon from "@/components/FilterIcon";
+
 // Définir une interface pour représenter un anime
 interface Anime {
   Name: string;
