@@ -14,6 +14,14 @@ interface Anime {
   image_url: string;
 }
 
+// Définir une interface pour représenter un manga
+interface Manga {
+  title: string;
+  main_picture: {
+    medium: string;
+  };
+}
+
 export default function Home() {
   const [topAnimes, setTopAnimes] = useState<Anime[]>([]); // Animes par rank
   const [popularAnimes, setPopularAnimes] = useState<Anime[]>([]); // Animes par popularité
@@ -32,6 +40,15 @@ export default function Home() {
   const [ratingAnimes, setRatingAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [selectedTab, setSelectedTab] = useState<string>("anime"); // État pour le tab sélectionné
+  const [rankedMangas, setRankedMangas] = useState<Manga[]>([]);
+  const [nsfwMangas, setNsfwMangas] = useState<Manga[]>([]);
+  const [popularMangas, setPopularMangas] = useState<Manga[]>([]);
+  const [startDateMangas, setStartDateMangas] = useState<Manga[]>([]);
+  const [mediaTypeMangas, setMediaTypeMangas] = useState<Manga[]>([]);
+  const [statusMangas, setStatusMangas] = useState<Manga[]>([]);
+  const [volumesMangas, setVolumesMangas] = useState<Manga[]>([]);
+  const [authorMangas, setAuthorMangas] = useState<Manga[]>([]);
+  const [chaptersMangas, setChaptersMangas] = useState<Manga[]>([]);
 
   // Fonction pour gérer le changement de tab
   const handleTabChange = (key: React.Key) => {
@@ -132,8 +149,70 @@ export default function Home() {
       }
     };
 
+    const fetchMangas = async () => {
+      try {
+        console.log("test manga hihi")
+        const [rankResponse, nsfwResponse, popularityResponse, startDateResponse, mediaTypeResponse, statusResponse, volumesResponse, authorResponse, chaptersResponse] = await Promise.all([
+          fetch("http://localhost:3000/api/mangas/mangasByRank"),
+          fetch("http://localhost:3000/api/mangas/mangasByNSFW"),
+          fetch("http://localhost:3000/api/mangas/mangasByPopularity"),
+          fetch("http://localhost:3000/api/mangas/mangasByStartDate?year=1989"),
+          fetch("http://localhost:3000/api/mangas/mangasByMediaType"),
+          fetch("http://localhost:3000/api/mangas/mangasByStatus"),
+          fetch("http://localhost:3000/api/mangas/mangasByVolumes"),
+          fetch("http://localhost:3000/api/mangas/mangasByAuthor?author=Shunsaku%20Tomose"),
+          fetch("http://localhost:3000/api/mangas/mangasByChapters")
+        ]);
+  
+        if (
+          !rankResponse.ok ||
+          !nsfwResponse.ok ||
+          !popularityResponse.ok ||
+          !startDateResponse.ok ||
+          !mediaTypeResponse.ok ||
+          !statusResponse.ok ||
+          !volumesResponse.ok ||
+          !authorResponse.ok ||
+          !chaptersResponse.ok
+        ) {
+          throw new Error("Failed to fetch mangas");
+        }
+  
+        const rankData = await rankResponse.json();
+        const nsfwData = await nsfwResponse.json();
+        const popularityData = await popularityResponse.json();
+        const startDateData = await startDateResponse.json();
+        const mediaTypeData = await mediaTypeResponse.json();
+        const statusData = await statusResponse.json();
+        const volumesData = await volumesResponse.json();
+        const authorData = await authorResponse.json();
+        const chaptersData = await chaptersResponse.json();
+  
+        setRankedMangas(rankData.mangas);
+        setNsfwMangas(nsfwData.mangas);
+        setPopularMangas(popularityData.mangas);
+        setStartDateMangas(startDateData.mangas);
+        setMediaTypeMangas(mediaTypeData.mangas);
+        setStatusMangas(statusData.mangas);
+        setVolumesMangas(volumesData.mangas);
+        setAuthorMangas(authorData.mangas);
+        setChaptersMangas(chaptersData.mangas);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchAnimes();
-  }, []);
+    fetchMangas();
+
+    // if (selectedTab === "anime") {
+    //   fetchAnimes();
+    // } else if (selectedTab === "manga") {
+    //   fetchMangas();
+    // }
+  }, [selectedTab]);
 
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
@@ -564,7 +643,282 @@ export default function Home() {
           </Link>
         </>
       ) : (
-        <h1>Manga</h1>
+        <>
+          <h3 className="mt-4 text-2xl font-bold">Best Ranked Mangas</h3>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+              {loading ? (
+                new Array(6).fill(null).map((_, index) => (
+                  <Image
+                      key={index}
+                      width={225}
+                      height={320}
+                      alt={`Loading image ${index + 1}`}
+                      src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                    />
+                ))
+              ) : (
+                rankedMangas.map((manga) => (
+                  <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                    <Image width={225} alt={`Image of ${manga.title}`} src={manga.main_picture.medium || "https://via.placeholder.com/225"} />
+                    <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                      <p className="text-tiny text-white/80">{manga.title}</p>
+                      <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                        EDIT
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))
+              )}
+            </div>
+            <h3 className="mt-14 text-2xl font-bold">Most Popular Mangas</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              popularMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">NSFW Mangas</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              nsfwMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">Mangas that has finished airing</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              statusMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+          
+          <h3 className="mt-14 text-2xl font-bold">Mangas that has more than XXX volumes</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              volumesMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">Mangas writed by FAUT QUE JE LE METTE</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              authorMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">Mangas by mediatype qdhqsudhqi</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              mediaTypeMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">Mangas that has started at XXX yearr</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              startDateMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">Mangas that has XXX chapters</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              chaptersMangas.map((manga) => (
+                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image
+                    width={225}
+                    alt={`Image of ${manga.title}`}
+                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
+                  />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{manga.title}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+        </>
       )}
     </section>
   );
