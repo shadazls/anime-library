@@ -42,7 +42,7 @@ export const GET = async (request) => {
 
         // Récupère les animés avec pagination et filtrage
         const animes = await Anime.find(filter)
-            .select('Name image_url Genres Score Episodes Status Rating -_id') // Inclure les champs requis
+            .select('Name image_url Genres Score Episodes Status Rating') // Inclure les champs requis
             .skip(skip)
             .limit(limit);
 

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardBody, CardFooter } from "@nextui-org/card";
+import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { set } from "mongoose";
 import Link from 'next/link';
+import TrashIcon from "@/components/TrashIcon";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -243,6 +244,11 @@ export default function Home() {
               topAnimes.map((anime) => (
                 <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
                   <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardHeader className="absolute justify-end">
+                    {/* <Button isIconOnly color="danger" aria-label="Delete" onPress={}>
+                      <TrashIcon />
+                    </Button> */}
+                  </CardHeader>
                   <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                     <p className="text-tiny text-white/80">{anime.Name}</p>
                     <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">

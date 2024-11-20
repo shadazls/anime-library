@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardBody, CardFooter } from "@nextui-org/card";
+import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import FilterOptions from "@/components/FilterOptions"; // Composant des filtres
@@ -16,9 +16,12 @@ import { Input } from "@nextui-org/input";
 import { useDisclosure } from "@nextui-org/react";
 import { Textarea } from "@nextui-org/input";
 import FilterIcon from "@/components/FilterIcon";
+import TrashIcon from "@/components/TrashIcon";
+import { ObjectId } from 'mongodb';
 
 // Définir une interface pour représenter un anime
 interface Anime {
+  _id: ObjectId;
   Name: string;
   image_url: string;
 }
@@ -132,6 +135,27 @@ export default function AnimeCatalogPage() {
         setItemsPerPage(18); // Valeur par défaut
     }
     setCurrentPage(1); // Réinitialise à la première page quand le nombre d'animés par page change
+  };
+
+  const handleDeleteAnime = async (animeId: ObjectId) => {
+    try {
+      const response = await fetch(`/api/animes/deleteAnime?id=${animeId}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        alert("Anime deleted successfully");
+        // Actualiser la liste des animés (ex. re-fetch les données ou filtrer localement)
+        setAnimes((prevAnimes) => prevAnimes.filter((anime) => anime._id !== animeId));
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to delete anime:", errorData.message);
+        alert("Failed to delete anime");
+      }
+    } catch (error) {
+      console.error("Error deleting anime:", error);
+      alert("An error occurred while deleting the anime");
+    }
   };
 
   return (
@@ -359,6 +383,11 @@ export default function AnimeCatalogPage() {
           animes.map((anime) => (
             <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
               <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+              <CardHeader className="absolute justify-end">
+                <Button isIconOnly color="danger" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
+                  <TrashIcon />
+                </Button>
+              </CardHeader>
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                 <p className="text-tiny text-white/80">{anime.Name}</p>
                 <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
