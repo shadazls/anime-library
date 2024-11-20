@@ -4,20 +4,9 @@ import { useEffect, useState } from "react";
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
+import { Tabs, Tab } from "@nextui-org/tabs";
 import { set } from "mongoose";
 import Link from 'next/link';
-
-<Link href="/animeCatalog">
-  <Button
-    className="mt-8 text-base font-medium text-black bg-white"
-    variant="flat"
-    radius="sm"
-    size="lg"
-  >
-    Show More
-  </Button>
-</Link>
-
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -42,6 +31,24 @@ export default function Home() {
   const [durationAnimes, setDurationAnimes] = useState<Anime[]>([]);
   const [ratingAnimes, setRatingAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(true); // Indicateur de chargement
+  const [selectedTab, setSelectedTab] = useState<string>("anime"); // État pour le tab sélectionné
+
+  // Fonction pour gérer le changement de tab
+  const handleTabChange = (key: React.Key) => {
+    const tabKey = key as string; // Convertir React.Key en string
+    switch (tabKey) {
+      case "anime":
+        console.log("Affichage des animes");
+        break;
+      case "mangas":
+        console.log("Affichage des mangas");
+        break;
+      default:
+        console.log("Onglet inconnu");
+    }
+    // Si vous voulez mettre à jour l'état pour un onglet sélectionné
+    setSelectedTab(tabKey);
+  };
 
   // Fonction de récupération des animes
   useEffect(() => {
@@ -130,424 +137,435 @@ export default function Home() {
 
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
+
       <h1 className="text-6xl font-bold mt-48">Chainsaw Man</h1>
       <p className="text-xl w-1/4">Denji has a simple dream -- to live a happy and peaceful life, spending time with a girl</p>
 
-      <h3 className="mt-48 text-2xl font-bold">Trending Now</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-                key={index}
-                width={225}
-                height={320}
-                alt={`Loading image ${index + 1}`}
-                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-              />
-          ))
-        ) : (
-          topAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+      <Tabs aria-label="Options" onSelectionChange={handleTabChange} className="mt-32">
+        <Tab key="anime" title="Anime" />
+        <Tab key="mangas" title="Manga" />
+      </Tabs>
 
-      <h3 className="mt-14 text-2xl font-bold">Popular this season</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-                key={index}
-                width={225}
-                height={320}
-                alt={`Loading image ${index + 1}`}
-                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-              />
-          ))
-        ) : (
-          popularAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+      {selectedTab === "anime" ? (
+        <>
+          <h3 className="mt-4 text-2xl font-bold">Trending Now</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                    key={index}
+                    width={225}
+                    height={320}
+                    alt={`Loading image ${index + 1}`}
+                    src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                  />
+              ))
+            ) : (
+              topAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Top Rated Animes</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          scoredAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Popular this season</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                    key={index}
+                    width={225}
+                    height={320}
+                    alt={`Loading image ${index + 1}`}
+                    src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                  />
+              ))
+            ) : (
+              popularAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Action Animes</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          actionAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Top Rated Animes</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              scoredAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Animes Movies</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          movieAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Action Animes</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              actionAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Animes in 12 episodes</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          episodesAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Animes Movies</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              movieAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime released in 2000</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          premieredAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Animes in 12 episodes</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              episodesAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime that has finished airing</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          statusAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime released in 2000</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              premieredAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime produced by Shueisha</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          producerAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime that has finished airing</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              statusAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime distributed by AnimEigo</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          licensorAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime produced by Shueisha</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              producerAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime dessinated by Madhouse</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          studioAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime distributed by AnimEigo</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              licensorAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime that comes from a Manga</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          sourceAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime dessinated by Madhouse</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              studioAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime with episodes of 27 minutes</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          durationAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime that comes from a Manga</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              sourceAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">Anime prohibited for under 13s</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(6).fill(null).map((_, index) => (
-            <Image
-              key={index}
-              width={225}
-              height={320}
-              alt={`Loading image ${index + 1}`}
-              src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-            />
-          ))
-        ) : (
-          ratingAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
+          <h3 className="mt-14 text-2xl font-bold">Anime with episodes of 27 minutes</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              durationAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
 
-      <h3 className="mt-14 text-2xl font-bold">All Time Popular</h3>
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-        {loading ? (
-          new Array(18).fill(null).map((_, index) => (
-            <Image
-                key={index}
-                width={225}
-                height={320}
-                alt={`Loading image ${index + 1}`}
-                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-              />
-          ))
-        ) : (
-          allTimePopularAnimes.map((anime) => (
-            <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
-      </div>
-      
-      <Link href="/animeCatalog">
-        <Button
-          className="mt-8 text-base font-medium text-black bg-white w-full"
-          variant="flat"
-          radius="sm"
-          size="lg"
-        >
-          Show More
-        </Button>
-      </Link>
+          <h3 className="mt-14 text-2xl font-bold">Anime prohibited for under 13s</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(6).fill(null).map((_, index) => (
+                <Image
+                  key={index}
+                  width={225}
+                  height={320}
+                  alt={`Loading image ${index + 1}`}
+                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                />
+              ))
+            ) : (
+              ratingAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <h3 className="mt-14 text-2xl font-bold">All Time Popular</h3>
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
+            {loading ? (
+              new Array(18).fill(null).map((_, index) => (
+                <Image
+                    key={index}
+                    width={225}
+                    height={320}
+                    alt={`Loading image ${index + 1}`}
+                    src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
+                  />
+              ))
+            ) : (
+              allTimePopularAnimes.map((anime) => (
+                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
+                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                    <p className="text-tiny text-white/80">{anime.Name}</p>
+                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                      EDIT
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
+          <Link href="/animeCatalog">
+            <Button
+              className="mt-8 text-base font-medium text-black bg-white w-full"
+              variant="flat"
+              radius="sm"
+              size="lg"
+            >
+              Show More
+            </Button>
+          </Link>
+        </>
+      ) : (
+        <h1>Manga</h1>
+      )}
     </section>
   );
 }
