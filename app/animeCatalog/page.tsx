@@ -61,7 +61,7 @@ export default function AnimeCatalogPage() {
 
       const data = await response.json();
       setAnimes(data.animes);  // Mise à jour des animes récupérés
-      setTotalPages(data.totalPages);  // Mise à jour du nombre total de pages
+      setTotalPages(data.pagination.totalPages);  // Mise à jour du nombre total de pages
     } catch (error) {
       console.error(error);
     } finally {
