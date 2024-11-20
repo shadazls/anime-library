@@ -43,21 +43,21 @@ export default function MangaCatalogPage() {
     genres: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [searchText, setSearchText] = useState<string>("");  // L'état du texte de recherche
 
   // Fonction de récupération des mangas avec pagination
-  const fetchMangas = async (page: number, limit: number) => {
+  const fetchMangas = async (page: number, limit: number, title: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/mangas?page=${page}&limit=${limit}`);
+      console.log(`Fetching with title: ${title}`);
+      const response = await fetch(`/api/mangas?page=${page}&limit=${limit}&title=${title}`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch mangas");
       }
 
       const data = await response.json();
-      console.log("data:", data);
       setMangas(data.mangas); // Mettez à jour l'état des mangas
-      console.log("mangas:", data.mangas);
       setTotalPages(data.totalPages); // Mettez à jour le nombre total de pages
     } catch (error) {
       console.error(error);
@@ -68,8 +68,8 @@ export default function MangaCatalogPage() {
 
   // Charger les mangas quand la page ou le nombre de mangas par page change
   useEffect(() => {
-    fetchMangas(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+    fetchMangas(currentPage, itemsPerPage, searchText);
+  }, [currentPage, itemsPerPage, searchText]);
 
   useEffect(() => {
     document.body.style.background = "#121212";
@@ -96,7 +96,7 @@ export default function MangaCatalogPage() {
 
       // Ferme le modal et recharge les mangas
       onOpenChange();
-      fetchMangas(currentPage, itemsPerPage);
+      fetchMangas(currentPage, itemsPerPage, searchText);
     } catch (error: any) {
       setErrorMessage(error.message || "An error occurred");
     }
@@ -121,12 +121,18 @@ export default function MangaCatalogPage() {
     setCurrentPage(1); // Réinitialise à la première page quand le nombre de mangas par page change
   };
 
+  // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
+  const handleSearch = (text: string) => {
+    setSearchText(text);  // Met à jour l'état du texte de recherche
+    console.log(text);
+  };
+
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
       <h1 className="text-6xl font-bold">Manga Catalog</h1>
 
       {/* Barre de filtres */}
-      <FilterOptions />
+      <FilterOptions onSearch={handleSearch}/>
       <div className="max-w-md"></div>
       <div className="flex h-10 space-x-4 justify-end">
         <Button onPress={onOpen} color="primary">
