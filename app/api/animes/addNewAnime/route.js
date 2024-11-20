@@ -10,9 +10,9 @@ export const POST = async (request) => {
         const body = await request.json();
 
         // Valide les données obligatoires
-        const { Name, image_url } = body;
-        if (!Name || !image_url) {
-            return new Response(JSON.stringify({ message: 'Name and image_url are required.' }), {
+        const { name, image_url } = body;
+        if (!name || !image_url) {
+            return new Response(JSON.stringify({ message: 'name and image_url are required.' }), {
                 status: 400,
             });
         }
