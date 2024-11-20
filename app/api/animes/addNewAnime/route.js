@@ -10,15 +10,24 @@ export const POST = async (request) => {
         const body = await request.json();
 
         // Valide les données obligatoires
-        const { name, image_url } = body;
-        if (!name || !image_url) {
-            return new Response(JSON.stringify({ message: 'name and image_url are required.' }), {
+        const { Name, image_url } = body;
+        if (!Name || !image_url) {
+            return new Response(JSON.stringify({ message: 'Name and image_url are required.' }), {
                 status: 400,
             });
         }
 
-        // Crée un nouvel animé avec les données reçues
-        const newAnime = new Anime(body);
+        // Récupère l'ID le plus élevé actuel de anime_id
+        const highestAnime = await Anime.findOne().sort({ anime_id: -1 }).limit(1);
+
+        // Si un anime existe déjà, incrémente l'anime_id
+        const newAnimeId = highestAnime ? highestAnime.anime_id + 1 : 1; // Si aucun anime n'est trouvé, commence à 1
+
+        // Ajoute l'anime_id au corps de la requête
+        const newAnimeData = { ...body, anime_id: newAnimeId };
+
+        // Crée un nouvel animé avec les données mises à jour
+        const newAnime = new Anime(newAnimeData);
 
         // Sauvegarde l'animé dans la base de données
         await newAnime.save();
