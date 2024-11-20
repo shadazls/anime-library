@@ -37,8 +37,8 @@ export default function AnimeCatalogPage() {
     image_url: "",
     english_name: "",
     other_name: "",
-    synopsis: "",
-    genres: "",
+    Synopsis: "",
+    Genres: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [searchText, setSearchText] = useState<string>("");  // L'état du texte de recherche
@@ -189,15 +189,15 @@ export default function AnimeCatalogPage() {
                       label="Synopsis"
                       placeholder="Enter the synopsis"
                       variant="bordered"
-                      value={formData.synopsis}
-                      onValueChange={(value) => handleFormChange("synopsis", value)}
+                      value={formData.Synopsis}
+                      onValueChange={(value) => handleFormChange("Synopsis", value)}
                     />
                     <Input
                       label="Genres"
                       placeholder="Enter the genres (e.g., Action, Sci-Fi)"
                       variant="bordered"
-                      value={formData.genres}
-                      onValueChange={(value) => handleFormChange("genres", value)}
+                      value={formData.Genres}
+                      onValueChange={(value) => handleFormChange("Genres", value)}
                     />
                     {errorMessage && (
                       <p className="text-red-500 mt-2">{errorMessage}</p>
@@ -229,57 +229,68 @@ export default function AnimeCatalogPage() {
                           type="number"
                           placeholder="Enter the score (e.g., 8.75)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Score", value)}
                         />
                         <Input
                           label="Type"
                           placeholder="Enter the type (e.g., TV, Movie)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Type", value)}
                         />
                         <Input
                           label="Episodes"
                           type="number"
                           placeholder="Enter the number of episodes"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Episodes", value)}
                         />
                         <Input
                           label="Aired"
                           placeholder="Enter the aired dates (e.g., Apr 3, 1998 to Apr 24, 1999)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Aired", value)}
                         />
                         <Input
                           label="Premiered"
                           placeholder="Enter the season and year (e.g., spring 1998)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Premiered", value)}
                         />
                         <Input
                           label="Status"
                           placeholder="Enter the status (e.g., Finished Airing)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Status", value)}
                         />
                         <Input
                           label="Producers"
                           placeholder="Enter the producers (e.g., Bandai Visual)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Producers", value)}
                         />
                         <Input
                           label="Licensors"
                           placeholder="Enter the licensors (e.g., Funimation)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Licensors", value)}
                         />
                         <Input
                           label="Studios"
                           placeholder="Enter the studios (e.g., Sunrise)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Studios", value)}
                         />
                         <Input
                           label="Source"
                           placeholder="Enter the source (e.g., Original, Manga)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Source", value)}
                         />
                         <Input
                           label="Duration"
                           placeholder="Enter the duration (e.g., 24 min per ep)"
                           variant="bordered"
+                          onValueChange={(value) => handleFormChange("Duration", value)}
                         />
                       </div>
                     )}
