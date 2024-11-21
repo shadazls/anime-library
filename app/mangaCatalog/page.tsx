@@ -15,6 +15,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextu
 import { Input } from "@nextui-org/input";
 import { useDisclosure } from "@nextui-org/react";
 import { Textarea } from "@nextui-org/input";
+import { Skeleton } from "@nextui-org/skeleton";
 
 // Définir une interface pour représenter un manga
 interface Manga {
@@ -324,13 +325,9 @@ export default function MangaCatalogPage() {
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
         {loading
           ? new Array(12).fill(null).map((_, index) => (
-              <Image
-                key={index}
-                width={225}
-                height={320}
-                alt={`Loading image ${index + 1}`}
-                src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-              />
+              <div key={index} className="flex flex-col items-center">
+                <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+              </div>
             ))
           : mangas.map((manga) => (
               <Card

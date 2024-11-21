@@ -8,6 +8,7 @@ import { Tabs, Tab } from "@nextui-org/tabs";
 import { set } from "mongoose";
 import Link from 'next/link';
 import TrashIcon from "@/components/TrashIcon";
+import {Skeleton} from "@nextui-org/skeleton";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -232,13 +233,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                    key={index}
-                    width={225}
-                    height={320}
-                    alt={`Loading image ${index + 1}`}
-                    src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                  />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               topAnimes.map((anime) => (
@@ -249,11 +246,13 @@ export default function Home() {
                       <TrashIcon />
                     </Button> */}
                   </CardHeader>
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
+                  <CardFooter className="absolute bg-black/20 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+                    <div className="flex flex-grow gap-2 items-center">
+                      <div className="flex flex-col">
+                        <p className="text-tiny text-white/60">{anime.Name}</p>
+                      </div>
+                    </div>
+                    {/* <Button radius="full" size="sm">EDIT</Button> */}
                   </CardFooter>
                 </Card>
               ))
@@ -264,23 +263,17 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                    key={index}
-                    width={225}
-                    height={320}
-                    alt={`Loading image ${index + 1}`}
-                    src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                  />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               popularAnimes.map((anime) => (
                 <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
                   <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
+                  <CardFooter className="absolute bg-black/30 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 flex justify-center">
+                    <p className="text-small text-white/70">{anime.Name}</p>
+                    {/* <Button radius="full" size="sm">EDIT</Button> */}
                   </CardFooter>
                 </Card>
               ))
@@ -291,13 +284,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               scoredAnimes.map((anime) => (
@@ -318,13 +307,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               actionAnimes.map((anime) => (
@@ -345,13 +330,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               movieAnimes.map((anime) => (
@@ -372,13 +353,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               episodesAnimes.map((anime) => (
@@ -399,13 +376,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               premieredAnimes.map((anime) => (
@@ -426,13 +399,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               statusAnimes.map((anime) => (
@@ -453,13 +422,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               producerAnimes.map((anime) => (
@@ -480,13 +445,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               licensorAnimes.map((anime) => (
@@ -507,13 +468,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               studioAnimes.map((anime) => (
@@ -534,13 +491,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               sourceAnimes.map((anime) => (
@@ -561,13 +514,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               durationAnimes.map((anime) => (
@@ -588,13 +537,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               ratingAnimes.map((anime) => (
@@ -615,13 +560,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
             {loading ? (
               new Array(18).fill(null).map((_, index) => (
-                <Image
-                    key={index}
-                    width={225}
-                    height={320}
-                    alt={`Loading image ${index + 1}`}
-                    src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                  />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               allTimePopularAnimes.map((anime) => (
@@ -654,13 +595,9 @@ export default function Home() {
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
               {loading ? (
                 new Array(6).fill(null).map((_, index) => (
-                  <Image
-                      key={index}
-                      width={225}
-                      height={320}
-                      alt={`Loading image ${index + 1}`}
-                      src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                    />
+                  <div key={index} className="flex flex-col items-center">
+                    <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                  </div>
                 ))
               ) : (
                 rankedMangas.map((manga) => (
@@ -668,7 +605,8 @@ export default function Home() {
                     <Image 
                       width={225} 
                       alt={`Image of ${manga.title}`} 
-                      src={manga.main_picture.medium || "/placeholder-550x550.png"}
+                      src={manga.main_picture.medium}
+                      fallbackSrc="https://via.placeholder.com/225x320"
                     />
                     <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                       <p className="text-tiny text-white/80">{manga.title}</p>
@@ -684,13 +622,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               popularMangas.map((manga) => (
@@ -715,13 +649,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               nsfwMangas.map((manga) => (
@@ -746,13 +676,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               statusMangas.map((manga) => (
@@ -777,13 +703,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               volumesMangas.map((manga) => (
@@ -808,13 +730,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               authorMangas.map((manga) => (
@@ -839,13 +757,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               mediaTypeMangas.map((manga) => (
@@ -870,13 +784,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               startDateMangas.map((manga) => (
@@ -901,13 +811,9 @@ export default function Home() {
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
             {loading ? (
               new Array(6).fill(null).map((_, index) => (
-                <Image
-                  key={index}
-                  width={225}
-                  height={320}
-                  alt={`Loading image ${index + 1}`}
-                  src="https://app.requestly.io/delay/5000/https://nextui.org/images/hero-card-complete.jpeg"
-                />
+                <div key={index} className="flex flex-col items-center">
+                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
+                </div>
               ))
             ) : (
               chaptersMangas.map((manga) => (
