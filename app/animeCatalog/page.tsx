@@ -19,6 +19,7 @@ import FilterIcon from "@/components/FilterIcon";
 import TrashIcon from "@/components/TrashIcon";
 import { ObjectId } from 'mongodb';
 import { Skeleton } from "@nextui-org/skeleton";
+import EditIcon from "@/components/EditIcon";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -379,9 +380,12 @@ export default function AnimeCatalogPage() {
         ) : (
           animes.map((anime) => (
             <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-              <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-              <CardHeader className="absolute justify-end">
-                <Button isIconOnly color="danger" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
+              <Image isZoomed width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
+              <CardHeader className="absolute justify-end gap-2">
+                <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
+                  <EditIcon />
+                </Button>
+                <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
                   <TrashIcon />
                 </Button>
               </CardHeader>
