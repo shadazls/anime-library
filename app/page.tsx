@@ -10,6 +10,7 @@ import Link from 'next/link';
 import TrashIcon from "@/components/TrashIcon";
 import {Skeleton} from "@nextui-org/skeleton";
 import AnimeGrid from "@/components/AnimeGrid";
+import ItemGrid from "@/components/ItemGrid";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -218,81 +219,112 @@ export default function Home() {
 
       {selectedTab === "anime" ? (
         <>
-          <AnimeGrid
+          <ItemGrid
             title="Trending Now"
             loading={loading}
-            animes={topAnimes}
+            items={topAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Popular this season"
             loading={loading}
-            animes={popularAnimes}
+            items={popularAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Top Rated Animes"
             loading={loading}
-            animes={scoredAnimes}
+            items={scoredAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Action Animes"
             loading={loading}
-            animes={actionAnimes}
+            items={actionAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Animes Movies"
             loading={loading}
-            animes={movieAnimes}
+            items={movieAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Animes in 12 episodes"
             loading={loading}
-            animes={episodesAnimes}
+            items={episodesAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime released in 2000"
             loading={loading}
-            animes={premieredAnimes}
+            items={premieredAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime that has finished airing"
             loading={loading}
-            animes={statusAnimes}
+            items={statusAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime produced by Shueisha"
             loading={loading}
-            animes={producerAnimes}
+            items={producerAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime distributed by AnimEigo"
             loading={loading}
-            animes={licensorAnimes}
+            items={licensorAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime dessinated by Madhouse"
             loading={loading}
-            animes={studioAnimes}
+            items={studioAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime that comes from a Manga"
             loading={loading}
-            animes={sourceAnimes}
+            items={sourceAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime with episodes of 27 minutes"
             loading={loading}
-            animes={durationAnimes}
+            items={durationAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="Anime prohibited for under 13s"
             loading={loading}
-            animes={ratingAnimes}
+            items={ratingAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
-          <AnimeGrid
+          <ItemGrid
             title="All Time Popular"
             loading={loading}
-            animes={allTimePopularAnimes}
+            items={allTimePopularAnimes}
+            getName={(anime) => anime.Name}
+            getImage={(anime) => anime.image_url}
           />
+
           <Link href="/animeCatalog">
             <Button
               className="mt-8 text-base font-medium text-black bg-white w-full"
@@ -306,249 +338,69 @@ export default function Home() {
         </>
       ) : (
         <>
-          <h3 className="mt-4 text-2xl font-bold">Best Ranked Mangas</h3>
-            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-              {loading ? (
-                new Array(6).fill(null).map((_, index) => (
-                  <div key={index} className="flex flex-col items-center">
-                    <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                  </div>
-                ))
-              ) : (
-                rankedMangas.map((manga) => (
-                  <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                    <Image 
-                      width={225} 
-                      alt={`Image of ${manga.title}`} 
-                      src={manga.main_picture.medium}
-                      fallbackSrc="https://via.placeholder.com/225x320"
-                    />
-                    <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                      <p className="text-tiny text-white/80">{manga.title}</p>
-                      <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                        EDIT
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))
-              )}
-            </div>
-            <h3 className="mt-14 text-2xl font-bold">Most Popular Mangas</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              popularMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">NSFW Mangas</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              nsfwMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Mangas that has finished airing</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              statusMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-          
-          <h3 className="mt-14 text-2xl font-bold">Mangas that has more than XXX volumes</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              volumesMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Mangas writed by FAUT QUE JE LE METTE</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              authorMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Mangas by mediatype qdhqsudhqi</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              mediaTypeMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Mangas that has started at XXX yearr</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              startDateMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Mangas that has XXX chapters</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              chaptersMangas.map((manga) => (
-                <Card key={manga.title} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image
-                    width={225}
-                    alt={`Image of ${manga.title}`}
-                    src={manga.main_picture.medium || "https://via.placeholder.com/225"}
-                  />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{manga.title}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
+          <ItemGrid
+            title="Best Ranked Mangas"
+            loading={loading}
+            items={rankedMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Most Popular Mangas"
+            loading={loading}
+            items={popularMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="NSFW Mangas"
+            loading={loading}
+            items={nsfwMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Mangas that has finished airing"
+            loading={loading}
+            items={statusMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Mangas that has more than XXX volumes"
+            loading={loading}
+            items={volumesMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Mangas writed by"
+            loading={loading}
+            items={authorMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Mangas by mediatype XXX"
+            loading={loading}
+            items={mediaTypeMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Mangas that has started in XXX year"
+            loading={loading}
+            items={startDateMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
+          <ItemGrid
+            title="Mangas that has XXX chapters"
+            loading={loading}
+            items={chaptersMangas}
+            getName={(manga) => manga.title}
+            getImage={(manga) => manga.main_picture.medium}
+          />
         </>
       )}
     </section>
