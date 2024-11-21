@@ -9,6 +9,7 @@ import { set } from "mongoose";
 import Link from 'next/link';
 import TrashIcon from "@/components/TrashIcon";
 import {Skeleton} from "@nextui-org/skeleton";
+import AnimeGrid from "@/components/AnimeGrid";
 
 // Définir une interface pour représenter un anime
 interface Anime {
@@ -229,355 +230,81 @@ export default function Home() {
 
       {selectedTab === "anime" ? (
         <>
-          <h3 className="mt-4 text-2xl font-bold">Trending Now</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              topAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardHeader className="absolute justify-end">
-                    {/* <Button isIconOnly color="danger" aria-label="Delete" onPress={}>
-                      <TrashIcon />
-                    </Button> */}
-                  </CardHeader>
-                  <CardFooter className="absolute bg-black/20 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
-                    <div className="flex flex-grow gap-2 items-center">
-                      <div className="flex flex-col">
-                        <p className="text-tiny text-white/60">{anime.Name}</p>
-                      </div>
-                    </div>
-                    {/* <Button radius="full" size="sm">EDIT</Button> */}
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Popular this season</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              popularAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="absolute bg-black/30 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 flex justify-center">
-                    <p className="text-small text-white/70">{anime.Name}</p>
-                    {/* <Button radius="full" size="sm">EDIT</Button> */}
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Top Rated Animes</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              scoredAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Action Animes</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              actionAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Animes Movies</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              movieAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Animes in 12 episodes</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              episodesAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime released in 2000</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              premieredAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime that has finished airing</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              statusAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime produced by Shueisha</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              producerAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime distributed by AnimEigo</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              licensorAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime dessinated by Madhouse</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              studioAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime that comes from a Manga</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              sourceAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime with episodes of 27 minutes</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              durationAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">Anime prohibited for under 13s</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(6).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              ratingAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h3 className="mt-14 text-2xl font-bold">All Time Popular</h3>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16">
-            {loading ? (
-              new Array(18).fill(null).map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Skeleton className="rounded-xl w-[225px] h-[320px]" />
-                </div>
-              ))
-            ) : (
-              allTimePopularAnimes.map((anime) => (
-                <Card key={anime.Name} isPressable isHoverable isBlurred isFooterBlurred radius="lg" className="border-none">
-                  <Image width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
-                  <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                    <p className="text-tiny text-white/80">{anime.Name}</p>
-                    <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                      EDIT
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
+          <AnimeGrid
+            title="Trending Now"
+            loading={loading}
+            animes={topAnimes}
+          />
+          <AnimeGrid
+            title="Popular this season"
+            loading={loading}
+            animes={popularAnimes}
+          />
+          <AnimeGrid
+            title="Top Rated Animes"
+            loading={loading}
+            animes={scoredAnimes}
+          />
+          <AnimeGrid
+            title="Action Animes"
+            loading={loading}
+            animes={actionAnimes}
+          />
+          <AnimeGrid
+            title="Animes Movies"
+            loading={loading}
+            animes={movieAnimes}
+          />
+          <AnimeGrid
+            title="Animes in 12 episodes"
+            loading={loading}
+            animes={episodesAnimes}
+          />
+          <AnimeGrid
+            title="Anime released in 2000"
+            loading={loading}
+            animes={premieredAnimes}
+          />
+          <AnimeGrid
+            title="Anime that has finished airing"
+            loading={loading}
+            animes={statusAnimes}
+          />
+          <AnimeGrid
+            title="Anime produced by Shueisha"
+            loading={loading}
+            animes={producerAnimes}
+          />
+          <AnimeGrid
+            title="Anime distributed by AnimEigo"
+            loading={loading}
+            animes={licensorAnimes}
+          />
+          <AnimeGrid
+            title="Anime dessinated by Madhouse"
+            loading={loading}
+            animes={studioAnimes}
+          />
+          <AnimeGrid
+            title="Anime that comes from a Manga"
+            loading={loading}
+            animes={sourceAnimes}
+          />
+          <AnimeGrid
+            title="Anime with episodes of 27 minutes"
+            loading={loading}
+            animes={durationAnimes}
+          />
+          <AnimeGrid
+            title="Anime prohibited for under 13s"
+            loading={loading}
+            animes={ratingAnimes}
+          />
+          <AnimeGrid
+            title="All Time Popular"
+            loading={loading}
+            animes={allTimePopularAnimes}
+          />
           <Link href="/animeCatalog">
             <Button
               className="mt-8 text-base font-medium text-black bg-white w-full"
