@@ -56,17 +56,6 @@ export default function Home() {
   // Fonction pour gérer le changement de tab
   const handleTabChange = (key: React.Key) => {
     const tabKey = key as string; // Convertir React.Key en string
-    switch (tabKey) {
-      case "anime":
-        console.log("Affichage des animes");
-        break;
-      case "mangas":
-        console.log("Affichage des mangas");
-        break;
-      default:
-        console.log("Onglet inconnu");
-    }
-    // Si vous voulez mettre à jour l'état pour un onglet sélectionné
     setSelectedTab(tabKey);
   };
 
@@ -154,7 +143,6 @@ export default function Home() {
 
     const fetchMangas = async () => {
       try {
-        console.log("test manga hihi")
         const [rankResponse, nsfwResponse, popularityResponse, startDateResponse, mediaTypeResponse, statusResponse, volumesResponse, authorResponse, chaptersResponse] = await Promise.all([
           fetch("http://localhost:3000/api/mangas/mangasByRank"),
           fetch("http://localhost:3000/api/mangas/mangasByNSFW"),

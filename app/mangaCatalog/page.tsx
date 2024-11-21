@@ -50,7 +50,6 @@ export default function MangaCatalogPage() {
   const fetchMangas = async (page: number, limit: number, title: string) => {
     try {
       setLoading(true);
-      console.log(`Fetching with title: ${title}`);
       const response = await fetch(`/api/mangas?page=${page}&limit=${limit}&title=${title}`);
 
       if (!response.ok) {
@@ -125,7 +124,6 @@ export default function MangaCatalogPage() {
   // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
   const handleSearch = (text: string) => {
     setSearchText(text);  // Met à jour l'état du texte de recherche
-    console.log(text);
   };
 
   return (

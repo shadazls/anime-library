@@ -5,18 +5,12 @@ const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Afficher tous les cookies dans la console
-    console.log("Cookies :", document.cookie);
-
     const token = document.cookie.split("; ").find((cookie) => cookie.startsWith("token="))?.split("=")[1];
     
     if (token) {
       try {
         // Décoder le token sans vérifier la signature pour inspecter son contenu
         const decodedToken: any = jwt.decode(token);
-
-        // Afficher le contenu du token dans la console
-        console.log(decodedToken);
 
         // Vérifier la validité du token
         jwt.verify(token, process.env.JWT_SECRET!);
