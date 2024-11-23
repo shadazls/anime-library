@@ -1,15 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
-import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import { Tabs, Tab } from "@nextui-org/tabs";
-import { set } from "mongoose";
 import Link from 'next/link';
-import TrashIcon from "@/components/TrashIcon";
-import {Skeleton} from "@nextui-org/skeleton";
-import AnimeGrid from "@/components/AnimeGrid";
 import ItemGrid from "@/components/ItemGrid";
 
 // Définir une interface pour représenter un anime
@@ -199,11 +193,6 @@ export default function Home() {
     fetchAnimes();
     fetchMangas();
 
-    // if (selectedTab === "anime") {
-    //   fetchAnimes();
-    // } else if (selectedTab === "manga") {
-    //   fetchMangas();
-    // }
   }, [selectedTab]);
 
   return (
@@ -324,7 +313,6 @@ export default function Home() {
             getName={(anime) => anime.Name}
             getImage={(anime) => anime.image_url}
           />
-
           <Link href="/animeCatalog">
             <Button
               className="mt-8 text-base font-medium text-black bg-white w-full"
@@ -401,6 +389,16 @@ export default function Home() {
             getName={(manga) => manga.title}
             getImage={(manga) => manga.main_picture.medium}
           />
+          <Link href="/mangaCatalog">
+            <Button
+              className="mt-8 text-base font-medium text-black bg-white w-full"
+              variant="flat"
+              radius="sm"
+              size="lg"
+            >
+              Show More
+            </Button>
+          </Link>
         </>
       )}
     </section>

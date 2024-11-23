@@ -146,13 +146,10 @@ export default function AnimeCatalogPage() {
       });
   
       if (response.ok) {
-        alert("Anime deleted successfully");
-        // Actualiser la liste des animés (ex. re-fetch les données ou filtrer localement)
         setAnimes((prevAnimes) => prevAnimes.filter((anime) => anime._id !== animeId));
       } else {
         const errorData = await response.json();
         console.error("Failed to delete anime:", errorData.message);
-        alert("Failed to delete anime");
       }
     } catch (error) {
       console.error("Error deleting anime:", error);
@@ -382,7 +379,7 @@ export default function AnimeCatalogPage() {
             <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
               <Image isZoomed width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardHeader className="absolute justify-end gap-2">
-                <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
+                <Button isIconOnly variant="faded" color="default" aria-label="Delete">
                   <EditIcon />
                 </Button>
                 <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
