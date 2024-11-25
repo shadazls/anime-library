@@ -9,7 +9,13 @@ export const GET = async () => {
     const producers = await Anime.aggregate([
       {
         $project: {
-          producersArray: { $split: ["$Producers", ", "] }
+          producersArray: {
+            $cond: {
+              if: { $isArray: "$Producers" }, // Si Producers est déjà un tableau
+              then: "$Producers",              // Utiliser directement le tableau
+              else: { $split: ["$Producers", ", "] } // Sinon, le transformer en tableau
+            }
+          }
         }
       },
       { $unwind: "$producersArray" },

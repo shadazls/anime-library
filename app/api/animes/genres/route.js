@@ -8,8 +8,19 @@ export const GET = async () => {
     // Récupérer tous les genres distincts
     const genres = await Anime.aggregate([
       {
+        $match: {
+          Genres: { $exists: true, $ne: null }
+        }
+      },
+      {
         $project: {
-          genresArray: { $split: ["$Genres", ", "] }
+          genresArray: {
+            $cond: {
+              if: { $isArray: "$Genres" },
+              then: "$Genres",
+              else: { $split: ["$Genres", ", "] }
+            }
+          }
         }
       },
       { $unwind: "$genresArray" },
