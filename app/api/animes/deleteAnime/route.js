@@ -3,6 +3,7 @@ import Anime from '../../../../models/anime';
 
 export const DELETE = async (req) => {
   try {
+    // Connecte à la base de données
     await connectDB();
 
     // Récupérer les paramètres de la requête

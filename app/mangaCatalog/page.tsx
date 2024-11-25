@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardBody, CardFooter } from "@nextui-org/card";
+import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import FilterOptions from "@/components/FilterOptions"; // Composant des filtres
@@ -16,9 +16,13 @@ import { Input } from "@nextui-org/input";
 import { useDisclosure } from "@nextui-org/react";
 import { Textarea } from "@nextui-org/input";
 import { Skeleton } from "@nextui-org/skeleton";
+import TrashIcon from "@/components/TrashIcon";
+import EditIcon from "@/components/EditIcon";
+import { ObjectId } from 'mongodb';
 
 // Définir une interface pour représenter un manga
 interface Manga {
+  _id: ObjectId;
   title: string;
   main_picture: {
     medium: string;
@@ -119,6 +123,24 @@ export default function MangaCatalogPage() {
         setItemsPerPage(18); // Valeur par défaut
     }
     setCurrentPage(1); // Réinitialise à la première page quand le nombre de mangas par page change
+  };
+
+  const handleDeleteManga = async (mangaId: ObjectId) => {
+    try {
+      const response = await fetch(`/api/mangas/deleteManga?id=${mangaId}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        setMangas((prevMangas) => prevMangas.filter((manga) => manga._id !== mangaId));
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to delete manga:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error deleting manga:", error);
+      alert("An error occurred while deleting the manga");
+    }
   };
 
   // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
@@ -341,17 +363,16 @@ export default function MangaCatalogPage() {
                   alt={`Image of ${manga.title}`}
                   src={manga.main_picture.medium || "https://via.placeholder.com/225"}
                 />
-                <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <p className="text-tiny text-white/80">{manga.title}</p>
-                  {/* <Button
-                    className="text-tiny text-white bg-black/20"
-                    variant="flat"
-                    color="default"
-                    radius="lg"
-                    size="sm"
-                  >
-                    EDIT
-                  </Button> */}
+                <CardHeader className="absolute justify-end gap-2">
+                  <Button isIconOnly variant="faded" color="default" aria-label="Edit">
+                    <EditIcon />
+                  </Button>
+                  <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteManga(manga._id)}>
+                    <TrashIcon />
+                  </Button>
+                </CardHeader>
+                <CardFooter className="absolute bg-black/30 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 flex justify-center">
+                  <p className="text-small text-white/70">{manga.title}</p>
                 </CardFooter>
               </Card>
             ))}

@@ -22,7 +22,7 @@ export const GET = async (request) => {
 
         // Récupère les mangas avec pagination
         const mangas = await Manga.find(filter)
-            .select('title main_picture.medium -_id') // Sélectionne les champs pertinents
+            .select('title main_picture.medium') // Sélectionne les champs pertinents
             .skip(skip)
             .limit(limit);
 

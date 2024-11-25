@@ -1,29 +1,30 @@
 import connectDB from '../../../../lib/db';
-import Anime from '../../../../models/anime';
+import Manga from '../../../../models/manga';
 
 export const DELETE = async (req) => {
   try {
+    // Connecte à la base de données
     await connectDB();
 
-    // Récupérer les paramètres de la requête
+    // Récupère l'ID du manga à supprimer depuis les paramètres de requête
     const url = new URL(req.url);
     const id = url.searchParams.get('id'); // Récupérer l'ID passé comme paramètre
 
     if (!id) {
-      return new Response('Anime ID is required', { status: 400 });
+      return new Response('Manga ID is required', { status: 400 });
     }
 
-    // Supprimer l'animé correspondant à l'ID
-    const deletedAnime = await Anime.findByIdAndDelete(id);
+    // Supprime le manga correspondant à l'ID
+    const deletedManga = await Manga.findByIdAndDelete(id);
 
-    if (!deletedAnime) {
-      return new Response('Anime not found', { status: 404 });
+    if (!deletedManga) {
+      return new Response('Manga not found', { status: 404 });
     }
 
-    return new Response('Anime deleted successfully', { status: 200 });
+    return new Response('Manga deleted successfully', { status: 200 });
   } catch (error) {
-    console.error(error);
-    return new Response('Failed to delete anime', {
+    console.error('Error deleting manga:', error);
+    return new Response('Failed to delete manga', {
       status: 500,
     });
   }

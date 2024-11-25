@@ -46,7 +46,7 @@ export default function AnimeCatalogPage() {
     Genres: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const [searchText, setSearchText] = useState<string>("");  // L'état du texte de recherche
+  const [searchText, setSearchText] = useState<string>("");  // L'état du texte de 
 
   // Fonction de récupération des animes avec pagination et recherche
   const fetchAnimes = async (page: number, limit: number, name: string) => {
@@ -165,7 +165,7 @@ export default function AnimeCatalogPage() {
       <FilterOptions onSearch={handleSearch}/>
       <div className="max-w-md"></div>
         <div className="flex h-10 space-x-4 justify-end">
-          <Button onPress={onOpen} color="primary">Add an anime</Button>
+          <Button onPress={onOpen} color="primary" aria-label="Add Anime">Add an anime</Button>
           <Modal 
             isOpen={isOpen} 
             onOpenChange={onOpenChange}
@@ -379,7 +379,7 @@ export default function AnimeCatalogPage() {
             <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
               <Image isZoomed width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardHeader className="absolute justify-end gap-2">
-                <Button isIconOnly variant="faded" color="default" aria-label="Delete">
+                <Button isIconOnly variant="faded" color="default" aria-label="Edit">
                   <EditIcon />
                 </Button>
                 <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
@@ -389,12 +389,6 @@ export default function AnimeCatalogPage() {
               <CardFooter className="absolute bg-black/30 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 flex justify-center">
                 <p className="text-small text-white/70">{anime.Name}</p>
               </CardFooter>
-              {/* <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">{anime.Name}</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                  EDIT
-                </Button>
-              </CardFooter> */}
             </Card>
           ))
         )}
