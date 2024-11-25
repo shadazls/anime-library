@@ -26,8 +26,39 @@ export const PUT = async (req) => {
       return new Response('Anime not found', { status: 404 });
     }
 
-    return new Response(JSON.stringify(updatedAnime), {
+    // Structurer le retour pour inclure seulement les champs nécessaires
+    const responseAnime = {
+      id: updatedAnime._id,
+      anime_id: updatedAnime.anime_id,
+      Name: updatedAnime.Name,
+      english_name: updatedAnime.english_name,
+      other_name: updatedAnime.other_name,
+      Score: updatedAnime.Score,
+      Genres: updatedAnime.Genres,
+      Synopsis: updatedAnime.Synopsis,
+      Type: updatedAnime.Type,
+      Episodes: updatedAnime.Episodes,
+      Aired: updatedAnime.Aired,
+      Premiered: updatedAnime.Premiered,
+      Status: updatedAnime.Status,
+      Producers: updatedAnime.Producers,
+      Licensors: updatedAnime.Licensors,
+      Studios: updatedAnime.Studios,
+      Source: updatedAnime.Source,
+      Duration: updatedAnime.Duration,
+      Rating: updatedAnime.Rating,
+      Rank: updatedAnime.Rank,
+      Popularity: updatedAnime.Popularity,
+      Favorites: updatedAnime.Favorites,
+      scored_by: updatedAnime.scored_by,
+      Members: updatedAnime.Members,
+      image_url: updatedAnime.image_url,
+    };
+    
+
+    return new Response(JSON.stringify({ anime: responseAnime }), {
       status: 200,
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error(error);
