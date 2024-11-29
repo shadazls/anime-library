@@ -1,12 +1,14 @@
 import React from "react";
 import { Card, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
 import { Image } from "@nextui-org/image";
+import { ObjectId } from "mongoose";
 
 interface Item {
   [key: string]: any; // Rendre les champs flexibles pour différents types d'éléments (animes, mangas, etc.)
 }
 
 interface ItemGridProps {
+  getId: (item: Item) => ObjectId; // Fonction pour récupérer l'ID de l'élément
   title?: string; // Titre optionnel
   loading: boolean;
   items: Item[]; // Liste d'éléments (animes ou mangas)

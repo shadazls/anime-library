@@ -5,15 +5,19 @@ import { Button } from "@nextui-org/button";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import Link from 'next/link';
 import ItemGrid from "@/components/ItemGrid";
+import { title } from "process";
+import { ObjectId } from "mongoose";
 
 // Définir une interface pour représenter un anime
 interface Anime {
+  _id: ObjectId;
   Name: string;
   image_url: string;
 }
 
 // Définir une interface pour représenter un manga
 interface Manga {
+  _id: ObjectId;
   title: string;
   main_picture: {
     medium: string;
@@ -195,6 +199,36 @@ export default function Home() {
 
   }, [selectedTab]);
 
+  const animeCategories = [
+    { title: "Trending Now", items: topAnimes },
+    { title: "Popular this season", items: popularAnimes },
+    { title: "Top Rated Animes", items: scoredAnimes },
+    { title: "Action Animes", items: actionAnimes },
+    { title: "Animes Movies", items: movieAnimes },
+    { title: "Animes in 12 episodes", items: episodesAnimes },
+    { title: "Anime released in 2000", items: premieredAnimes },
+    { title: "Anime that has finished airing", items: statusAnimes },
+    { title: "Anime produced by Shueisha", items: producerAnimes },
+    { title: "Anime distributed by AnimEigo", items: licensorAnimes },
+    { title: "Anime dessinated by Madhouse", items: studioAnimes },
+    { title: "Anime that comes from a Manga", items: sourceAnimes },
+    { title: "Anime with episodes of 27 minutes", items: durationAnimes },
+    { title: "Anime prohibited for under 13s", items: ratingAnimes },
+    { title: "All Time Popular", items: allTimePopularAnimes }
+  ];
+
+  const mangaCategories = [
+    { title: "Best Ranked Mangas", items: rankedMangas },
+    { title: "Most Popular Mangas", items: popularMangas },
+    { title: "NSFW Mangas", items: nsfwMangas },
+    { title : "Mangas that has finished airing", items: statusMangas },
+    { title : "Mangas that has more than XXX volumes", items: volumesMangas },
+    { title : "Mangas writed by", items: authorMangas },
+    { title : "Mangas by mediatype XXX", items: mediaTypeMangas },
+    { title : "Mangas that has started in XXX year", items: startDateMangas },
+    { title : "Mangas that has XXX chapters", items: chaptersMangas }
+  ];
+
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
 
@@ -208,111 +242,17 @@ export default function Home() {
 
       {selectedTab === "anime" ? (
         <>
+        {animeCategories.map((category, index) => (
           <ItemGrid
-            title="Trending Now"
+            key={index}
+            getId={(anime) => anime._id}
+            title={category.title}
             loading={loading}
-            items={topAnimes}
+            items={category.items}
             getName={(anime) => anime.Name}
             getImage={(anime) => anime.image_url}
           />
-          <ItemGrid
-            title="Popular this season"
-            loading={loading}
-            items={popularAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Top Rated Animes"
-            loading={loading}
-            items={scoredAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Action Animes"
-            loading={loading}
-            items={actionAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Animes Movies"
-            loading={loading}
-            items={movieAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Animes in 12 episodes"
-            loading={loading}
-            items={episodesAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime released in 2000"
-            loading={loading}
-            items={premieredAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime that has finished airing"
-            loading={loading}
-            items={statusAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime produced by Shueisha"
-            loading={loading}
-            items={producerAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime distributed by AnimEigo"
-            loading={loading}
-            items={licensorAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime dessinated by Madhouse"
-            loading={loading}
-            items={studioAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime that comes from a Manga"
-            loading={loading}
-            items={sourceAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime with episodes of 27 minutes"
-            loading={loading}
-            items={durationAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="Anime prohibited for under 13s"
-            loading={loading}
-            items={ratingAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
-          <ItemGrid
-            title="All Time Popular"
-            loading={loading}
-            items={allTimePopularAnimes}
-            getName={(anime) => anime.Name}
-            getImage={(anime) => anime.image_url}
-          />
+        ))}
           <Link href="/animeCatalog">
             <Button
               className="mt-8 text-base font-medium text-black bg-white w-full"
