@@ -21,7 +21,6 @@ export const POST = async (req: Request) => {
     if (!isPasswordValid) {
       return new Response("Invalid credentials", { status: 400 });
     }
-
     // Générer un token JWT
     const token = jwt.sign(
       { userId: user._id, email: user.email },

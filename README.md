@@ -1,10 +1,22 @@
-# Next.js & NextUI Template
+# Kurosaw - Anime Streaming App
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+Kurosaw est une application web qui permet de regarder des animes et lire des mangas sans publicités, avec une interface utilisateur soignée et gratuite.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+[Accéder à l'application](https://githubbox.com/nextui-org/next-app-template)
 
-## Technologies Used
+---
+
+## Fonctionnalités
+
+- Regarder des animes sans publicité.
+- Lire des mangas en ligne.
+- Interface utilisateur moderne et intuitive.
+- Mode clair/sombre.
+- Recherche et tri rapides des contenus.
+
+---
+
+## Technologies Utilisées
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)
@@ -14,40 +26,32 @@ This is a template for creating applications using Next.js 14 (app directory) an
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
 
-## How to Use
+---
 
-### Use the template with create-next-app
+## Installation et Utilisation
 
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
-
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+### 1. Cloner le projet
 
 ```bash
-npm install
+git clone https://github.com/votre-repo/kurosaw.git
+cd kurosaw
 ```
 
-### Run the development server
+## To-Do List
 
-```bash
-npm run dev
-```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+- [x] Mise en place du projet avec Next.js
+- [x] Implémentation de la base de données et des schémas de données
+- [x] Développement de la page d'accueil (Front-End)
+- [x] Développement de la page d'accueil (Back-End)
+- [x] Développement de la page de catalogue d'animés (Front-End)
+- [ ] Développement de la page de catalogue d'animés (Back-End) -- EN COURS, A DETAILLER
+- [x] Développement de la page de catalogue de mangas (Front-End)
+- [ ] Développement de la page de catalogue de mangas (Back-End) -- EN COURS, A DETAILLER
+- [ ] Développement de la page de détails d'animés (Front-End)
+- [ ] Développement de la page de détails d'animés (Back-End)
+- [ ] Développement de la page de détails de mangas (Front-End)
+- [ ] Développement de la page de détails de mangas (Back-End)
+- [ ] Développement d'un système d'authentification (Inscription, Connexion, Déconnexion, Session) (Front-End)
+- [ ] Développement d'un système d'authentification (Inscription, Connexion, Déconnexion, Session) (Back-End)
+- [ ] Corrections des problèmes d'UI (Image non chargées)
+- [ ] Amélioration de la qualité du code
