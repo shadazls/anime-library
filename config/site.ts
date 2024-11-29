@@ -1,24 +1,24 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Kurosaw",
+  description: "Kurosaw is a web application that allows you to search for animes and get information about them.",
   navItems: [
     {
       label: "Home",
       href: "/",
     },
     {
-      label: "Docs",
-      href: "/docs",
+      label: "Anime",
+      href: "/animeCatalog",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "Manga",
+      href: "/mangaCatalog",
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: "Collections",
+      href: "/collections",
     },
     {
       label: "About",
@@ -60,10 +60,6 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
+    github: "https://github.com/shadazls",
   },
 };

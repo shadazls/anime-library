@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -25,39 +27,38 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
+import useAuth from "../lib/useAuth"; // Importer le hook d'authentification
 
 export const Navbar = () => {
+  const isAuthenticated = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
   const searchInput = (
     <Input
       aria-label="Search"
       classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
+        inputWrapper: "bg-white/15 border-white border",
+        input: [
+          "text-sm text-white",
+          "placeholder:text-white",
+        ],
       }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
       labelPlacement="outside"
       placeholder="Search..."
       startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+        <SearchIcon className="text-base text-white pointer-events-none flex-shrink-0" />
       }
       type="search"
     />
   );
 
   return (
-    <NextUINavbar maxWidth="xl" position="sticky">
+    <NextUINavbar maxWidth="xl" position="sticky" className="bg-transparent" isBordered>
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-AmrysSemibold text-3xl">Kurosaw</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+        <ul className="hidden lg:flex gap-4 justify-start ml-4">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
@@ -80,30 +81,38 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal aria-label="Twitter" href={siteConfig.links.twitter}>
-            <TwitterIcon className="text-default-500" />
-          </Link>
-          <Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
-            <DiscordIcon className="text-default-500" />
-          </Link>
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <Button
-            isExternal
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={<HeartFilledIcon className="text-danger" />}
-            variant="flat"
-          >
-            Sponsor
-          </Button>
-        </NavbarItem>
+        {!isAuthenticated ? (
+          <NavbarItem className="hidden md:flex gap-4">
+            <Button
+              className="text-sm font-medium text-white bg-default-100"
+              variant="flat"
+              radius="sm"
+              as={NextLink}
+              href="/login"
+            >
+              Log In
+            </Button>
+            <Button
+              className="text-sm font-medium text-black bg-white"
+              variant="flat"
+              radius="sm"
+              as={NextLink}
+              href="/register"
+            >
+              Get Started
+            </Button>
+          </NavbarItem>
+        ) : (
+          <NavbarItem className="hidden md:flex gap-4">
+            <p className="text-white">Connecté</p>
+          </NavbarItem>
+        )}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
