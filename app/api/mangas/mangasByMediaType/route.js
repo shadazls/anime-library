@@ -9,7 +9,7 @@ export const GET = async () => {
     const mangasByMediaType = await Manga.find({
       media_type: 'light_novel', // Filtrer par media_type
     })
-      .select('title media_type main_picture.medium -_id') // Sélectionner les champs pertinents
+      .select('title media_type main_picture.medium') // Sélectionner les champs pertinents
       .sort({ title: 1 }) // Trier par titre par ordre alphabétique (ou autre critère)
       .limit(6); // Limiter à 6 résultats
       

@@ -9,7 +9,7 @@ export const GET = async () => {
     const mangasByNumVolumes = await Manga.find({
       num_volumes: { $gt: 50 }, // Filtrer les mangas avec plus de 50 volumes
     })
-      .select('title num_volumes main_picture.medium -_id') // Sélectionner les champs pertinents
+      .select('title num_volumes main_picture.medium') // Sélectionner les champs pertinents
       .sort({ num_volumes: 1 }) // Trier par nombre de volumes (ordre croissant)
       .limit(6); // Limiter à 6 résultats
 

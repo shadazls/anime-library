@@ -222,11 +222,11 @@ export default function Home() {
     { title: "Most Popular Mangas", items: popularMangas },
     { title: "NSFW Mangas", items: nsfwMangas },
     { title : "Mangas that has finished airing", items: statusMangas },
-    { title : "Mangas that has more than XXX volumes", items: volumesMangas },
-    { title : "Mangas writed by", items: authorMangas },
-    { title : "Mangas by mediatype XXX", items: mediaTypeMangas },
-    { title : "Mangas that has started in XXX year", items: startDateMangas },
-    { title : "Mangas that has XXX chapters", items: chaptersMangas }
+    { title : "Mangas that has more than 50 volumes", items: volumesMangas },
+    { title : "Mangas writed by Shunsaku Tomose", items: authorMangas },
+    { title : "Mangas that comes from light novel", items: mediaTypeMangas },
+    { title : "Mangas that has started in 1989", items: startDateMangas },
+    { title : "Mangas that has more than 500 chapters", items: chaptersMangas }
   ];
 
   return (
@@ -266,69 +266,17 @@ export default function Home() {
         </>
       ) : (
         <>
-          <ItemGrid
-            title="Best Ranked Mangas"
-            loading={loading}
-            items={rankedMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Most Popular Mangas"
-            loading={loading}
-            items={popularMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="NSFW Mangas"
-            loading={loading}
-            items={nsfwMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Mangas that has finished airing"
-            loading={loading}
-            items={statusMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Mangas that has more than XXX volumes"
-            loading={loading}
-            items={volumesMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Mangas writed by"
-            loading={loading}
-            items={authorMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Mangas by mediatype XXX"
-            loading={loading}
-            items={mediaTypeMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Mangas that has started in XXX year"
-            loading={loading}
-            items={startDateMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
-          <ItemGrid
-            title="Mangas that has XXX chapters"
-            loading={loading}
-            items={chaptersMangas}
-            getName={(manga) => manga.title}
-            getImage={(manga) => manga.main_picture.medium}
-          />
+          {mangaCategories.map((category, index) => (
+            <ItemGrid
+              key={index}
+              getId={(manga) => manga._id}
+              title={category.title}
+              loading={loading}
+              items={category.items}
+              getName={(manga) => manga.title}
+              getImage={(manga) => manga.main_picture.medium}
+            />
+          ))}
           <Link href="/mangaCatalog">
             <Button
               className="mt-8 text-base font-medium text-black bg-white w-full"
