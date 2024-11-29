@@ -55,3 +55,4 @@ cd kurosaw
 - [ ] Développement d'un système d'authentification (Inscription, Connexion, Déconnexion, Session) (Back-End)
 - [ ] Corrections des problèmes d'UI (Image non chargées)
 - [ ] Amélioration de la qualité du code
+- [ ] Implémentation de l'internationalisation sur toutes les pages
