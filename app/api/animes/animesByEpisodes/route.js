@@ -20,7 +20,7 @@ export const GET = async (req) => {
         { Episodes: episodes },           // Compare à la valeur recherchée
       ],
     })
-      .select('Name image_url Episodes -_id')
+      .select('Name image_url Episodes')
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByEpisodes }), {

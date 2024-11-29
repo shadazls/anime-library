@@ -17,7 +17,7 @@ export const GET = async (req) => {
     // Rechercher les animés dont l'année correspond dans le champ Premiered
     const regex = new RegExp(`\\b${year}\\b`, 'i'); // Regex pour correspondre uniquement à l'année
     const animesByYear = await Anime.find({ Premiered: { $regex: regex } })
-      .select('Name image_url Premiered -_id') // Sélectionner uniquement les champs pertinents
+      .select('Name image_url Premiered') // Sélectionner uniquement les champs pertinents
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByYear }), {

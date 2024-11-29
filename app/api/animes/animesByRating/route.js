@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés avec la classification d'âge spécifiée
     const animesByRating = await Anime.find({ Rating: new RegExp(rating, 'i') })
-      .select('Name image_url Rating -_id')
+      .select('Name image_url Rating')
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByRating }), {

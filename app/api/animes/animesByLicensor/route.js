@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés contenant le distributeur dans la liste des distributeurs
     const animesByLicensor = await Anime.find({ Licensors: new RegExp(licensor, 'i') })
-      .select('Name image_url Licensors -_id') // Sélectionner uniquement les champs nécessaires
+      .select('Name image_url Licensors') // Sélectionner uniquement les champs nécessaires
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByLicensor }), {

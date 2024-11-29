@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés contenant le studio dans la liste des studios
     const animesByStudio = await Anime.find({ Studios: new RegExp(studio, 'i') })
-      .select('Name image_url Studios -_id') // Sélectionner uniquement les champs nécessaires
+      .select('Name image_url Studios') // Sélectionner uniquement les champs nécessaires
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByStudio }), {

@@ -6,7 +6,7 @@ export const GET = async () => {
         await connectDB();
 
         const animesByScore = await Anime.find({ Score: { $type: "number" } }) // Ne garder que les scores numériques (enlever les champs "UNKNOWN")
-            .select('Name Score image_url -_id')
+            .select('Name Score image_url')
             .sort({ Score: -1 })
             .limit(6);
 

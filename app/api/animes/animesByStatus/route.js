@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés avec le statut correspondant
     const animesByStatus = await Anime.find({ Status: status })
-      .select('Name image_url Status -_id') // Sélectionner uniquement les champs nécessaires
+      .select('Name image_url Status') // Sélectionner uniquement les champs nécessaires
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByStatus }), {

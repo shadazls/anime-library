@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés avec la durée spécifiée
     const animesByDuration = await Anime.find({ Duration: duration })
-      .select('Name image_url Duration -_id')
+      .select('Name image_url Duration')
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByDuration }), {
