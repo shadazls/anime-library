@@ -27,10 +27,11 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
-import useAuth from "../lib/useAuth"; // Importer le hook d'authentification
+import { useAuth } from "../lib/useAuth"; // Importer le hook d'authentification
 
 export const Navbar = () => {
-  const isAuthenticated = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
+  const { isAuthenticated, user } = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -110,7 +111,8 @@ export const Navbar = () => {
           </NavbarItem>
         ) : (
           <NavbarItem className="hidden md:flex gap-4">
-            <p className="text-white">Connecté</p>
+            <p className="text-white">{user?.name}</p>
+            {/* {user?.name} */}
           </NavbarItem>
         )}
       </NavbarContent>

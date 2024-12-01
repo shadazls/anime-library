@@ -7,7 +7,9 @@ import { Link } from "@nextui-org/link";
 import { Card, CardBody } from "@nextui-org/card";
 import { EyeFilledIcon } from "@/components/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/EyeSlashFilledIcon";
+import EyeRegularIcon from "@/components/EyeRegularIcon";
 import { useRouter } from "next/navigation"; // Pour redirection
+import EyeSlashRegularIcon from "@/components/EyeSlashRegularIcon";
 
 export default function LoginPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -53,14 +55,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-1/4">
-      <Card className="bg-test w-full p-6 border border-stone-800">
+    <section className="flex justify-center items-center absolute inset-0">
+      <Card className="bg-test w-1/4 p-6 border border-stone-800">
         <CardBody className="flex flex-col items-center gap-6">
           <h1 className="text-3xl font-semibold">Log In</h1>
           {errorMessage && (
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} className="flex flex-col gap-4">
             <Input
               type="text"
               label="Email/Username"
@@ -89,9 +91,9 @@ export default function LoginPage() {
                   aria-label="toggle password visibility"
                 >
                   {isVisible ? (
-                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                    <EyeSlashRegularIcon className="text-2xl text-default-400 pointer-events-none" />
                   ) : (
-                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                    <EyeRegularIcon className="text-2xl text-default-400 pointer-events-none" />
                   )}
                 </button>
               }
@@ -106,8 +108,9 @@ export default function LoginPage() {
               Log In
             </Button>
           </form>
+          <p>Don't have an account? <Link href="/register" color="success">Sign Up</Link></p>
         </CardBody>
       </Card>
-    </div>
+    </section>
   );
 }
