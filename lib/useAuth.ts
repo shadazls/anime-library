@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 
 export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("/api/me", {
+        const res = await fetch("/api/auth/me", {
           headers: {
             Authorization: `Bearer ${document.cookie
               .split("; ")
