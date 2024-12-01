@@ -10,7 +10,7 @@ export const GET = async () => {
       {
         $group: { _id: "$Type" } // Regroupe par type d'anime
       },
-      { $sort: { _id: 1 } } // Trie les types par ordre alphabétique
+      { $sort: { _id: 1}}
     ]);
 
     return new Response(JSON.stringify(types), {

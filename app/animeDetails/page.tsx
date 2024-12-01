@@ -21,6 +21,7 @@ import { ObjectId } from 'mongodb';
 import { Skeleton } from "@nextui-org/skeleton";
 import EditIcon from "@/components/EditIcon";
 
+
 // Définir une interface pour représenter un anime
 interface Anime {
   _id: ObjectId;
@@ -156,6 +157,7 @@ export default function AnimeDetailsPage() {
       alert("An error occurred while deleting the anime");
     }
   };
+
 
   return (
     <section className="flex flex-col gap-4 py-8 md:py-10 mx-24">
