@@ -8,6 +8,8 @@ import { Card, CardBody } from "@nextui-org/card";
 import { EyeFilledIcon } from "@/components/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/EyeSlashFilledIcon";
 import { useRouter } from "next/navigation"; // Pour redirection
+import EyeRegularIcon from "@/components/EyeRegularIcon";
+import EyeSlashRegularIcon from "@/components/EyeSlashRegularIcon";
 
 export default function RegisterPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -24,7 +26,8 @@ export default function RegisterPage() {
     document.body.style.background = "#080808";
   }, []);
 
-  const handleRegister = async () => {
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault(); // Empêche le rechargement de la page
     try {
       // Réinitialiser le message d'erreur
       setErrorMessage("");
@@ -51,70 +54,73 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-1/4">
-      <Card className="bg-test w-full p-6 border border-stone-800">
+    <section className="flex justify-center items-center absolute inset-0">
+      <Card className="bg-test w-1/4 p-6 border border-stone-800">
         <CardBody className="flex flex-col items-center gap-6">
           <h1 className="text-3xl font-semibold">Create An Account</h1>
           {errorMessage && (
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
-          <Input
-            type="email"
-            label="Email"
-            labelPlacement="outside"
-            variant="bordered"
-            description="Enter your email address"
-            placeholder="your.email@address.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="max-w-xs"
-          />
-          <Input
-            type="text"
-            label="Username"
-            labelPlacement="outside"
-            variant="bordered"
-            description="Enter your username"
-            placeholder="YourUsername"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="max-w-xs"
-          />
-          <Input
-            type={isVisible ? "text" : "password"}
-            label="Password"
-            labelPlacement="outside"
-            variant="bordered"
-            description="Enter your password"
-            placeholder="Choose your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            endContent={
-              <button
-                className="focus:outline-none"
-                type="button"
-                onClick={toggleVisibility}
-                aria-label="toggle password visibility"
-              >
-                {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
-            }
-            className="max-w-xs"
-          />
-          <Button
-            className="text-sm font-medium text-black bg-white"
-            variant="flat"
-            radius="sm"
-            onClick={handleRegister}
-          >
-            Sign Up
-          </Button>
+          <form onSubmit={handleRegister} className="flex flex-col gap-4">
+            <Input
+              type="email"
+              label="Email"
+              labelPlacement="outside"
+              variant="bordered"
+              description="Enter your email address"
+              placeholder="your.email@address.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="max-w-xs"
+            />
+            <Input
+              type="text"
+              label="Username"
+              labelPlacement="outside"
+              variant="bordered"
+              description="Enter your username"
+              placeholder="YourUsername"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="max-w-xs"
+            />
+            <Input
+              type={isVisible ? "text" : "password"}
+              label="Password"
+              labelPlacement="outside"
+              variant="bordered"
+              description="Enter your password"
+              placeholder="Choose your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              endContent={
+                <button
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={toggleVisibility}
+                  aria-label="toggle password visibility"
+                >
+                  {isVisible ? (
+                    <EyeSlashRegularIcon className="text-2xl text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeRegularIcon className="text-2xl text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+              className="max-w-xs"
+            />
+            <Button
+              type="submit"
+              className="text-sm font-medium text-black bg-white"
+              variant="flat"
+              radius="sm"
+            >
+              Sign Up
+            </Button>
+          </form>
+          <p>Already have an account? <Link href="/login" color="success">Log In</Link></p>
         </CardBody>
       </Card>
-    </div>
+    </section>
   );
 }
