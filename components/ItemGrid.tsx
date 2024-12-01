@@ -1,12 +1,15 @@
 import React from "react";
 import { Card, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
 import { Image } from "@nextui-org/image";
+import { ObjectId } from "mongoose";
+import { useRouter } from "next/navigation";
 
 interface Item {
   [key: string]: any; // Rendre les champs flexibles pour différents types d'éléments (animes, mangas, etc.)
 }
 
 interface ItemGridProps {
+  getId: (item: Item) => ObjectId; // Fonction pour récupérer l'ID de l'élément
   title?: string; // Titre optionnel
   loading: boolean;
   items: Item[]; // Liste d'éléments (animes ou mangas)
@@ -14,7 +17,15 @@ interface ItemGridProps {
   getImage: (item: Item) => string; // Fonction pour récupérer l'URL de l'image
 }
 
-const ItemGrid: React.FC<ItemGridProps> = ({ title, loading, items, getName, getImage }) => {
+const ItemGrid: React.FC<ItemGridProps> = ({ title, loading, items, getName, getImage, getId }) => {
+  const router = useRouter();
+
+  const handleItemClick = (id: ObjectId) => {
+    if (router) {
+      router.push(`/anime/${id}`);
+    }
+  };
+
   return (
     <div>
       {title && <h3 className="mt-4 text-2xl font-bold">{title}</h3>}
@@ -34,6 +45,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({ title, loading, items, getName, get
               isFooterBlurred
               radius="lg"
               className="border-none"
+              onClick={() => handleItemClick(getId(item))}
             >
               <Image
                 width={225}

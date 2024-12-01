@@ -15,7 +15,7 @@ export const GET = async (req) => {
     }
 
     const animesByType = await Anime.find({ Type: type })
-      .select('Name image_url Type -_id')
+      .select('Name image_url Type')
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByType }), {

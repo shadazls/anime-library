@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés contenant le producteur dans la liste des producteurs
     const animesByProducer = await Anime.find({ Producers: new RegExp(producer, 'i') })
-      .select('Name image_url Producers -_id') // Sélectionner uniquement les champs nécessaires
+      .select('Name image_url Producers') // Sélectionner uniquement les champs nécessaires
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByProducer }), {

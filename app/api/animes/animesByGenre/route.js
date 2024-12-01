@@ -15,7 +15,7 @@ export const GET = async (req) => {
     }
 
     const animesByGenre = await Anime.find({ Genres: genre })
-      .select('Name image_url Genres -_id')
+      .select('Name image_url Genres')
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesByGenre }), {

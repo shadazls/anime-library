@@ -16,7 +16,7 @@ export const GET = async (req) => {
 
     // Rechercher les animés ayant la source spécifiée
     const animesBySource = await Anime.find({ Source: new RegExp(source, 'i') })
-      .select('Name image_url Source -_id')
+      .select('Name image_url Source')
       .limit(limit);
 
     return new Response(JSON.stringify({ animes: animesBySource }), {

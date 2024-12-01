@@ -56,3 +56,4 @@ cd kurosaw
 - [ ] Corrections des problèmes d'UI (Image non chargées)
 - [ ] Amélioration de la qualité du code
 - [ ] Implémentation de l'internationalisation sur toutes les pages
+- [ ] Améliorer le système de loading de la page d'accueil
