@@ -31,6 +31,7 @@ interface Anime {
   Favorites: number;
   Members: number;
   image_url: string;
+  trailer_url?: string;
 }
 
 interface AnimeDetailParams {
@@ -64,7 +65,15 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
   const handleTrailerClick = async () => {
     if (!anime) return;
 
+    // Si `trailer_url` existe déjà, utilise-le directement
+    if (anime.trailer_url) {
+      setTrailerUrl(anime.trailer_url);
+      onOpen();
+      return;
+    }
+
     try {
+      // Requête à AniList pour récupérer le trailer
       const query = `
         query ($search: String) {
           Media(search: $search, type: ANIME) {
@@ -88,11 +97,21 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
       const { data } = await response.json();
 
       if (data?.Media?.trailer?.site === "youtube") {
-        const trailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
-        setTrailerUrl(trailerUrl);
+        const fetchedTrailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
+
+        // Mets à jour le trailer dans la base de données
+        await fetch(`/api/animes/editAnime?id=${anime._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ trailer_url: fetchedTrailerUrl }),
+        });
+
+        // Mets à jour localement
+        setAnime((prev) => (prev ? { ...prev, trailer_url: fetchedTrailerUrl } : prev));
+        setTrailerUrl(fetchedTrailerUrl);
         onOpen();
-        // setShowModal(true);
-        // window.open(trailerUrl, "_blank"); // Ouvre le trailer dans un nouvel onglet
       } else {
         alert("Trailer not available");
       }
@@ -100,6 +119,44 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
       console.error("Failed to fetch trailer:", error);
     }
   };
+
+  // const handleTrailerClick = async () => {
+  //   if (!anime) return;
+
+  //   try {
+  //     const query = `
+  //       query ($search: String) {
+  //         Media(search: $search, type: ANIME) {
+  //           trailer {
+  //             id
+  //             site
+  //           }
+  //         }
+  //       }
+  //     `;
+  //     const variables = { search: anime.Name };
+
+  //     const response = await fetch("https://graphql.anilist.co", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ query, variables }),
+  //     });
+
+  //     const { data } = await response.json();
+
+  //     if (data?.Media?.trailer?.site === "youtube") {
+  //       const trailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
+  //       setTrailerUrl(trailerUrl);
+  //       onOpen();
+  //     } else {
+  //       alert("Trailer not available");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to fetch trailer:", error);
+  //   }
+  // };
 
   return (
     <section className="p-4 mx-24">

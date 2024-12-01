@@ -53,6 +53,7 @@ export const PUT = async (req) => {
       scored_by: updatedAnime.scored_by,
       Members: updatedAnime.Members,
       image_url: updatedAnime.image_url,
+      trailer_url: updatedAnime.trailer_url,
     };
     
 

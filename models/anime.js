@@ -25,6 +25,7 @@ const animeSchema = new mongoose.Schema({
     scored_by: { type: Number },
     Members: { type: Number },
     image_url: { type: String },
+    trailer_url: { type: String },
 });
 
 const Anime = mongoose.models.Anime || mongoose.model('Anime', animeSchema, 'animeCollection');
