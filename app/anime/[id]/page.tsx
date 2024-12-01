@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { ObjectId } from "mongoose";
 import { Image } from "@nextui-org/image";
-import { StarIcon } from "@/components/StarIcon";
+import StarIcon from "@/components/StarIcon";
 import { Button } from "@nextui-org/button";
 import PlayIcon from "@/components/PlayIcon";
 import { EyeFilledIcon } from "@/components/EyeFilledIcon";
 import BookmarkIcon from "@/components/BookmarkIcon";
 import CheckIcon from "@/components/CheckIcon";
 import EyeRegularIcon from "@/components/EyeRegularIcon";
+import { Tabs, Tab } from "@nextui-org/tabs";
 
 
 interface Anime {
@@ -63,7 +64,9 @@ const AnimeDetailsPage = ({ params }: AnimeDetailProps) => {
         const response = await fetch(`/api/animes/anime?id=${id}`);
         if (!response.ok) throw new Error("Failed to fetch anime details");
         const data = await response.json();
+        console.log("data: ", data);
         setAnime(data);
+        console.log("anime: ", anime);
       } catch (error) {
         console.error(error);
       } finally {
@@ -72,6 +75,43 @@ const AnimeDetailsPage = ({ params }: AnimeDetailProps) => {
     };
     fetchAnimeDetails();
   }, [id]);
+
+  const fetchTrailer = async () => {
+    if (!anime) return;
+
+    try {
+      const query = `
+        query ($search: String) {
+          Media(search: $search, type: ANIME) {
+            trailer {
+              id
+              site
+            }
+          }
+        }
+      `;
+      const variables = { search: anime.Name };
+
+      const response = await fetch("https://graphql.anilist.co", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query, variables }),
+      });
+
+      const { data } = await response.json();
+
+      if (data?.Media?.trailer?.site === "youtube") {
+        const trailerUrl = `https://www.youtube.com/watch?v=${data.Media.trailer.id}`;
+        window.open(trailerUrl, "_blank"); // Ouvre le trailer dans un nouvel onglet
+      } else {
+        alert("Trailer not available");
+      }
+    } catch (error) {
+      console.error("Failed to fetch trailer:", error);
+    }
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -83,94 +123,187 @@ const AnimeDetailsPage = ({ params }: AnimeDetailProps) => {
 
   return (
     <section className="flex flex-col justify-center gap-8 py-8 md:py-12 mx-24">
-      <div className="flex justify-start gap-4">
-        {/* Image de l'animé */}
-        <Image
-          className="mr-24"
-          alt={`Image of ${anime.Name}`}
-          src={(anime.image_url) || "https://via.placeholder.com/225"}
-          isZoomed
-        />
+      <div className="flex flex-col">
 
-        <div className="flex flex-col gap-4 w-full">
-          <Button
-                className="text-sm font-medium text-black bg-white self-end"
-                variant="flat"
-                radius="sm"
-                startContent={<PlayIcon/>}
-              >
-            Watch trailer
-          </Button>
-          <h1 className="text-4xl font-bold text-white">{anime.Name}</h1>
-          <p className="text-lg font-medium text-gray-400 mt-2">⭐⭐⭐⭐⭐ {anime.Score}</p>
-          <div className="flex gap-4">
+        <div className="flex justify-start gap-4">
+          {/* Image de l'animé */}
+          <Image
+            className="mr-24"
+            alt={`Image of ${anime.Name}`}
+            src={(anime.image_url) || "https://via.placeholder.com/225"}
+            isZoomed
+          />
+
+          <div className="flex flex-col gap-4 w-full">
             <Button
-                className="text-sm font-medium text-white bg-default-100"
-                variant="flat"
-                radius="sm"
-                startContent={<EyeRegularIcon/>}
-              >
-                Watching
+                  className="text-sm font-medium text-black bg-white self-end"
+                  variant="flat"
+                  radius="sm"
+                  startContent={<PlayIcon/>}
+                  onPress={fetchTrailer}
+                >
+              Watch trailer
             </Button>
-            <Button
-                className="text-sm font-medium text-white bg-default-100"
-                variant="flat"
-                radius="sm"
-                startContent={<BookmarkIcon/>}
-              >
-                To Watch
-            </Button>
-            <Button
-                className="text-sm font-medium text-white bg-default-100"
-                variant="flat"
-                radius="sm"
-                startContent={<CheckIcon/>}
-              >
-                Watched
-            </Button>
+            <h1 className="text-4xl mt-8 font-bold text-white">{anime.Name}</h1>
+
+            <div className="flex gap-2 items-center">
+              <StarIcon fill="#7d7d7d"></StarIcon>
+              <p>{anime.Score}</p>
+            </div>
+            <div className="flex mt-4 gap-4 w-full">
+              <Button
+                  className="text-sm font-medium text-white bg-default-100"
+                  variant="flat"
+                  radius="sm"
+                  startContent={<EyeRegularIcon/>}
+                >
+                  Watching
+              </Button>
+              <Button
+                  className="text-sm font-medium text-white bg-default-100"
+                  variant="flat"
+                  radius="sm"
+                  startContent={<BookmarkIcon/>}
+                >
+                  To Watch
+              </Button>
+              <Button
+                  className="text-sm font-medium text-white bg-default-100"
+                  variant="flat"
+                  radius="sm"
+                  startContent={<CheckIcon/>}
+                >
+                  Watched
+              </Button>
+            </div>
+          </div>
+
+        </div>
+        <Tabs className="my-16 text-8xl" size="lg" aria-label="Display" variant="underlined" disabledKeys={["relations", "characters", "staff", "reviews"]}>
+          <Tab key="overview" title="Overview" />
+          <Tab key="relations" title="Relations" />
+          <Tab key="characters" title="Characters" />
+          <Tab key="staff" title="Staff" />
+          <Tab key="reviews" title="Reviews" />
+        </Tabs>
+        {/* <h2 className="text-2xl font-bold my-16">Overview</h2> */}
+        <div className="flex">
+          <div className="flex flex-col mr-32 min-w-96">
+            <h3 className="text-xl font-semibold mb-4">Details</h3>
+            <div className="flex gap-8">
+              <ul className="space-y-2">
+                <li>
+                  <p className="text-gray-400">Type</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Episodes</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Genres</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Aired</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Status</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Premiered</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Producers</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Licensors</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Studios</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Source</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Status</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Duration</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Rating</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Rank</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Popularity</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Favorites</p>
+                </li>
+                <li>
+                  <p className="text-gray-400">Members</p>
+                </li>
+              </ul>
+              <ul className="space-y-2">
+                <li>
+                  <p>{anime.Type}</p> 
+                </li>
+                <li>
+                  <p>{anime.Episodes}</p> 
+                </li>
+                <li>
+                  <p>{anime.Genres.join(", ")}</p> 
+                </li>
+                <li>
+                  <p>{anime.Aired}</p> 
+                </li>
+                <li>
+                  <p>{anime.Status}</p> 
+                </li>
+                <li>
+                  <p>{anime.Premiered}</p>
+                </li>
+                <li>
+                  <p>{anime.Producers.join(", ")}</p>
+                </li>
+                <li>
+                  <p>{anime.Licensors.join(", ")}</p>
+                </li>
+                <li>
+                  <p>{anime.Studios.join(", ")}</p>
+                </li>
+                <li>
+                  <p>{anime.Source}</p>
+                </li>
+                <li>
+                  <p>{anime.Status}</p>
+                </li>
+                <li>
+                  <p>{anime.Duration}</p>
+                </li>
+                <li>
+                  <p>{anime.Rating}</p>
+                </li>
+                <li>
+                  <p>{anime.Rank}</p>
+                </li>
+                <li>
+                  <p>{anime.Popularity}</p>
+                </li>
+                <li>
+                  <p>{anime.Favorites}</p>
+                </li>
+                <li>
+                  <p>{anime.Members}</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <h3 className="text-xl font-semibold mb-4">Description</h3>
+            <p className="text-gray-400">{anime.Synopsis}</p>
           </div>
         </div>
-
-        {/* Boutons */}
-        {/* <div className="flex gap-4">
-          <button className="rounded-full bg-gray-700 px-6 py-2 text-white hover:bg-gray-600">
-            Watching
-          </button>
-          <button className="rounded-full bg-gray-700 px-6 py-2 text-white hover:bg-gray-600">
-            To Watch
-          </button>
-          <button className="rounded-full bg-gray-700 px-6 py-2 text-white hover:bg-gray-600">
-            Watched
-          </button>
-        </div> */}
-
-        {/* Section description */}
-        {/* <div className="bg-gray-800 text-left text-gray-200 p-6 rounded-lg w-full max-w-3xl">
-          <h2 className="text-xl font-bold mb-4">Description</h2>
-          <p className="leading-relaxed">{anime.Synopsis}</p>
-        </div> */}
-
-        {/* Détails supplémentaires */}
-        {/* <div className="bg-gray-800 text-gray-200 p-6 rounded-lg w-full max-w-3xl">
-          <h2 className="text-xl font-bold mb-4">Details</h2>
-          <ul className="space-y-2">
-            <li>
-              <span className="font-medium">Type:</span> {anime.Type}
-            </li>
-            <li>
-              <span className="font-medium">Episodes:</span> {anime.Episodes}
-            </li>
-            <li>
-              <span className="font-medium">Genres:</span> {anime.Genres.join(", ")}
-            </li>
-            <li>
-              <span className="font-medium">Aired:</span> {anime.Aired}
-            </li>
-            <li>
-              <span className="font-medium">Status:</span> {anime.Status}
-            </li>
-          </ul>
-        </div> */}
       </div>
     </section>
   );
