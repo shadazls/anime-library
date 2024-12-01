@@ -27,10 +27,11 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
-import useAuth from "../lib/useAuth"; // Importer le hook d'authentification
+import { useAuth } from "../lib/useAuth"; // Importer le hook d'authentification
 
 export const Navbar = () => {
   const isAuthenticated = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
+  
   const searchInput = (
     <Input
       aria-label="Search"

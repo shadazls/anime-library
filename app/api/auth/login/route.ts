@@ -28,9 +28,11 @@ export const POST = async (req: Request) => {
       { expiresIn: "1h" }
     );
 
+    console.log("process.env.JWT: ", process.env.JWT_SECRET);
+
     // Définir le token dans un cookie sécurisé
     const headers = new Headers();
-    headers.append("Set-Cookie", `token=${token}; Path=/; Max-Age=3600; SameSite=Strict;`);
+    headers.append("Set-Cookie", `token=${token}; Path=/; Max-Age=3600; SameSite=Lax;`);
 
     return new Response("Logged in successfully", { status: 200, headers });
 
