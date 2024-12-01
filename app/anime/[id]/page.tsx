@@ -8,6 +8,7 @@ import AnimeDescription from "@/components/AnimeDescription";
 import TrailerModal from "@/components/TrailerModal";
 import TabsSection from "@/components/TabsSection";
 import { useDisclosure } from "@nextui-org/react";
+import ItemGrid from "@/components/ItemGrid";
 
 interface Anime {
   _id: ObjectId;
@@ -40,11 +41,24 @@ interface AnimeDetailParams {
   };
 }
 
+interface Relation {
+  id: number;
+  title: {
+    romaji: string;
+    english?: string;
+  };
+  image: string;
+  type: string;
+  relationType: string;
+}
+
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
   const { id } = params;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [anime, setAnime] = useState<Anime | null>(null);
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [relations, setRelations] = useState<Relation[] | null>(null);
 
   useEffect(() => {
     document.body.style.background = "#121212"; // Fond sombre
@@ -61,6 +75,64 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     };
     fetchAnimeDetails();
   }, [id]);
+
+  const fetchRelations = async () => {
+    if (!anime) return;
+
+    try {
+      const query = `
+        query ($search: String) {
+          Media(search: $search, type: ANIME) {
+            relations {
+              edges {
+                relationType
+                node {
+                  id
+                  title {
+                    romaji
+                    english
+                  }
+                  type
+                  coverImage {
+                    large
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+      const variables = { search: anime.Name };
+
+      const response = await fetch("https://graphql.anilist.co", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query, variables }),
+      });
+
+      const { data } = await response.json();
+
+      const fetchedRelations = data?.Media?.relations?.edges.map((edge: any) => ({
+        id: edge.node.id,
+        title: edge.node.title,
+        image: edge.node.coverImage.large,
+        type: edge.node.type,
+        relationType: edge.relationType,
+      }));
+
+      setRelations(fetchedRelations || []);
+    } catch (error) {
+      console.error("Failed to fetch relations:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "relations") {
+      fetchRelations();
+    }
+  }, [activeTab]);
 
   const handleTrailerClick = async () => {
     if (!anime) return;
@@ -120,43 +192,38 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     }
   };
 
-  // const handleTrailerClick = async () => {
-  //   if (!anime) return;
-
-  //   try {
-  //     const query = `
-  //       query ($search: String) {
-  //         Media(search: $search, type: ANIME) {
-  //           trailer {
-  //             id
-  //             site
-  //           }
-  //         }
-  //       }
-  //     `;
-  //     const variables = { search: anime.Name };
-
-  //     const response = await fetch("https://graphql.anilist.co", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ query, variables }),
-  //     });
-
-  //     const { data } = await response.json();
-
-  //     if (data?.Media?.trailer?.site === "youtube") {
-  //       const trailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
-  //       setTrailerUrl(trailerUrl);
-  //       onOpen();
-  //     } else {
-  //       alert("Trailer not available");
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to fetch trailer:", error);
-  //   }
-  // };
+  const renderContent = () => {
+    switch (activeTab) {
+      case "overview":
+        return (
+          <div className="flex">
+            <AnimeDetails anime={anime!} />
+            <AnimeDescription synopsis={anime!.Synopsis} />
+          </div>
+        );
+      case "relations":
+        return relations ? (
+          <ItemGrid
+            key="relations"
+            loading={!relations}
+            items={relations}
+            getId={(relation) => relation.id}
+            getName={(relation) => relation.title.romaji}
+            getImage={(relation) => relation.image}
+          />
+        ) : (
+          <p>Loading relations...</p>
+        );
+      case "characters":
+        return <p>Characters</p>;
+      case "staff":
+        return <p>Staff</p>;
+      case "reviews":
+        return <p>Reviews</p>;
+      default:
+        return null;
+    }
+  };
 
   return (
     <section className="p-4 mx-24">
@@ -168,11 +235,8 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
             animeImageUrl={anime.image_url}
             onTrailerClick={handleTrailerClick}
           />
-          <TabsSection />
-          <div className="flex">
-            <AnimeDetails anime={anime} />
-            <AnimeDescription synopsis={anime.Synopsis} />
-          </div>
+          <TabsSection onTabChange={(key) => setActiveTab(key)}/>
+          {renderContent()}
           <TrailerModal isOpen={isOpen} onClose={onClose} trailerUrl={trailerUrl} />
         </>
       )}
@@ -181,3 +245,4 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
 };
 
 export default AnimeDetailsPage;
+
