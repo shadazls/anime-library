@@ -12,13 +12,18 @@ export const POST = async (request) => {
         // Valide les données obligatoires
         const { Name, image_url } = body;
         if (!Name || !image_url) {
-            return new Response(JSON.stringify({ message: 'Name and image_url are required.' }), {
-                status: 400,
-            });
+            return new Response(
+                JSON.stringify({ message: 'Name and image_url are required.' }),
+                {
+                    status: 400,
+                }
+            );
         }
 
         // Récupère l'ID le plus élevé actuel de anime_id
-        const highestAnime = await Anime.findOne().sort({ anime_id: -1 }).limit(1);
+        const highestAnime = await Anime.findOne()
+            .sort({ anime_id: -1 })
+            .limit(1);
 
         // Si un anime existe déjà, incrémente l'anime_id
         const newAnimeId = highestAnime ? highestAnime.anime_id + 1 : 1; // Si aucun anime n'est trouvé, commence à 1
@@ -33,13 +38,22 @@ export const POST = async (request) => {
         await newAnime.save();
 
         // Retourne une réponse de succès
-        return new Response(JSON.stringify({ message: 'Anime added successfully!', anime: newAnime }), {
-            status: 201,
-        });
+        return new Response(
+            JSON.stringify({
+                message: 'Anime added successfully!',
+                anime: newAnime,
+            }),
+            {
+                status: 201,
+            }
+        );
     } catch (error) {
         console.error('Error adding anime:', error);
-        return new Response(JSON.stringify({ message: 'Failed to add anime.' }), {
-            status: 500,
-        });
+        return new Response(
+            JSON.stringify({ message: 'Failed to add anime.' }),
+            {
+                status: 500,
+            }
+        );
     }
 };

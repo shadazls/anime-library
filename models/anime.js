@@ -28,6 +28,8 @@ const animeSchema = new mongoose.Schema({
     trailer_url: { type: String },
 });
 
-const Anime = mongoose.models.Anime || mongoose.model('Anime', animeSchema, 'animeCollection');
+const Anime =
+    mongoose.models.Anime ||
+    mongoose.model('Anime', animeSchema, 'animeCollection');
 
 export default Anime;

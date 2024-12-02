@@ -34,6 +34,8 @@ const mangaSchema = new mongoose.Schema({
     end_date: { type: Date },
 });
 
-const Manga = mongoose.models.Manga || mongoose.model('Manga', mangaSchema, 'mangaCollection');
+const Manga =
+    mongoose.models.Manga ||
+    mongoose.model('Manga', mangaSchema, 'mangaCollection');
 
 export default Manga;
