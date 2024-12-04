@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 
 interface Anime {
     _id: ObjectId;
+    anime_id: number;
     Name: string;
     Score: number;
     Genres: string[];
@@ -33,6 +34,7 @@ interface Anime {
     Members: number;
     image_url: string;
     trailer_url?: string;
+    characters?: Character[];
 }
 
 interface AnimeDetailParams {
@@ -152,6 +154,15 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     }, [activeTab]);
 
     const fetchCharacters = async () => {
+        console.log('HAHAHAHAHAAHHAHAHAHAHAHAHHAHAHHAHAHAHAHAHAHAHH');
+        if (!anime) return;
+
+        if (anime.characters && anime.characters.length > 0) {
+            console.log('ANIME CHARACTERShihi', anime.characters);
+            setCharacters(anime.characters);
+            return;
+        }
+
         const query = `
       query ($id: Int) {
         Media(id: $id) {
@@ -173,8 +184,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         }
       }
     `;
-        const variables = { id: parseInt(id) }; // Assurez-vous que `id` est un nombre
-
+        const variables = { id: anime.anime_id };
         try {
             const response = await fetch('https://graphql.anilist.co', {
                 method: 'POST',
@@ -196,7 +206,33 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                     })
                 );
 
-                setCharacters(formattedCharacters);
+                // Ajout de la validation ici
+                const validateCharacters = (characters: any[]) => {
+                    return characters.every(
+                        (char) =>
+                            typeof char.id === 'number' &&
+                            typeof char.name?.full === 'string' &&
+                            typeof char.image?.large === 'string' &&
+                            typeof char.role === 'string'
+                    );
+                };
+
+                // Ajouter les personnages à la base de données
+                await fetch(`/api/animes/editAnime?id=${anime._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ characters: formattedCharacters }),
+                });
+                // Mets à jour localement
+                setAnime((prev) =>
+                    prev ? { ...prev, characters: formattedCharacters } : prev
+                );
+                if (anime.characters && Array.isArray(anime.characters)) {
+                    setCharacters(anime.characters);
+                }
+                // setCharacters(formattedCharacters);
             }
         } catch (error) {
             console.error('Failed to fetch characters:', error);
@@ -297,7 +333,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                     <ItemGrid
                         key="characters"
                         loading={!characters}
-                        items={characters}
+                        items={characters || []}
                         getId={(character) => character.id}
                         getName={(character) => character.name.full}
                         getImage={(character) => character.image.large}
