@@ -69,8 +69,8 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [anime, setAnime] = useState<Anime | null>(null);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    const streamingEpisodes = useStreamingEpisodes(anime?.anime_id);
-    const relations = useAnimeRelations(anime?.anime_id);
+    const streamingEpisodes = useStreamingEpisodes(anime?.anime_id, activeTab);
+    const relations = useAnimeRelations(anime?.anime_id, activeTab);
     const characters = useAnimeCharacters(anime?.anime_id, anime, setAnime);
     const staff = useAnimeStaff(anime?.anime_id, activeTab);
     const reviews = useAnimeReviews(anime?.anime_id, activeTab);
@@ -165,6 +165,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 return streamingEpisodes ? (
                     <ItemGrid
                         key="streamingEpisodes"
+                        type="episode"
                         loading={!streamingEpisodes}
                         items={streamingEpisodes}
                         getId={(episode) => episode.url} // Utilise l'URL comme ID unique
@@ -172,36 +173,21 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         getImage={(episode) =>
                             episode.thumbnail ||
                             '/default-episode-thumbnail.jpg'
-                        } // Image par défaut si aucune vignette
-                        // getExtra={(episode) => (
-                        //     <div>
-                        //         <a
-                        //             href={episode.url}
-                        //             target="_blank"
-                        //             rel="noopener noreferrer"
-                        //             className="block text-sm text-blue-500"
-                        //         >
-                        //             {episode.site}
-                        //         </a>
-                        //     </div>
-                        // )}
+                        }
                     />
                 ) : (
                     <p>Loading streaming episodes...</p>
                 );
             case 'relations':
                 return relations ? (
-                    (console.log(relations),
-                    (
-                        <ItemGrid
-                            key="relations"
-                            loading={!relations}
-                            items={relations}
-                            getId={(relation) => relation.id}
-                            getName={(relation) => relation.title}
-                            getImage={(relation) => relation.image}
-                        />
-                    ))
+                    <ItemGrid
+                        key="relations"
+                        loading={!relations}
+                        items={relations}
+                        getId={(relation) => relation.id}
+                        getName={(relation) => relation.title}
+                        getImage={(relation) => relation.image}
+                    />
                 ) : (
                     <p>Loading relations...</p>
                 );

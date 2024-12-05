@@ -12,7 +12,7 @@ interface AnimeRelation {
     relationType: string;
 }
 
-const useAnimeRelations = (animeId: number | undefined) => {
+const useAnimeRelations = (animeId: number | undefined, activeTab: string) => {
     const [relations, setRelations] = useState<AnimeRelation[] | null>(null);
 
     useEffect(() => {
@@ -21,6 +21,7 @@ const useAnimeRelations = (animeId: number | undefined) => {
         }
 
         const fetchAnimeRelations = async () => {
+            if (!animeId || activeTab !== 'relations') return;
             const query = `
             query ($id: Int) {
                 Media(id: $id) {
@@ -66,7 +67,7 @@ const useAnimeRelations = (animeId: number | undefined) => {
         };
 
         fetchAnimeRelations();
-    }, [animeId]);
+    }, [animeId, activeTab]);
 
     return relations;
 };

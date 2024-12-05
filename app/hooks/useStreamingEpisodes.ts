@@ -8,7 +8,10 @@ interface StreamingEpisode {
     site: string;
 }
 
-const useStreamingEpisodes = (animeId: number | undefined) => {
+const useStreamingEpisodes = (
+    animeId: number | undefined,
+    activeTab: string
+) => {
     const [streamingEpisodes, setStreamingEpisodes] = useState<
         StreamingEpisode[] | null
     >(null);
@@ -19,6 +22,7 @@ const useStreamingEpisodes = (animeId: number | undefined) => {
         }
 
         const fetchStreamingEpisodes = async () => {
+            if (!animeId || activeTab !== 'watch') return;
             const query = `
         query ($id: Int) {
           Media(id: $id) {
@@ -47,7 +51,7 @@ const useStreamingEpisodes = (animeId: number | undefined) => {
         };
 
         fetchStreamingEpisodes();
-    }, [animeId]);
+    }, [animeId, activeTab]);
 
     return streamingEpisodes;
 };
