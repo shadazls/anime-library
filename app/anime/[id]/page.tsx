@@ -12,37 +12,37 @@ import ItemGrid from '@/components/ItemGrid';
 import ReviewItem from '@/components/ReviewItem';
 import TabsSection from '@/components/TabsSection';
 import TrailerModal from '@/components/TrailerModal';
+import { Anime } from '@/types';
 import { Button } from '@nextui-org/button';
 import { useDisclosure } from '@nextui-org/react';
-import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 
-interface Anime {
-    _id: ObjectId;
-    anime_id: number;
-    Name: string;
-    Score: number;
-    Genres: string[];
-    Synopsis: string;
-    Type: string;
-    Episodes: number;
-    Aired: string;
-    Premiered: string;
-    Status: string;
-    Producers: string[];
-    Licensors: string[];
-    Studios: string[];
-    Source: string;
-    Duration: string;
-    Rating: string;
-    Rank: number;
-    Popularity: number;
-    Favorites: number;
-    Members: number;
-    image_url: string;
-    trailer_url?: string;
-    characters?: Character[];
-}
+// interface Anime {
+//     _id: ObjectId;
+//     anime_id: number;
+//     Name: string;
+//     Score: number;
+//     Genres: string[];
+//     Synopsis: string;
+//     Type: string;
+//     Episodes: number;
+//     Aired: string;
+//     Premiered: string;
+//     Status: string;
+//     Producers: string[];
+//     Licensors: string[];
+//     Studios: string[];
+//     Source: string;
+//     Duration: string;
+//     Rating: string;
+//     Rank: number;
+//     Popularity: number;
+//     Favorites: number;
+//     Members: number;
+//     image_url: string;
+//     trailer_url?: string;
+//     characters?: Character[];
+// }
 
 interface AnimeDetailParams {
     params: {
@@ -73,7 +73,12 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const relations = useAnimeRelations(anime?.anime_id, activeTab);
     const characters = useAnimeCharacters(anime?.anime_id, anime, setAnime);
     const staff = useAnimeStaff(anime?.anime_id, activeTab);
-    const reviews = useAnimeReviews(anime?.anime_id, activeTab);
+    const reviews = useAnimeReviews(
+        anime?.anime_id,
+        anime,
+        setAnime,
+        activeTab
+    );
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
