@@ -23,6 +23,7 @@ const staffSchema = new mongoose.Schema({
         large: { type: String, required: true },
         medium: { type: String, default: '' },
     },
+    role: { type: String, required: true },
 });
 
 const reviewSchema = new mongoose.Schema({
