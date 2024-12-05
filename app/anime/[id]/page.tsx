@@ -1,5 +1,6 @@
 'use client';
 
+import useAnimeCharacters from '@/app/hooks/useAnimeCharacters';
 import useAnimeRelations from '@/app/hooks/useAnimeRelations';
 import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
@@ -47,17 +48,6 @@ interface AnimeDetailParams {
     };
 }
 
-interface Relation {
-    id: number;
-    title: {
-        romaji: string;
-        english?: string;
-    };
-    image: string;
-    type: string;
-    relationType: string;
-}
-
 interface Character {
     id: number;
     name: {
@@ -98,11 +88,11 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [anime, setAnime] = useState<Anime | null>(null);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    const [characters, setCharacters] = useState<Character[] | null>(null);
     const [staff, setStaff] = useState<Staff[] | null>(null);
     const [reviews, setReviews] = useState<Review[] | null>(null);
-    const relations = useAnimeRelations(anime?.anime_id);
     const streamingEpisodes = useStreamingEpisodes(anime?.anime_id);
+    const relations = useAnimeRelations(anime?.anime_id);
+    const characters = useAnimeCharacters(anime?.anime_id, anime, setAnime);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -120,98 +110,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         };
         fetchAnimeDetails();
     }, [id]);
-
-    const fetchCharacters = async () => {
-        if (!anime) return;
-
-        if (anime.characters && anime.characters.length > 0) {
-            console.log('ANIME CHARACTERShihi', anime.characters);
-            setCharacters(anime.characters);
-            return;
-        }
-
-        const query = `
-      query ($id: Int) {
-        Media(id: $id) {
-          characters {
-            edges {
-              role
-              node {
-                id
-                name {
-                  full
-                  native
-                }
-                image {
-                  large
-                }
-              }
-            }
-          }
-        }
-      }
-    `;
-        const variables = { id: anime.anime_id };
-        try {
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query, variables }),
-            });
-
-            const { data } = await response.json();
-
-            if (data?.Media?.characters?.edges) {
-                const formattedCharacters = data.Media.characters.edges.map(
-                    (edge: any) => ({
-                        id: edge.node.id,
-                        name: edge.node.name,
-                        image: edge.node.image,
-                        role: edge.role,
-                    })
-                );
-
-                // Ajout de la validation ici
-                const validateCharacters = (characters: any[]) => {
-                    return characters.every(
-                        (char) =>
-                            typeof char.id === 'number' &&
-                            typeof char.name?.full === 'string' &&
-                            typeof char.image?.large === 'string' &&
-                            typeof char.role === 'string'
-                    );
-                };
-
-                // Ajouter les personnages à la base de données
-                await fetch(`/api/animes/editAnime?id=${anime._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ characters: formattedCharacters }),
-                });
-                // Mets à jour localement
-                setAnime((prev) =>
-                    prev ? { ...prev, characters: formattedCharacters } : prev
-                );
-                if (anime.characters && Array.isArray(anime.characters)) {
-                    setCharacters(anime.characters);
-                }
-                // setCharacters(formattedCharacters);
-            }
-        } catch (error) {
-            console.error('Failed to fetch characters:', error);
-        }
-    };
-
-    // Appeler `fetchCharacters` lorsque l'onglet est activé
-    useEffect(() => {
-        if (activeTab === 'characters') {
-            fetchCharacters();
-        }
-    }, [activeTab]);
 
     const handleTrailerClick = async () => {
         if (!anime) return;
