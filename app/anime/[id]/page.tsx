@@ -17,50 +17,10 @@ import { Button } from '@nextui-org/button';
 import { useDisclosure } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 
-// interface Anime {
-//     _id: ObjectId;
-//     anime_id: number;
-//     Name: string;
-//     Score: number;
-//     Genres: string[];
-//     Synopsis: string;
-//     Type: string;
-//     Episodes: number;
-//     Aired: string;
-//     Premiered: string;
-//     Status: string;
-//     Producers: string[];
-//     Licensors: string[];
-//     Studios: string[];
-//     Source: string;
-//     Duration: string;
-//     Rating: string;
-//     Rank: number;
-//     Popularity: number;
-//     Favorites: number;
-//     Members: number;
-//     image_url: string;
-//     trailer_url?: string;
-//     characters?: Character[];
-// }
-
 interface AnimeDetailParams {
     params: {
         id: string;
     };
-}
-
-interface Character {
-    id: number;
-    name: {
-        full: string;
-        native?: string;
-    };
-    image: {
-        large: string;
-        medium?: string;
-    };
-    role: string;
 }
 
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
@@ -71,8 +31,13 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [activeTab, setActiveTab] = useState<string>('overview');
     const streamingEpisodes = useStreamingEpisodes(anime?.anime_id, activeTab);
     const relations = useAnimeRelations(anime?.anime_id, activeTab);
-    const characters = useAnimeCharacters(anime?.anime_id, anime, setAnime);
-    const staff = useAnimeStaff(anime?.anime_id, activeTab);
+    const characters = useAnimeCharacters(
+        anime?.anime_id,
+        anime,
+        setAnime,
+        activeTab
+    );
+    const staff = useAnimeStaff(anime?.anime_id, anime, setAnime, activeTab);
     const reviews = useAnimeReviews(
         anime?.anime_id,
         anime,
@@ -215,7 +180,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         items={staff}
                         getId={(staffMember) => staffMember.id}
                         getName={(staffMember) => staffMember.name.full}
-                        getImage={(staffMember) => staffMember.image}
+                        getImage={(staffMember) => staffMember.image.large}
                     />
                 ) : (
                     <p>Loading staff...</p>

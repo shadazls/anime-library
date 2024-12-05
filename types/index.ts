@@ -30,6 +30,7 @@ export interface Anime {
     image_url: string;
     trailer_url?: string;
     characters?: Character[];
+    staff?: Staff[];
     reviews?: Review[];
 }
 
@@ -55,4 +56,16 @@ export interface Review {
     score: number;
     summary: string;
     body: string;
+}
+
+interface Staff {
+    id: number;
+    name: {
+        full: string;
+        native?: string;
+    };
+    image: {
+        large: string;
+    };
+    role: string;
 }

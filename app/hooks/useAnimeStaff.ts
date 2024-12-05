@@ -1,3 +1,4 @@
+import { Anime } from '@/types';
 import { useEffect, useState } from 'react';
 
 interface Staff {
@@ -12,12 +13,23 @@ interface Staff {
     role: string;
 }
 
-const useAnimeStaff = (animeId: number | undefined, activeTab: string) => {
+const useAnimeStaff = (
+    animeId: number | undefined,
+    anime: any | null,
+    setAnime: React.Dispatch<React.SetStateAction<Anime | null>>,
+    activeTab: string
+) => {
     const [staff, setStaff] = useState<Staff[] | null>(null);
 
     useEffect(() => {
         const fetchStaff = async () => {
-            if (!animeId) return;
+            if (!animeId || !anime) return;
+
+            // Vérifie si les personnages sont déjà présents dans l'objet anime
+            if (anime.staff && anime.staff.length > 0) {
+                setStaff(anime.staff);
+                return;
+            }
 
             const query = `
                 query ($id: Int) {
@@ -69,7 +81,7 @@ const useAnimeStaff = (animeId: number | undefined, activeTab: string) => {
                             staffMap[id] = {
                                 id,
                                 name,
-                                image: image.large,
+                                image: { large: image.large },
                                 role,
                             };
                         }
@@ -77,6 +89,23 @@ const useAnimeStaff = (animeId: number | undefined, activeTab: string) => {
 
                     // Convertir le staffMap en tableau et mettre à jour l'état
                     const uniqueStaff = Object.values(staffMap);
+                    // Ajouter les données à la base de données
+                    await fetch(`/api/animes/editAnime?id=${anime._id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            staff: uniqueStaff,
+                        }),
+                    });
+
+                    // Mets à jour localement
+                    setAnime((prev) =>
+                        prev ? { ...prev, staff: uniqueStaff } : prev
+                    );
+
+                    // Mettre à jour l'état local des staff
                     setStaff(uniqueStaff);
                 }
             } catch (error) {
@@ -85,7 +114,7 @@ const useAnimeStaff = (animeId: number | undefined, activeTab: string) => {
         };
 
         fetchStaff();
-    }, [animeId, activeTab]);
+    }, [animeId, anime, setAnime, activeTab]);
 
     return staff;
 };

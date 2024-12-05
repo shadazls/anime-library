@@ -45,7 +45,8 @@ interface Anime {
 const useAnimeCharacters = (
     animeId: number | undefined,
     anime: Anime | null,
-    setAnime: React.Dispatch<React.SetStateAction<Anime | null>>
+    setAnime: React.Dispatch<React.SetStateAction<Anime | null>>,
+    activeTab: string
 ) => {
     const [characters, setCharacters] = useState<Character[] | null>(null);
 
@@ -130,7 +131,7 @@ const useAnimeCharacters = (
         };
 
         fetchCharacters();
-    }, [animeId, anime, setAnime]);
+    }, [animeId, anime, setAnime, activeTab]);
 
     return characters;
 };
