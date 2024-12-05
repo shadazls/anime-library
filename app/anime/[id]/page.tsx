@@ -1,5 +1,6 @@
 'use client';
 
+import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
 import AnimeInfo from '@/components/AnimeInfo';
@@ -90,13 +91,6 @@ interface Review {
     body: string;
 }
 
-interface StreamingEpisode {
-    title: string;
-    thumbnail: string;
-    url: string;
-    site: string;
-}
-
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { id } = params;
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -107,9 +101,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [characters, setCharacters] = useState<Character[] | null>(null);
     const [staff, setStaff] = useState<Staff[] | null>(null);
     const [reviews, setReviews] = useState<Review[] | null>(null);
-    const [streamingEpisodes, setStreamingEpisodes] = useState<
-        StreamingEpisode[] | null
-    >(null);
+    const streamingEpisodes = useStreamingEpisodes(anime?.anime_id);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -395,57 +387,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
             if (anime) {
                 fetchStaff(anime.anime_id);
             }
-        }
-    }, [activeTab, anime]);
-
-    const fetchStreamingEpisodes = async () => {
-        if (!anime) return;
-
-        const query = `
-          query ($id: Int) {
-            Media(id: $id) {
-              streamingEpisodes {
-                site
-                thumbnail
-                title
-                url
-              }
-            }
-          }
-        `;
-        const variables = { id: anime.anime_id };
-
-        try {
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query, variables }),
-            });
-
-            const { data } = await response.json();
-
-            if (data?.Media?.streamingEpisodes) {
-                const streamingEpisodes = data.Media.streamingEpisodes.map(
-                    (episode: any) => ({
-                        title: episode.title,
-                        thumbnail: episode.thumbnail,
-                        url: episode.url,
-                        site: episode.site,
-                    })
-                );
-
-                setStreamingEpisodes(streamingEpisodes);
-            }
-        } catch (error) {
-            console.error('Failed to fetch streaming episodes:', error);
-        }
-    };
-
-    useEffect(() => {
-        if (activeTab === 'watch') {
-            fetchStreamingEpisodes();
         }
     }, [activeTab, anime]);
 
