@@ -1,5 +1,6 @@
 'use client';
 
+import useAnimeRelations from '@/app/hooks/useAnimeRelations';
 import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
@@ -97,10 +98,10 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [anime, setAnime] = useState<Anime | null>(null);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    const [relations, setRelations] = useState<Relation[] | null>(null);
     const [characters, setCharacters] = useState<Character[] | null>(null);
     const [staff, setStaff] = useState<Staff[] | null>(null);
     const [reviews, setReviews] = useState<Review[] | null>(null);
+    const relations = useAnimeRelations(anime?.anime_id);
     const streamingEpisodes = useStreamingEpisodes(anime?.anime_id);
 
     useEffect(() => {
@@ -120,68 +121,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         fetchAnimeDetails();
     }, [id]);
 
-    const fetchRelations = async () => {
-        if (!anime) return;
-
-        try {
-            const query = `
-        query ($search: String) {
-          Media(search: $search, type: ANIME) {
-            relations {
-              edges {
-                relationType
-                node {
-                  id
-                  title {
-                    romaji
-                    english
-                  }
-                  type
-                  coverImage {
-                    large
-                  }
-                }
-              }
-            }
-          }
-        }
-      `;
-            const variables = { search: anime.Name };
-
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query, variables }),
-            });
-
-            const { data } = await response.json();
-
-            const fetchedRelations = data?.Media?.relations?.edges.map(
-                (edge: any) => ({
-                    id: edge.node.id,
-                    title: edge.node.title,
-                    image: edge.node.coverImage.large,
-                    type: edge.node.type,
-                    relationType: edge.relationType,
-                })
-            );
-
-            setRelations(fetchedRelations || []);
-        } catch (error) {
-            console.error('Failed to fetch relations:', error);
-        }
-    };
-
-    useEffect(() => {
-        if (activeTab === 'relations') {
-            fetchRelations();
-        }
-    }, [activeTab]);
-
     const fetchCharacters = async () => {
-        console.log('HAHAHAHAHAAHHAHAHAHAHAHAHHAHAHHAHAHAHAHAHAHAHH');
         if (!anime) return;
 
         if (anime.characters && anime.characters.length > 0) {
