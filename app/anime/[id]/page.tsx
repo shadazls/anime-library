@@ -165,6 +165,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 return (
                     <ItemGrid
                         key="characters"
+                        type="character"
                         loading={!characters}
                         items={characters || []}
                         getId={(character) => character.id}

@@ -33,6 +33,9 @@ const ItemGrid: React.FC<ItemGridProps> = ({
         if (type === 'episode') {
             window.open(id.toString(), '_blank');
             return;
+        } else if (type === 'character' && router) {
+            router.push(`/character/${id}`);
+            return;
         }
         if (router) {
             router.push(`/anime/${id}`);
