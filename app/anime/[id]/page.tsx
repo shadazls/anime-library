@@ -2,6 +2,7 @@
 
 import useAnimeCharacters from '@/app/hooks/useAnimeCharacters';
 import useAnimeRelations from '@/app/hooks/useAnimeRelations';
+import useAnimeStaff from '@/app/hooks/useAnimeStaff';
 import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
@@ -88,11 +89,12 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [anime, setAnime] = useState<Anime | null>(null);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    const [staff, setStaff] = useState<Staff[] | null>(null);
+    // const [staff, setStaff] = useState<Staff[] | null>(null);
     const [reviews, setReviews] = useState<Review[] | null>(null);
     const streamingEpisodes = useStreamingEpisodes(anime?.anime_id);
     const relations = useAnimeRelations(anime?.anime_id);
     const characters = useAnimeCharacters(anime?.anime_id, anime, setAnime);
+    const staff = useAnimeStaff(anime?.anime_id, activeTab);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -170,63 +172,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
             console.error('Failed to fetch trailer:', error);
         }
     };
-
-    const fetchStaff = async (animeId: number) => {
-        const query = `
-          query ($id: Int) {
-            Media(id: $id) {
-              staff {
-                edges {
-                  node {
-                    id
-                    name {
-                      full
-                      native
-                    }
-                    image {
-                      large
-                    }
-                  }
-                }
-              }
-            }
-          }
-        `;
-        const variables = { id: animeId };
-
-        try {
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query, variables }),
-            });
-
-            const { data } = await response.json();
-
-            if (data?.Media?.staff?.edges) {
-                const staff = data.Media.staff.edges.map((edge: any) => ({
-                    id: edge.node.id,
-                    name: edge.node.name,
-                    image: edge.node.image?.large,
-                    role: edge.role,
-                }));
-
-                setStaff(staff);
-            }
-        } catch (error) {
-            console.error('Failed to fetch staff:', error);
-        }
-    };
-
-    useEffect(() => {
-        if (activeTab === 'staff') {
-            if (anime) {
-                fetchStaff(anime.anime_id);
-            }
-        }
-    }, [activeTab, anime]);
 
     const fetchReviews = async (animeId: number) => {
         const query = `
