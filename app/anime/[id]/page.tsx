@@ -191,14 +191,17 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 );
             case 'relations':
                 return relations ? (
-                    <ItemGrid
-                        key="relations"
-                        loading={!relations}
-                        items={relations}
-                        getId={(relation) => relation.id}
-                        getName={(relation) => relation.title.romaji}
-                        getImage={(relation) => relation.image}
-                    />
+                    (console.log(relations),
+                    (
+                        <ItemGrid
+                            key="relations"
+                            loading={!relations}
+                            items={relations}
+                            getId={(relation) => relation.id}
+                            getName={(relation) => relation.title}
+                            getImage={(relation) => relation.image}
+                        />
+                    ))
                 ) : (
                     <p>Loading relations...</p>
                 );
@@ -238,6 +241,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                                 variant="flat"
                                 radius="sm"
                                 size="lg"
+                                disabled
                             >
                                 Write a review
                             </Button>

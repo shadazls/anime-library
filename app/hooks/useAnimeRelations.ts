@@ -1,15 +1,6 @@
 // useAnimeRelations.ts
 import { useEffect, useState } from 'react';
 
-// interface AnimeRelation {
-//     id: number;
-//     title: string;
-//     type: string;
-//     format: string;
-//     status: string;
-//     imageUrl: string;
-// }
-
 interface AnimeRelation {
     id: number;
     title: {
@@ -64,7 +55,7 @@ const useAnimeRelations = (animeId: number | undefined) => {
                     data?.Media?.relations?.edges.map((edge: any) => ({
                         id: edge.node.id,
                         title:
-                            edge.node.title.romaji || edge.node.title.english,
+                            edge.node.title.english || edge.node.title.romaji,
                         type: edge.node.type,
                         image: edge.node.coverImage?.large,
                     })) || [];
