@@ -6,7 +6,7 @@ export const GET = async () => {
         await connectDB();
 
         const animesByRank = await Anime.find()
-            .select('Name Rank image_url -_id')
+            .select('Name Rank image_url')
             .sort({ Rank: 1 })
             .limit(6);
 

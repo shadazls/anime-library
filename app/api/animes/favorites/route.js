@@ -6,7 +6,7 @@ export const GET = async () => {
         await connectDB();
 
         const animesByFavorites = await Anime.find()
-            .select('Name Favorites image_url -_id')
+            .select('Name Favorites image_url')
             .sort({ Favorites: -1 })
             .limit(18);
 

@@ -30,14 +30,17 @@ export const GET = async (request) => {
         const totalMangas = await Manga.countDocuments();
 
         // Retourne les résultats et des informations de pagination
-        return new Response(JSON.stringify({
-            mangas,
-            totalMangas,
-            totalPages: Math.ceil(totalMangas / limit),
-            currentPage: page
-        }), {
-            status: 200,
-        });
+        return new Response(
+            JSON.stringify({
+                mangas,
+                totalMangas,
+                totalPages: Math.ceil(totalMangas / limit),
+                currentPage: page,
+            }),
+            {
+                status: 200,
+            }
+        );
     } catch (error) {
         console.error(error);
         return new Response('Failed to fetch mangas', {

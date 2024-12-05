@@ -12,7 +12,8 @@ export const GET = async (request) => {
         const nameQuery = url.searchParams.get('name') || ''; // Recherche par nom
         const genreQuery = url.searchParams.get('genre') || ''; // Recherche par genre
         const scoreQuery = parseFloat(url.searchParams.get('score')) || null; // Recherche par score
-        const episodesQuery = parseInt(url.searchParams.get('episodes')) || null; // Recherche par nombre d'épisodes
+        const episodesQuery =
+            parseInt(url.searchParams.get('episodes')) || null; // Recherche par nombre d'épisodes
         const statusQuery = url.searchParams.get('status') || ''; // Recherche par statut
         const ratingQuery = url.searchParams.get('rating') || ''; // Recherche par classification d'âge
 
@@ -51,14 +52,18 @@ export const GET = async (request) => {
 
         // Retourne les résultats et des informations de pagination dans un format lisible
         return new Response(
-            JSON.stringify({
-                animes,               // Liste des animés filtrés
-                pagination: {
-                    totalAnimes,      // Nombre total d'animes correspondant au filtre
-                    totalPages: Math.ceil(totalAnimes / limit), // Nombre total de pages
-                    currentPage: page, // Page actuelle
+            JSON.stringify(
+                {
+                    animes, // Liste des animés filtrés
+                    pagination: {
+                        totalAnimes, // Nombre total d'animes correspondant au filtre
+                        totalPages: Math.ceil(totalAnimes / limit), // Nombre total de pages
+                        currentPage: page, // Page actuelle
+                    },
                 },
-            }, null, 2), // Ajout de l'indentation pour améliorer la lisibilité
+                null,
+                2
+            ), // Ajout de l'indentation pour améliorer la lisibilité
             {
                 status: 200,
                 headers: {
