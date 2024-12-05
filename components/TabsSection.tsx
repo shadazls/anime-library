@@ -18,7 +18,6 @@ const TabsSection = ({
             size="lg"
             aria-label="Display"
             variant="underlined"
-            disabledKeys={['reviews']}
             onSelectionChange={handleTabChange}
         >
             <Tab key="overview" title="Overview" />
