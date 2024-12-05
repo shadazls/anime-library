@@ -1,16 +1,6 @@
+import { Review } from '@/types';
 import { Avatar } from '@nextui-org/avatar';
 import { useState } from 'react';
-
-interface Review {
-    id: number;
-    summary: string;
-    body: string;
-    score: number;
-    user: {
-        name: string;
-        avatar: string;
-    };
-}
 
 const ReviewItem = ({ review }: { review: Review }) => {
     const [isExpanded, setIsExpanded] = useState(false);

@@ -2,6 +2,7 @@
 
 import useAnimeCharacters from '@/app/hooks/useAnimeCharacters';
 import useAnimeRelations from '@/app/hooks/useAnimeRelations';
+import useAnimeReviews from '@/app/hooks/useAnimeReviews';
 import useAnimeStaff from '@/app/hooks/useAnimeStaff';
 import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
@@ -62,39 +63,17 @@ interface Character {
     role: string;
 }
 
-interface Staff {
-    id: number;
-    name: {
-        full: string;
-        native?: string;
-    };
-    image: string;
-    role: string;
-}
-
-interface Review {
-    id: number;
-    user: {
-        name: string;
-        avatar: string;
-    };
-    score: number;
-    summary: string;
-    body: string;
-}
-
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { id } = params;
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [anime, setAnime] = useState<Anime | null>(null);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    // const [staff, setStaff] = useState<Staff[] | null>(null);
-    const [reviews, setReviews] = useState<Review[] | null>(null);
     const streamingEpisodes = useStreamingEpisodes(anime?.anime_id);
     const relations = useAnimeRelations(anime?.anime_id);
     const characters = useAnimeCharacters(anime?.anime_id, anime, setAnime);
     const staff = useAnimeStaff(anime?.anime_id, activeTab);
+    const reviews = useAnimeReviews(anime?.anime_id, activeTab);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -172,68 +151,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
             console.error('Failed to fetch trailer:', error);
         }
     };
-
-    const fetchReviews = async (animeId: number) => {
-        const query = `
-        query ($id: Int) {
-          Media(id: $id) {
-            reviews {
-              nodes {
-                id
-                user {
-                  name
-                  avatar {
-                    large
-                  }
-                }
-                score
-                summary
-                body
-              }
-            }
-          }
-        }
-      `;
-        const variables = { id: animeId };
-
-        try {
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query, variables }),
-            });
-
-            const { data } = await response.json();
-
-            if (data?.Media?.reviews?.nodes) {
-                const fetchedReviews = data.Media.reviews.nodes.map(
-                    (node: any) => ({
-                        id: node.id,
-                        user: {
-                            name: node.user.name,
-                            avatar: node.user.avatar.large,
-                        },
-                        score: node.score,
-                        summary: node.summary,
-                        body: node.body,
-                    })
-                );
-                setReviews(fetchedReviews);
-            }
-        } catch (error) {
-            console.error('Failed to fetch reviews:', error);
-        }
-    };
-
-    useEffect(() => {
-        if (activeTab === 'reviews') {
-            if (anime) {
-                fetchReviews(anime.anime_id);
-            }
-        }
-    }, [activeTab, anime]);
 
     const renderContent = () => {
         switch (activeTab) {
