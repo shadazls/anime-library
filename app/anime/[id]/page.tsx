@@ -4,6 +4,7 @@ import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
 import AnimeInfo from '@/components/AnimeInfo';
 import ItemGrid from '@/components/ItemGrid';
+import ReviewItem from '@/components/ReviewItem';
 import TabsSection from '@/components/TabsSection';
 import TrailerModal from '@/components/TrailerModal';
 import { useDisclosure } from '@nextui-org/react';
@@ -77,6 +78,17 @@ interface Staff {
     role: string;
 }
 
+interface Review {
+    id: number;
+    user: {
+        name: string;
+        avatar: string;
+    };
+    score: number;
+    summary: string;
+    body: string;
+}
+
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { id } = params;
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -86,6 +98,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [relations, setRelations] = useState<Relation[] | null>(null);
     const [characters, setCharacters] = useState<Character[] | null>(null);
     const [staff, setStaff] = useState<Staff[] | null>(null);
+    const [reviews, setReviews] = useState<Review[] | null>(null);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -374,6 +387,68 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         }
     }, [activeTab, anime]);
 
+    const fetchReviews = async (animeId: number) => {
+        const query = `
+        query ($id: Int) {
+          Media(id: $id) {
+            reviews {
+              nodes {
+                id
+                user {
+                  name
+                  avatar {
+                    large
+                  }
+                }
+                score
+                summary
+                body
+              }
+            }
+          }
+        }
+      `;
+        const variables = { id: animeId };
+
+        try {
+            const response = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query, variables }),
+            });
+
+            const { data } = await response.json();
+
+            if (data?.Media?.reviews?.nodes) {
+                const fetchedReviews = data.Media.reviews.nodes.map(
+                    (node: any) => ({
+                        id: node.id,
+                        user: {
+                            name: node.user.name,
+                            avatar: node.user.avatar.large,
+                        },
+                        score: node.score,
+                        summary: node.summary,
+                        body: node.body,
+                    })
+                );
+                setReviews(fetchedReviews);
+            }
+        } catch (error) {
+            console.error('Failed to fetch reviews:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (activeTab === 'reviews') {
+            if (anime) {
+                fetchReviews(anime.anime_id);
+            }
+        }
+    }, [activeTab, anime]);
+
     const renderContent = () => {
         switch (activeTab) {
             case 'overview':
@@ -421,7 +496,15 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                     <p>Loading staff...</p>
                 );
             case 'reviews':
-                return <p>Reviews</p>;
+                return reviews ? (
+                    <div>
+                        {reviews.map((review) => (
+                            <ReviewItem key={review.id} review={review} />
+                        ))}
+                    </div>
+                ) : (
+                    <p>Loading reviews...</p>
+                );
             default:
                 return null;
         }
