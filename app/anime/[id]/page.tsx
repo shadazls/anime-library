@@ -7,6 +7,7 @@ import ItemGrid from '@/components/ItemGrid';
 import ReviewItem from '@/components/ReviewItem';
 import TabsSection from '@/components/TabsSection';
 import TrailerModal from '@/components/TrailerModal';
+import { Button } from '@nextui-org/button';
 import { useDisclosure } from '@nextui-org/react';
 import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
@@ -89,6 +90,13 @@ interface Review {
     body: string;
 }
 
+interface StreamingEpisode {
+    title: string;
+    thumbnail: string;
+    url: string;
+    site: string;
+}
+
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { id } = params;
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -99,6 +107,9 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [characters, setCharacters] = useState<Character[] | null>(null);
     const [staff, setStaff] = useState<Staff[] | null>(null);
     const [reviews, setReviews] = useState<Review[] | null>(null);
+    const [streamingEpisodes, setStreamingEpisodes] = useState<
+        StreamingEpisode[] | null
+    >(null);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -387,6 +398,57 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         }
     }, [activeTab, anime]);
 
+    const fetchStreamingEpisodes = async () => {
+        if (!anime) return;
+
+        const query = `
+          query ($id: Int) {
+            Media(id: $id) {
+              streamingEpisodes {
+                site
+                thumbnail
+                title
+                url
+              }
+            }
+          }
+        `;
+        const variables = { id: anime.anime_id };
+
+        try {
+            const response = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query, variables }),
+            });
+
+            const { data } = await response.json();
+
+            if (data?.Media?.streamingEpisodes) {
+                const streamingEpisodes = data.Media.streamingEpisodes.map(
+                    (episode: any) => ({
+                        title: episode.title,
+                        thumbnail: episode.thumbnail,
+                        url: episode.url,
+                        site: episode.site,
+                    })
+                );
+
+                setStreamingEpisodes(streamingEpisodes);
+            }
+        } catch (error) {
+            console.error('Failed to fetch streaming episodes:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (activeTab === 'watch') {
+            fetchStreamingEpisodes();
+        }
+    }, [activeTab, anime]);
+
     const fetchReviews = async (animeId: number) => {
         const query = `
         query ($id: Int) {
@@ -458,6 +520,34 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         <AnimeDescription synopsis={anime!.Synopsis} />
                     </div>
                 );
+            case 'watch':
+                return streamingEpisodes ? (
+                    <ItemGrid
+                        key="streamingEpisodes"
+                        loading={!streamingEpisodes}
+                        items={streamingEpisodes}
+                        getId={(episode) => episode.url} // Utilise l'URL comme ID unique
+                        getName={(episode) => episode.title}
+                        getImage={(episode) =>
+                            episode.thumbnail ||
+                            '/default-episode-thumbnail.jpg'
+                        } // Image par défaut si aucune vignette
+                        // getExtra={(episode) => (
+                        //     <div>
+                        //         <a
+                        //             href={episode.url}
+                        //             target="_blank"
+                        //             rel="noopener noreferrer"
+                        //             className="block text-sm text-blue-500"
+                        //         >
+                        //             {episode.site}
+                        //         </a>
+                        //     </div>
+                        // )}
+                    />
+                ) : (
+                    <p>Loading streaming episodes...</p>
+                );
             case 'relations':
                 return relations ? (
                     <ItemGrid
@@ -497,11 +587,24 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 );
             case 'reviews':
                 return reviews ? (
-                    <div>
-                        {reviews.map((review) => (
-                            <ReviewItem key={review.id} review={review} />
-                        ))}
-                    </div>
+                    <>
+                        <div>
+                            <h3 className="text-2xl font-semibold mb-4">
+                                Recent Reviews
+                            </h3>
+                            <Button
+                                className="text-lg mb-8 font-medium text-black bg-white w-96"
+                                variant="flat"
+                                radius="sm"
+                                size="lg"
+                            >
+                                Write a review
+                            </Button>
+                            {reviews.map((review) => (
+                                <ReviewItem key={review.id} review={review} />
+                            ))}
+                        </div>
+                    </>
                 ) : (
                     <p>Loading reviews...</p>
                 );
