@@ -67,6 +67,16 @@ interface Character {
     role: string;
 }
 
+interface Staff {
+    id: number;
+    name: {
+        full: string;
+        native?: string;
+    };
+    image: string;
+    role: string;
+}
+
 const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { id } = params;
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,6 +85,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const [activeTab, setActiveTab] = useState<string>('overview');
     const [relations, setRelations] = useState<Relation[] | null>(null);
     const [characters, setCharacters] = useState<Character[] | null>(null);
+    const [staff, setStaff] = useState<Staff[] | null>(null);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -306,6 +317,63 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         }
     };
 
+    const fetchStaff = async (animeId: number) => {
+        const query = `
+          query ($id: Int) {
+            Media(id: $id) {
+              staff {
+                edges {
+                  node {
+                    id
+                    name {
+                      full
+                      native
+                    }
+                    image {
+                      large
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `;
+        const variables = { id: animeId };
+
+        try {
+            const response = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query, variables }),
+            });
+
+            const { data } = await response.json();
+
+            if (data?.Media?.staff?.edges) {
+                const staff = data.Media.staff.edges.map((edge: any) => ({
+                    id: edge.node.id,
+                    name: edge.node.name,
+                    image: edge.node.image?.large,
+                    role: edge.role,
+                }));
+
+                setStaff(staff);
+            }
+        } catch (error) {
+            console.error('Failed to fetch staff:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (activeTab === 'staff') {
+            if (anime) {
+                fetchStaff(anime.anime_id);
+            }
+        }
+    }, [activeTab, anime]);
+
     const renderContent = () => {
         switch (activeTab) {
             case 'overview':
@@ -340,7 +408,18 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                     />
                 );
             case 'staff':
-                return <p>Staff</p>;
+                return staff ? (
+                    <ItemGrid
+                        key="staff"
+                        loading={!staff}
+                        items={staff}
+                        getId={(staffMember) => staffMember.id}
+                        getName={(staffMember) => staffMember.name.full}
+                        getImage={(staffMember) => staffMember.image}
+                    />
+                ) : (
+                    <p>Loading staff...</p>
+                );
             case 'reviews':
                 return <p>Reviews</p>;
             default:
