@@ -28,7 +28,7 @@ export interface Anime {
     Favorites: number;
     Members: number;
     image_url: string;
-    trailer_url?: string;
+    trailer_url?: string | null;
     characters?: Character[];
     staff?: Staff[];
     reviews?: Review[];
