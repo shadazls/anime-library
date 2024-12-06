@@ -68,10 +68,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     }, [id]);
 
     const handleTrailerClick = async () => {
-        if (!anime) {
-            console.log('ZIZIIIITO');
-            return;
-        }
+        if (!anime) return;
 
         // Si `trailer_url` existe déjà, utilise-le directement
         if (anime.trailer_url) {
@@ -192,6 +189,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 return staff ? (
                     <ItemGrid
                         key="staff"
+                        type="staff"
                         loading={!staff}
                         items={staff}
                         getId={(staffMember) => staffMember.id}

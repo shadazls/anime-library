@@ -30,7 +30,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
     const router = useRouter();
 
     const handleItemClick = (id: ObjectId, type?: string) => {
-        if (type === 'episode') {
+        if (type === 'episode' && router) {
             window.open(id.toString(), '_blank');
             return;
         } else if (type === 'character' && router) {
@@ -38,6 +38,9 @@ const ItemGrid: React.FC<ItemGridProps> = ({
             return;
         } else if (type === 'animev2' && router) {
             router.push(`/animev2/${id}`);
+            return;
+        } else if (type === 'staff' && router) {
+            router.push(`/staff/${id}`);
             return;
         }
         if (router) {
