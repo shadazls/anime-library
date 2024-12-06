@@ -23,6 +23,18 @@ const staffSchema = new mongoose.Schema({
         large: { type: String, required: true },
         medium: { type: String, default: '' },
     },
+    role: { type: String, required: true },
+});
+
+const reviewSchema = new mongoose.Schema({
+    id: { type: Number, required: true },
+    user: {
+        name: { type: String, required: true },
+        avatar: { type: String, required: true }, // URL de l'avatar
+    },
+    score: { type: Number, required: true },
+    summary: { type: String, required: true },
+    body: { type: String, required: true },
 });
 
 const animeSchema = new mongoose.Schema({
@@ -53,6 +65,7 @@ const animeSchema = new mongoose.Schema({
     trailer_url: { type: String },
     characters: { type: [characterSchema], default: [] },
     staff: { type: [staffSchema], default: [] },
+    reviews: { type: [reviewSchema], default: [] },
 });
 
 const Anime =
