@@ -97,7 +97,6 @@ const AnimeDetailsPageV2 = ({ params }: { params: { id: string } }) => {
                 });
                 const { data } = await response.json();
                 setAnime(data.Media);
-                console.log('Banner Image URL:', data.Media.bannerImage);
                 // Mise à jour du fond d'écran avec l'image banner
                 document.body.style.background = data.Media.bannerImage
                     ? `url(${data.Media.bannerImage}) no-repeat center top, #121212`
