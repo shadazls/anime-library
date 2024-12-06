@@ -23,13 +23,11 @@ const useAnimeReviews = (
     useEffect(() => {
         const fetchReviews = async () => {
             if (!animeId || activeTab !== 'reviews') {
-                console.log('HOHOOOOOOOOOOOOOOOOOOOOO');
                 return;
             }
 
             // Vérifie si les critiques sont déjà présentes dans l'objet anime
             if (anime && anime.reviews && anime.reviews.length > 0) {
-                console.log('Reviews already present in anime object');
                 setReviews(anime.reviews);
                 return;
             }
