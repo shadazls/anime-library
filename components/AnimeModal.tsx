@@ -1,38 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
 import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
+import { Anime } from "@/app/animeCatalog/page"; // Remplacez par le chemin correct de l'interface
 
 interface AnimeModalProps {
   isOpen: boolean;
-  onClose: () => void; // Fonction pour fermer le modal
-  onSubmit: (data: AnimeFormData) => void; // Fonction pour soumettre les données
-  mode: "add" | "edit"; // Indique si le modal est en mode ajout ou édition
+  onClose: () => void;
+  onSubmit: (data: Partial<Anime>) => void;
+  mode: "add" | "edit";
+  initialData?: Partial<Anime>; // Données initiales pour pré-remplir en mode édition
 }
 
-interface AnimeFormData {
-  Name: string;
-  image_url: string;
-  english_name?: string;
-  other_name?: string;
-  Synopsis?: string;
-  Genres?: string;
-  Score?: number;
-  Type?: string;
-  Episodes?: number;
-  Aired?: string;
-  Premiered?: string;
-  Status?: string;
-  Producers?: string;
-  Licensors?: string;
-  Studios?: string;
-  Source?: string;
-  Duration?: string;
-}
-
-const AnimeModal: React.FC<AnimeModalProps> = ({ isOpen, onClose, onSubmit, mode }) => {
-  const [formData, setFormData] = useState<AnimeFormData>({
+const AnimeModal: React.FC<AnimeModalProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  mode,
+  initialData,
+}) => {
+  const defaultFormData: Partial<Anime> = {
     Name: "",
     image_url: "",
     english_name: "",
@@ -50,23 +38,35 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ isOpen, onClose, onSubmit, mode
     Studios: "",
     Source: "",
     Duration: "",
-  });
+  };
 
+  const [formData, setFormData] = useState<Partial<Anime>>(defaultFormData);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Gère les changements dans les champs
-  const handleFormChange = (field: string, value: string) => {
+  // Pré-remplir les champs avec `initialData` ou réinitialiser
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      console.log("Initial data received by AnimeModal:", initialData); // Ajoutez ce log
+      setFormData({ ...defaultFormData, ...initialData });
+    } else if (mode === "add") {
+      console.log("Switching to add mode, resetting form."); // Ajoutez ce log
+      setFormData(defaultFormData);
+    }
+  }, [mode, initialData]);
+
+  // Gestion des changements dans les champs du formulaire
+  const handleFormChange = (field: keyof Anime, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Soumission des données
+  // Validation et soumission des données
   const handleSubmit = () => {
     if (!formData.Name || !formData.image_url) {
       setErrorMessage("Name and Image URL are required.");
       return;
     }
-    onSubmit(formData); // Appelle la fonction parent avec les données
+    onSubmit(formData); // Envoie les données au parent
     onClose(); // Ferme le modal
   };
 
@@ -84,7 +84,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ isOpen, onClose, onSubmit, mode
             placeholder="Enter the name of the anime"
             variant="bordered"
             isRequired
-            value={formData.Name}
+            value={formData.Name || ""}
             onValueChange={(value) => handleFormChange("Name", value)}
           />
           <Input
@@ -92,35 +92,35 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ isOpen, onClose, onSubmit, mode
             placeholder="Enter the URL for the anime's image"
             variant="bordered"
             isRequired
-            value={formData.image_url}
+            value={formData.image_url || ""}
             onValueChange={(value) => handleFormChange("image_url", value)}
           />
           <Input
-            label="English name"
+            label="English Name"
             placeholder="Enter the English name of the anime"
             variant="bordered"
-            value={formData.english_name}
+            value={formData.english_name || ""}
             onValueChange={(value) => handleFormChange("english_name", value)}
           />
           <Input
-            label="Other name"
+            label="Other Name"
             placeholder="Enter the other name of the anime"
             variant="bordered"
-            value={formData.other_name}
+            value={formData.other_name || ""}
             onValueChange={(value) => handleFormChange("other_name", value)}
           />
           <Textarea
             label="Synopsis"
             placeholder="Enter the synopsis"
             variant="bordered"
-            value={formData.Synopsis}
+            value={formData.Synopsis || ""}
             onValueChange={(value) => handleFormChange("Synopsis", value)}
           />
           <Input
             label="Genres"
             placeholder="Enter the genres (e.g., Action, Sci-Fi)"
             variant="bordered"
-            value={formData.Genres}
+            value={formData.Genres || ""}
             onValueChange={(value) => handleFormChange("Genres", value)}
           />
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
@@ -129,33 +129,27 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ isOpen, onClose, onSubmit, mode
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            style={{
-              marginTop: "1rem",
-              padding: "0.5rem 1rem",
-              background: "#0070f3",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
+            className="mt-4 py-2 px-4 bg-blue-600 text-white rounded-md"
           >
             {showAdvanced ? "Hide Advanced Fields" : "Show Advanced Fields"}
           </button>
 
           {/* Champs avancés */}
           {showAdvanced && (
-            <div className="flex flex-col gap-3" style={{ marginTop: "1rem" }}>
+            <div className="flex flex-col gap-3 mt-4">
               <Input
                 label="Score"
                 type="number"
-                placeholder="Enter the score (e.g., 8.75)"
+                placeholder="Enter the score"
                 variant="bordered"
-                onValueChange={(value) => handleFormChange("Score", value)}
+                value={formData.Score !== undefined ? String(formData.Score) : ""}
+                onValueChange={(value) => handleFormChange("Score", Number(value))}
               />
               <Input
                 label="Type"
                 placeholder="Enter the type (e.g., TV, Movie)"
                 variant="bordered"
+                value={formData.Type || ""}
                 onValueChange={(value) => handleFormChange("Type", value)}
               />
               <Input
@@ -163,54 +157,63 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ isOpen, onClose, onSubmit, mode
                 type="number"
                 placeholder="Enter the number of episodes"
                 variant="bordered"
-                onValueChange={(value) => handleFormChange("Episodes", value)}
+                value={formData.Episodes !== undefined ? String(formData.Episodes) : ""}
+                onValueChange={(value) => handleFormChange("Episodes", Number(value))}
               />
               <Input
                 label="Aired"
-                placeholder="Enter the aired dates (e.g., Apr 3, 1998 to Apr 24, 1999)"
+                placeholder="Enter aired dates (e.g., Jan 2020 to Mar 2020)"
                 variant="bordered"
+                value={formData.Aired || ""}
                 onValueChange={(value) => handleFormChange("Aired", value)}
               />
               <Input
                 label="Premiered"
-                placeholder="Enter the season and year (e.g., Spring 1998)"
+                placeholder="Enter the premiered season (e.g., Spring 2020)"
                 variant="bordered"
+                value={formData.Premiered || ""}
                 onValueChange={(value) => handleFormChange("Premiered", value)}
               />
               <Input
                 label="Status"
                 placeholder="Enter the status (e.g., Finished Airing)"
                 variant="bordered"
+                value={formData.Status || ""}
                 onValueChange={(value) => handleFormChange("Status", value)}
               />
               <Input
                 label="Producers"
-                placeholder="Enter the producers (e.g., Bandai Visual)"
+                placeholder="Enter the producers (e.g., Sunrise)"
                 variant="bordered"
+                value={formData.Producers || ""}
                 onValueChange={(value) => handleFormChange("Producers", value)}
               />
               <Input
                 label="Licensors"
                 placeholder="Enter the licensors (e.g., Funimation)"
                 variant="bordered"
+                value={formData.Licensors || ""}
                 onValueChange={(value) => handleFormChange("Licensors", value)}
               />
               <Input
                 label="Studios"
-                placeholder="Enter the studios (e.g., Sunrise)"
+                placeholder="Enter the studios (e.g., Madhouse)"
                 variant="bordered"
+                value={formData.Studios || ""}
                 onValueChange={(value) => handleFormChange("Studios", value)}
               />
               <Input
                 label="Source"
-                placeholder="Enter the source (e.g., Original, Manga)"
+                placeholder="Enter the source material (e.g., Manga)"
                 variant="bordered"
+                value={formData.Source || ""}
                 onValueChange={(value) => handleFormChange("Source", value)}
               />
               <Input
                 label="Duration"
                 placeholder="Enter the duration (e.g., 24 min per ep)"
                 variant="bordered"
+                value={formData.Duration || ""}
                 onValueChange={(value) => handleFormChange("Duration", value)}
               />
             </div>

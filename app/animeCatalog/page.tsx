@@ -5,28 +5,37 @@ import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import FilterOptions from "@/components/FilterOptions"; // Composant des filtres
-import { SearchInput } from "@/components/SearchInput";
-import { Divider } from "@nextui-org/divider";
 import { Pagination } from "@nextui-org/pagination";
-import { Tabs, Tab } from "@nextui-org/tabs";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
-import { SortIcon } from "@/components/icons";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
-import { Input } from "@nextui-org/input";
 import { useDisclosure } from "@nextui-org/react";
-import { Textarea } from "@nextui-org/input";
-import FilterIcon from "@/components/FilterIcon";
 import TrashIcon from "@/components/TrashIcon";
 import { ObjectId } from 'mongodb';
 import { Skeleton } from "@nextui-org/skeleton";
 import EditIcon from "@/components/EditIcon";
+import AnimeModal from "@/components/AnimeModal"; // Import du composant modal
+
 
 // Définir une interface pour représenter un anime
-interface Anime {
+export interface Anime {
   _id: ObjectId;
   Name: string;
   image_url: string;
+  english_name?: string;
+  other_name?: string;
+  Synopsis?: string;
+  Genres?: string;
+  Score?: number;
+  Type?: string;
+  Episodes?: number;
+  Aired?: string;
+  Premiered?: string;
+  Status?: string;
+  Producers?: string;
+  Licensors?: string;
+  Studios?: string;
+  Source?: string;
+  Duration?: string;
 }
+
 
 export default function AnimeCatalogPage() {
   const [animes, setAnimes] = useState<Anime[]>([]); // Animes récupérés avec pagination
@@ -37,16 +46,12 @@ export default function AnimeCatalogPage() {
   const [selectedTab, setSelectedTab] = useState<string>("18"); // Tab sélectionné
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [formData, setFormData] = useState({
-    Name: "",
-    image_url: "",
-    english_name: "",
-    other_name: "",
-    Synopsis: "",
-    Genres: "",
-  });
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [searchText, setSearchText] = useState<string>("");  // L'état du texte de 
+  const [searchText, setSearchText] = useState<string>("");
+
 
   // Fonction de récupération des animes avec pagination et recherche
   const fetchAnimes = async (page: number, limit: number, name: string) => {
@@ -65,9 +70,11 @@ export default function AnimeCatalogPage() {
       }
 
       const data = await response.json();
+      console.log("Fetched animes data:", data); // Ajoutez ce log
       setAnimes(data.animes);  // Mise à jour des animes récupérés
       setTotalPages(data.pagination.totalPages);  // Mise à jour du nombre total de pages
     } catch (error) {
+
       console.error(error);
     } finally {
       setLoading(false);
@@ -79,11 +86,6 @@ export default function AnimeCatalogPage() {
     fetchAnimes(currentPage, 18, searchText);  // Par exemple, 18 animes par page
   }, [searchText, currentPage]);  // Déclenche à chaque changement de searchText
 
-  // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
-  const handleSearch = (text: string) => {
-    setSearchText(text);  // Met à jour l'état du texte de recherche
-  };
-
   // Charger les animes quand la page ou le nombre d'animés par page change
   useEffect(() => {
     fetchAnimes(currentPage, itemsPerPage, searchText);
@@ -93,32 +95,41 @@ export default function AnimeCatalogPage() {
     document.body.style.background = '#121212';
   }, []);
 
-  const handleFormChange = (field: string, value: string) => {
-    setFormData({ ...formData, [field]: value });
-  };
 
-  const handleAddAnime = async () => {
-    setErrorMessage(""); // Reset error message
+
+    // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
+    const handleSearch = (text: string) => {
+      setSearchText(text);  // Met à jour l'état du texte de recherche
+    };
+  
+
+  // Gérer l'ouverture du modal pour modifier un anime
+  const openEditAnimeModal = async (anime: Anime) => {
     try {
-      const response = await fetch("/api/animes/addNewAnime", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
+      const response = await fetch(`/api/animes/anime?id=${anime._id}`);
       if (!response.ok) {
-        throw new Error("Failed to add anime");
+        throw new Error("Failed to fetch anime details");
       }
-
-      // Ferme le modal et recharge les animes
-      onOpenChange();
-      fetchAnimes(currentPage, itemsPerPage, searchText);
-    } catch (error: any) {
-      setErrorMessage(error.message || "An error occurred");
+      const fullAnime = await response.json(); // Anime avec tous les champs
+      console.log("Full anime data fetched for editing:", fullAnime); // Vérifiez ici si toutes les données sont présentes
+      setSelectedAnime(fullAnime); // Passe toutes les données récupérées
+      setModalMode("edit");
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching anime for editing:", error);
     }
   };
+  
+  
+
+  const openAddAnimeModal = () => {
+    setModalMode("add");
+    setSelectedAnime(null); // Réinitialiser les données sélectionnées
+    setModalOpen(true); // Ouvrir le modal pour ajouter un nouvel anime
+  };
+  
+  
+  
 
   // Fonction pour changer le nombre d'animés par page en fonction du Tab sélectionné
   const handleTabChange = (key: React.Key) => {
@@ -139,21 +150,55 @@ export default function AnimeCatalogPage() {
     setCurrentPage(1); // Réinitialise à la première page quand le nombre d'animés par page change
   };
 
+
+   // Ajouter un nouvel anime
+   const handleAddAnime = async (animeData: Partial<Anime>) => {
+    try {
+      const response = await fetch("/api/animes/addNewAnime", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(animeData),
+      });
+      if (response.ok) {
+        fetchAnimes(currentPage, itemsPerPage, searchText);
+      }
+    } catch (error) {
+      console.error("Error adding anime:", error);
+    }
+  };
+
+  // Modifier un anime existant
+  const handleEditAnime = async (animeData: Partial<Anime>) => {
+    if (!animeData._id) return; // Vérification pour éviter une erreur
+    try {
+      const response = await fetch(`/api/animes/editAnime?id=${animeData._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(animeData),
+      });
+      if (response.ok) {
+        fetchAnimes(currentPage, itemsPerPage, searchText);
+      }
+    } catch (error) {
+      console.error("Error editing anime:", error);
+    }
+  };
+
+  // Supprimer un anime
   const handleDeleteAnime = async (animeId: ObjectId) => {
     try {
       const response = await fetch(`/api/animes/deleteAnime?id=${animeId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-  
       if (response.ok) {
         setAnimes((prevAnimes) => prevAnimes.filter((anime) => anime._id !== animeId));
       } else {
-        const errorData = await response.json();
-        console.error("Failed to delete anime:", errorData.message);
+        console.error("Failed to delete anime");
       }
     } catch (error) {
       console.error("Error deleting anime:", error);
-      alert("An error occurred while deleting the anime");
     }
   };
 
@@ -163,208 +208,15 @@ export default function AnimeCatalogPage() {
 
       {/* Barre de filtres */}
       <FilterOptions onSearch={handleSearch}/>
-      <div className="max-w-md"></div>
-        <div className="flex h-10 space-x-4 justify-end">
-          <Button onPress={onOpen} color="primary" aria-label="Add Anime">Add an anime</Button>
-          <Modal 
-            isOpen={isOpen} 
-            onOpenChange={onOpenChange}
-            placement="top-center"
-          >
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">Add an anime</ModalHeader>
-                  <ModalBody className="overflow-auto" style={{ maxHeight: "70vh"}}>
-                    {/* Champs principaux */}
-                    <Input
-                      autoFocus
-                      label="Name"
-                      placeholder="Enter the name of the anime"
-                      variant="bordered"
-                      isRequired
-                      value={formData.Name}
-                      onValueChange={(value) => handleFormChange("Name", value)}
-                    />
-                    <Input
-                      label="Image URL"
-                      placeholder="Enter the URL for the anime's image"
-                      variant="bordered"
-                      isRequired
-                      value={formData.image_url}
-                      onValueChange={(value) => handleFormChange("image_url", value)}
-                    />
-                    <Input
-                      label="English name"
-                      placeholder="Enter the English name of the anime"
-                      variant="bordered"
-                      value={formData.english_name}
-                      onValueChange={(value) => handleFormChange("english_name", value)}
-                    />
-                    <Input
-                      label="Other name"
-                      placeholder="Enter the other name of the anime"
-                      variant="bordered"
-                      value={formData.other_name}
-                      onValueChange={(value) => handleFormChange("other_name", value)}
-                    />
-                    <Textarea
-                      label="Synopsis"
-                      placeholder="Enter the synopsis"
-                      variant="bordered"
-                      value={formData.Synopsis}
-                      onValueChange={(value) => handleFormChange("Synopsis", value)}
-                    />
-                    <Input
-                      label="Genres"
-                      placeholder="Enter the genres (e.g., Action, Sci-Fi)"
-                      variant="bordered"
-                      value={formData.Genres}
-                      onValueChange={(value) => handleFormChange("Genres", value)}
-                    />
-                    {errorMessage && (
-                      <p className="text-red-500 mt-2">{errorMessage}</p>
-                    )}
 
 
-                    {/* Bouton pour basculer l'affichage des champs avancés */}
-                    <button
-                      type="button"
-                      onClick={() => setShowAdvanced(!showAdvanced)}
-                      style={{
-                        marginTop: "1rem",
-                        padding: "0.5rem 1rem",
-                        background: "#0070f3",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {showAdvanced ? "Hide Advanced Creation" : "Advanced Creation"}
-                    </button>
-
-                    {/* Champs avancés */}
-                    {showAdvanced && (
-                      <div className="flex flex-col gap-3" style={{ marginTop: "1rem" }}>
-                        <Input
-                          label="Score"
-                          type="number"
-                          placeholder="Enter the score (e.g., 8.75)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Score", value)}
-                        />
-                        <Input
-                          label="Type"
-                          placeholder="Enter the type (e.g., TV, Movie)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Type", value)}
-                        />
-                        <Input
-                          label="Episodes"
-                          type="number"
-                          placeholder="Enter the number of episodes"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Episodes", value)}
-                        />
-                        <Input
-                          label="Aired"
-                          placeholder="Enter the aired dates (e.g., Apr 3, 1998 to Apr 24, 1999)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Aired", value)}
-                        />
-                        <Input
-                          label="Premiered"
-                          placeholder="Enter the season and year (e.g., spring 1998)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Premiered", value)}
-                        />
-                        <Input
-                          label="Status"
-                          placeholder="Enter the status (e.g., Finished Airing)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Status", value)}
-                        />
-                        <Input
-                          label="Producers"
-                          placeholder="Enter the producers (e.g., Bandai Visual)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Producers", value)}
-                        />
-                        <Input
-                          label="Licensors"
-                          placeholder="Enter the licensors (e.g., Funimation)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Licensors", value)}
-                        />
-                        <Input
-                          label="Studios"
-                          placeholder="Enter the studios (e.g., Sunrise)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Studios", value)}
-                        />
-                        <Input
-                          label="Source"
-                          placeholder="Enter the source (e.g., Original, Manga)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Source", value)}
-                        />
-                        <Input
-                          label="Duration"
-                          placeholder="Enter the duration (e.g., 24 min per ep)"
-                          variant="bordered"
-                          onValueChange={(value) => handleFormChange("Duration", value)}
-                        />
-                      </div>
-                    )}
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <Button color="danger" variant="flat" onPress={onClose}>
-                      Close
-                    </Button>
-                    <Button color="primary" onPress={handleAddAnime}>
-                      Confirm
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-          <Divider orientation="vertical"></Divider>
-          <div className="flex flex-col h-96">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button 
-                  variant="bordered"
-                  startContent={<SortIcon className="" />}
-                >
-                  Title
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
-                <DropdownItem key="title">Title</DropdownItem>
-                <DropdownItem key="popularity">Popularity</DropdownItem>
-                <DropdownItem key="rank">Rank</DropdownItem>
-                <DropdownItem key="score">Score</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <p className="text-foreground-400 mt-1 text-xs">
-              Sort by
-            </p>
-          </div>
-          <Divider orientation="vertical" />
-          <div className="flex flex-col items-end">
-            <Tabs aria-label="Options" onSelectionChange={handleTabChange}>
-              <Tab key="18" title="18" />
-              <Tab key="36" title="36" />
-              <Tab key="54" title="54" />
-            </Tabs>
-            <p className="text-foreground-400 mt-1 text-xs">
-              Number of items per page
-            </p>
-          </div>
-        </div>
+      {/* Bouton pour ajouter un anime */}
+      <div className="flex justify-end">
+        <Button onPress={openAddAnimeModal} color="primary">
+          Add Anime
+        </Button>
+      </div>
+      
 
       {/* Affichage des animés */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-center gap-16">
@@ -379,7 +231,7 @@ export default function AnimeCatalogPage() {
             <Card key={anime.Name} isPressable isHoverable isFooterBlurred radius="lg" className="border-none">
               <Image isZoomed width={225} alt={`Image of ${anime.Name}`} src={anime.image_url || "https://via.placeholder.com/225"} />
               <CardHeader className="absolute justify-end gap-2">
-                <Button isIconOnly variant="faded" color="default" aria-label="Edit">
+                <Button isIconOnly variant="faded" color="default" aria-label="Edit" onPress={() => openEditAnimeModal(anime)}>
                   <EditIcon />
                 </Button>
                 <Button isIconOnly variant="faded" color="default" aria-label="Delete" onPress={() => handleDeleteAnime(anime._id)}>
@@ -405,6 +257,15 @@ export default function AnimeCatalogPage() {
           showControls
         />
       </div>
+
+      {/* Modal */}
+      <AnimeModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={modalMode === "add" ? handleAddAnime : handleEditAnime}
+        mode={modalMode}
+        initialData={modalMode === "edit" && selectedAnime ? selectedAnime : undefined}
+      />
     </section>
   );
 }
