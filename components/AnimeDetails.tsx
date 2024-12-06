@@ -25,6 +25,7 @@ const AnimeDetails = ({ anime }: AnimeDetailsProps) => {
             <div className="flex flex-col mr-32 min-w-96">
                 <h3 className="text-xl font-semibold mb-4">Details</h3>
                 <div className="flex gap-8">
+                    {/* TODO: Régler le problème d'écart entre les lignes lorsqu'un champ est trop long et prend plusieurs lignes, au lieu de faire 2 colonnes, faire pleins de lignes */}
                     <ul className="space-y-2">
                         <li>
                             <p className="text-gray-400">Type</p>

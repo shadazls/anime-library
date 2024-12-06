@@ -15,6 +15,7 @@ interface ItemGridProps {
     items: Item[]; // Liste d'éléments (animes ou mangas)
     getName: (item: Item) => string; // Fonction pour récupérer le nom de l'élément
     getImage: (item: Item) => string; // Fonction pour récupérer l'URL de l'image
+    type?: string; // Type d'élément (anime, manga, etc.)
 }
 
 const ItemGrid: React.FC<ItemGridProps> = ({
@@ -24,10 +25,21 @@ const ItemGrid: React.FC<ItemGridProps> = ({
     getName,
     getImage,
     getId,
+    type,
 }) => {
     const router = useRouter();
 
-    const handleItemClick = (id: ObjectId) => {
+    const handleItemClick = (id: ObjectId, type?: string) => {
+        if (type === 'episode') {
+            window.open(id.toString(), '_blank');
+            return;
+        } else if (type === 'character' && router) {
+            router.push(`/character/${id}`);
+            return;
+        } else if (type === 'animev2' && router) {
+            router.push(`/animev2/${id}`);
+            return;
+        }
         if (router) {
             router.push(`/anime/${id}`);
         }
@@ -54,7 +66,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
                               isFooterBlurred
                               radius="lg"
                               className="border-none"
-                              onClick={() => handleItemClick(getId(item))}
+                              onClick={() => handleItemClick(getId(item), type)}
                           >
                               <Image
                                   width={225}
