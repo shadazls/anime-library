@@ -32,6 +32,14 @@ export interface Anime {
     characters?: Character[];
     staff?: Staff[];
     reviews?: Review[];
+    streamingEpisodes?: StreamingEpisode[];
+}
+
+export interface StreamingEpisode {
+    title: string;
+    thumbnail: string;
+    url: string;
+    site: string;
 }
 
 export interface Character {

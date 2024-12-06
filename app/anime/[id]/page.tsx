@@ -32,7 +32,12 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { trailerUrl, errorModal, setErrorModal, fetchTrailer } =
         useAnimeTrailer(anime, onOpen, setAnime);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    const streamingEpisodes = useStreamingEpisodes(anime?.anime_id, activeTab);
+    const streamingEpisodes = useStreamingEpisodes(
+        anime?.anime_id,
+        anime,
+        setAnime,
+        activeTab
+    );
     const relations = useAnimeRelations(anime?.anime_id, activeTab);
     const characters = useAnimeCharacters(
         anime?.anime_id,
