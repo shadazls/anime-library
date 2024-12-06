@@ -8,6 +8,7 @@ import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
 import AnimeInfo from '@/components/AnimeInfo';
+import ErrorModal from '@/components/ErrorModal';
 import ItemGrid from '@/components/ItemGrid';
 import ReviewItem from '@/components/ReviewItem';
 import TabsSection from '@/components/TabsSection';
@@ -44,6 +45,10 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         setAnime,
         activeTab
     );
+    const [errorModal, setErrorModal] = useState({
+        isOpen: false,
+        message: '',
+    });
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -63,7 +68,10 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     }, [id]);
 
     const handleTrailerClick = async () => {
-        if (!anime) return;
+        if (!anime) {
+            console.log('ZIZIIIITO');
+            return;
+        }
 
         // Si `trailer_url` existe déjà, utilise-le directement
         if (anime.trailer_url) {
@@ -95,8 +103,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
             });
 
             const { data } = await response.json();
-            console.log('ZIZIIIII');
-            console.log('Fetched trailer:', data.media.trailer);
             if (data?.Media?.trailer?.site === 'youtube') {
                 const fetchedTrailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
 
@@ -116,9 +122,16 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 setTrailerUrl(fetchedTrailerUrl);
                 onOpen();
             } else {
-                alert('Trailer not available');
+                setErrorModal({
+                    isOpen: true,
+                    message: 'Trailer not available for this anime.',
+                });
             }
         } catch (error) {
+            setErrorModal({
+                isOpen: true,
+                message: 'Failed to fetch the trailer. Please try again later.',
+            });
             console.error('Failed to fetch trailer:', error);
         }
     };
@@ -233,6 +246,13 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         isOpen={isOpen}
                         onClose={onClose}
                         trailerUrl={trailerUrl}
+                    />
+                    <ErrorModal
+                        isOpen={errorModal.isOpen}
+                        onClose={() =>
+                            setErrorModal({ isOpen: false, message: '' })
+                        }
+                        errorMessage={errorModal.message}
                     />
                 </>
             )}
