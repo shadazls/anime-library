@@ -59,6 +59,7 @@ export const PUT = async (req) => {
             characters: updatedAnime.characters,
             reviews: updatedAnime.reviews,
             streamingEpisodes: updatedAnime.streamingEpisodes,
+            relations: updatedAnime.relations,
         };
 
         return new Response(JSON.stringify({ anime: responseAnime }), {

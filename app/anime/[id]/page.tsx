@@ -38,7 +38,12 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         setAnime,
         activeTab
     );
-    const relations = useAnimeRelations(anime?.anime_id, activeTab);
+    const relations = useAnimeRelations(
+        anime?.anime_id,
+        anime,
+        setAnime,
+        activeTab
+    );
     const characters = useAnimeCharacters(
         anime?.anime_id,
         anime,
@@ -108,7 +113,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         loading={!relations}
                         items={relations}
                         getId={(relation) => relation.id}
-                        getName={(relation) => relation.title}
+                        getName={(relation) => relation.title.romaji}
                         getImage={(relation) => relation.image}
                     />
                 ) : (

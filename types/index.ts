@@ -33,6 +33,7 @@ export interface Anime {
     staff?: Staff[];
     reviews?: Review[];
     streamingEpisodes?: StreamingEpisode[];
+    relations?: AnimeRelation[];
 }
 
 export interface StreamingEpisode {
@@ -76,4 +77,15 @@ interface Staff {
         large: string;
     };
     role: string;
+}
+
+export interface AnimeRelation {
+    id: number;
+    title: {
+        romaji: string;
+        english?: string;
+    };
+    image: string;
+    type: string;
+    relationType: string;
 }

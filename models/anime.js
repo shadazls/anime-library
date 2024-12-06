@@ -44,6 +44,17 @@ const streamingEpisodeSchema = new mongoose.Schema({
     site: { type: String, required: true },
 });
 
+const relationSchema = new mongoose.Schema({
+    id: { type: Number, required: true },
+    title: {
+        romaji: { type: String, required: true },
+        english: { type: String, default: '' },
+    },
+    image: { type: String, required: true },
+    type: { type: String, required: true },
+    relationType: { type: String, required: true },
+});
+
 const animeSchema = new mongoose.Schema({
     anime_id: { type: String, required: true, unique: true },
     Name: { type: String, required: true },
@@ -74,6 +85,7 @@ const animeSchema = new mongoose.Schema({
     staff: { type: [staffSchema], default: [] },
     reviews: { type: [reviewSchema], default: [] },
     streamingEpisodes: { type: [streamingEpisodeSchema], default: [] },
+    relations: { type: [relationSchema], default: [] },
 });
 
 const Anime =
