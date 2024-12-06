@@ -120,7 +120,7 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
     const formatDateOfBirth = (dob: Character['dateOfBirth']) => {
         if (!dob) return 'Unknown';
         const { day, month, year } = dob;
-        return `${day || '??'}/${month || '??'}/${year || '??'}`;
+        return `${day || '??'}/${month || '??'}`;
     };
 
     const renderContent = () => {
@@ -147,7 +147,7 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
                                     </li>
                                     <li>
                                         <p className="text-gray-400">
-                                            Date of birth
+                                            Birthday
                                         </p>
                                     </li>
                                 </ul>
@@ -189,6 +189,7 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
                 return (
                     <ItemGrid
                         loading={false} // Mettez `true` si les données sont encore en cours de chargement
+                        type="animev2"
                         items={character.media.edges.map((media) => media.node)}
                         getName={(item) => item.title.romaji}
                         getImage={(item) => item.coverImage.large}

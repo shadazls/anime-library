@@ -36,6 +36,9 @@ const ItemGrid: React.FC<ItemGridProps> = ({
         } else if (type === 'character' && router) {
             router.push(`/character/${id}`);
             return;
+        } else if (type === 'animev2' && router) {
+            router.push(`/animev2/${id}`);
+            return;
         }
         if (router) {
             router.push(`/anime/${id}`);

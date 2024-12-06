@@ -95,7 +95,8 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
             });
 
             const { data } = await response.json();
-
+            console.log('ZIZIIIII');
+            console.log('Fetched trailer:', data.media.trailer);
             if (data?.Media?.trailer?.site === 'youtube') {
                 const fetchedTrailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
 
@@ -152,6 +153,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                 return relations ? (
                     <ItemGrid
                         key="relations"
+                        type="animev2"
                         loading={!relations}
                         items={relations}
                         getId={(relation) => relation.id}
