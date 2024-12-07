@@ -1,10 +1,14 @@
 'use client';
 
+import { ObjectId } from 'mongoose';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
+    _id: ObjectId;
     name?: string;
     email?: string;
+    avatar?: string;
+    bannerImage?: string;
 }
 
 interface AuthContextType {
