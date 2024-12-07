@@ -4,6 +4,7 @@ import CharacterSection from '@/components/CharacterSection';
 import ItemGrid from '@/components/ItemGrid';
 import { Image } from '@nextui-org/image';
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 interface Staff {
     id: number;
@@ -231,8 +232,10 @@ const StaffPage = ({ params }: StaffDetailParams) => {
                                 Description
                             </h3>
                             <p className="text-gray-400">
-                                {staff.description ||
-                                    'No description available.'}
+                                <ReactMarkdown>
+                                    {staff.description ||
+                                        'No description available.'}
+                                </ReactMarkdown>
                             </p>
                         </div>
                     </div>
