@@ -10,6 +10,7 @@ interface AnimeInfoProps {
     animeName: string;
     animeScore: number;
     animeImageUrl: string;
+    animeId: number;
     onTrailerClick: () => void;
 }
 
@@ -17,8 +18,30 @@ const AnimeInfo = ({
     animeName,
     animeScore,
     animeImageUrl,
+    animeId,
     onTrailerClick,
 }: AnimeInfoProps) => {
+    const handleAddToList = async (status: string) => {
+        try {
+            const response = await fetch('/api/users/addAnimeToList', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ animeId, status }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add anime to list');
+            }
+
+            const data = await response.json();
+            console.log(`Anime added to list with status: ${status}`, data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div className="flex justify-start gap-4">
             <Image
@@ -52,6 +75,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<EyeRegularIcon />}
+                        onPress={() => handleAddToList('Watching')}
                     >
                         Watching
                     </Button>
@@ -60,6 +84,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<BookmarkIcon />}
+                        onPress={() => handleAddToList('To Watch')}
                     >
                         To Watch
                     </Button>
@@ -68,6 +93,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<CheckIcon />}
+                        onPress={() => handleAddToList('Watched')}
                     >
                         Watched
                     </Button>

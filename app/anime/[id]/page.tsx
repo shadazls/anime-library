@@ -182,6 +182,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         animeName={anime.Name}
                         animeScore={anime.Score}
                         animeImageUrl={anime.image_url}
+                        animeId={anime.anime_id}
                         onTrailerClick={handleTrailerClick}
                     />
                     <TabsSection onTabChange={(key) => setActiveTab(key)} />
