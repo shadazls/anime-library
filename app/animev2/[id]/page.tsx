@@ -137,30 +137,6 @@ const AnimeDetailsPageV2 = ({ params }: { params: { id: string } }) => {
                                 Favorites: anime.favourites,
                             }}
                         />
-                        {/* <AnimeDetails
-                            anime={{
-                                Type: anime.type,
-                                Episodes: anime.episodes,
-                                Genres: anime.genres,
-                                Aired: `${anime.startDate.year}-${anime.startDate.month}-${anime.startDate.day}`,
-                                Status: anime.status,
-                                Premiered: `${anime.season} ${anime.seasonYear}`,
-                                Producers: anime.studios.nodes.map(
-                                    (node: any) => node.name
-                                ),
-                                Licensors: [], // AniList n'inclut pas les Licensors
-                                Studios: anime.studios.nodes.map(
-                                    (node: any) => node.name
-                                ),
-                                Source: anime.source,
-                                Duration: `${anime.duration} min`,
-                                Rating: `${anime.averageScore}/100`,
-                                // Rank: '-', // Non disponible dans AniList
-                                Popularity: anime.popularity,
-                                Favorites: anime.favourites,
-                                // Members: '-', // Non disponible dans AniList
-                            }}
-                        /> */}
                         <AnimeDescription
                             synopsis={
                                 anime.description || 'No description available'
