@@ -1,6 +1,7 @@
 import connectDB from '@/lib/db';
 import User from '@/models/User';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
 export const POST = async (request) => {
     try {
@@ -8,14 +9,11 @@ export const POST = async (request) => {
 
         // Connecte à la base de données
         await connectDB();
-        console.log('Database connected successfully.');
 
         // Récupère le token dans les cookies ou les en-têtes Authorization
         const token =
             request.headers.get('Authorization')?.split('Bearer ')[1] ||
             request.cookies.get('token')?.value;
-
-        console.log('Token retrieved:', token);
 
         if (!token) {
             console.log('No token found.');
@@ -24,11 +22,9 @@ export const POST = async (request) => {
 
         // Vérifie et décode le JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Token decoded:', decoded);
 
         // Récupère les informations de l'utilisateur à partir de l'ID décodé
         const user = await User.findById(decoded.userId);
-        console.log('User found:', user);
 
         if (!user) {
             console.log('User not found.');
@@ -37,7 +33,6 @@ export const POST = async (request) => {
 
         // Récupère les données de la requête
         const { animeId, listName } = await request.json();
-        console.log('Request body:', { animeId, listName });
 
         // Valide les données
         const validLists = [
@@ -51,6 +46,29 @@ export const POST = async (request) => {
         if (!validLists.includes(listName)) {
             console.log('Invalid list name:', listName);
             return new Response('Invalid list name', { status: 400 });
+        }
+
+        // Vérifier si l'anime est déjà dans une autre liste
+        const existingList = validLists.find((list) => {
+            console.log(`Checking list: ${list}`);
+            console.log('List contents:', user[list]);
+            const exists = user[list].some(
+                (id) => String(id) === String(animeId)
+            ); // Convertir les ID en String si nécessaire
+            console.log(`Anime ${animeId} exists in ${list}:`, exists);
+            return exists;
+        });
+
+        const animeObjectId = new mongoose.Types.ObjectId(animeId);
+
+        if (existingList) {
+            // Si l'anime est trouvé dans une autre liste, le retirer de cette liste
+            console.log(
+                `Anime ${animeId} found in ${existingList}. Removing it from that list.`
+            );
+            user[existingList] = user[existingList].filter(
+                (id) => id.toString() !== animeObjectId.toString()
+            );
         }
 
         // Ajoute l'anime à la liste correspondante
