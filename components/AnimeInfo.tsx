@@ -5,12 +5,13 @@ import PlayIcon from '@/components/PlayIcon';
 import StarIcon from '@/components/StarIcon';
 import { Button } from '@nextui-org/button';
 import { Image } from '@nextui-org/image';
+import { ObjectId } from 'mongoose';
 
 interface AnimeInfoProps {
     animeName: string;
     animeScore: number;
     animeImageUrl: string;
-    animeId: number;
+    animeId: ObjectId;
     onTrailerClick: () => void;
 }
 
@@ -21,14 +22,14 @@ const AnimeInfo = ({
     animeId,
     onTrailerClick,
 }: AnimeInfoProps) => {
-    const handleAddToList = async (status: string) => {
+    const handleAddToList = async (listName: string) => {
         try {
             const response = await fetch('/api/users/addAnimeToList', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ animeId, status }),
+                body: JSON.stringify({ animeId, listName }),
             });
 
             if (!response.ok) {
@@ -36,7 +37,7 @@ const AnimeInfo = ({
             }
 
             const data = await response.json();
-            console.log(`Anime added to list with status: ${status}`, data);
+            console.log(`Anime added to ${listName}`, data);
         } catch (error) {
             console.error(error);
         }
@@ -75,7 +76,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<EyeRegularIcon />}
-                        onPress={() => handleAddToList('Watching')}
+                        onPress={() => handleAddToList('watching')}
                     >
                         Watching
                     </Button>
@@ -84,7 +85,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<BookmarkIcon />}
-                        onPress={() => handleAddToList('To Watch')}
+                        onPress={() => handleAddToList('to_watch')}
                     >
                         To Watch
                     </Button>
@@ -93,7 +94,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<CheckIcon />}
-                        onPress={() => handleAddToList('Watched')}
+                        onPress={() => handleAddToList('watched')}
                     >
                         Watched
                     </Button>

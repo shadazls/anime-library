@@ -17,11 +17,12 @@ import TrailerModal from '@/components/TrailerModal';
 import { Anime } from '@/types';
 import { Button } from '@nextui-org/button';
 import { useDisclosure } from '@nextui-org/react';
+import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 
 interface AnimeDetailParams {
     params: {
-        id: string;
+        id: ObjectId;
     };
 }
 
@@ -182,7 +183,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         animeName={anime.Name}
                         animeScore={anime.Score}
                         animeImageUrl={anime.image_url}
-                        animeId={anime.anime_id}
+                        animeId={anime._id}
                         onTrailerClick={handleTrailerClick}
                     />
                     <TabsSection onTabChange={(key) => setActiveTab(key)} />
