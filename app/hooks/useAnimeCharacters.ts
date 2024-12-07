@@ -1,5 +1,5 @@
 // useAnimeCharacters.ts
-import { ObjectId } from 'mongoose';
+import { Anime } from '@/types';
 import { useEffect, useState } from 'react';
 
 interface Character {
@@ -13,33 +13,6 @@ interface Character {
         medium?: string;
     };
     role: string;
-}
-
-interface Anime {
-    _id: ObjectId;
-    anime_id: number;
-    Name: string;
-    Score: number;
-    Genres: string[];
-    Synopsis: string;
-    Type: string;
-    Episodes: number;
-    Aired: string;
-    Premiered: string;
-    Status: string;
-    Producers: string[];
-    Licensors: string[];
-    Studios: string[];
-    Source: string;
-    Duration: string;
-    Rating: string;
-    Rank: number;
-    Popularity: number;
-    Favorites: number;
-    Members: number;
-    image_url: string;
-    trailer_url?: string;
-    characters?: Character[];
 }
 
 const useAnimeCharacters = (

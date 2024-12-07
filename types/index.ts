@@ -28,10 +28,19 @@ export interface Anime {
     Favorites: number;
     Members: number;
     image_url: string;
-    trailer_url?: string;
+    trailer_url?: string | null;
     characters?: Character[];
     staff?: Staff[];
     reviews?: Review[];
+    streamingEpisodes?: StreamingEpisode[];
+    relations?: AnimeRelation[];
+}
+
+export interface StreamingEpisode {
+    title: string;
+    thumbnail: string;
+    url: string;
+    site: string;
 }
 
 export interface Character {
@@ -68,4 +77,15 @@ interface Staff {
         large: string;
     };
     role: string;
+}
+
+export interface AnimeRelation {
+    id: number;
+    title: {
+        romaji: string;
+        english?: string;
+    };
+    image: string;
+    type: string;
+    relationType: string;
 }

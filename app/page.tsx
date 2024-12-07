@@ -59,6 +59,21 @@ export default function Home() {
         setSelectedTab(tabKey);
     };
 
+    const fetchData = async (url: string, cacheKey: string) => {
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            return JSON.parse(cachedData);
+        } else {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch from ${url}`);
+            }
+            const data = await response.json();
+            localStorage.setItem(cacheKey, JSON.stringify(data)); // Mise en cache
+            return data;
+        }
+    };
+
     // Fonction de récupération des animes
     useEffect(() => {
         document.body.style.background =
@@ -66,79 +81,73 @@ export default function Home() {
         // document.body.classList.add("background-main")#121212
         const fetchAnimes = async () => {
             try {
+                setLoading(true);
                 const [
-                    rankResponse,
-                    popularityResponse,
-                    allTimeResponse,
-                    scoreResponse,
-                    actionResponse,
-                    movieResponse,
-                    episodesResponse,
-                    premieredResponse,
-                    statusReponse,
-                    producerResponse,
-                    licensorResponse,
-                    studioResponse,
-                    sourceResponse,
-                    durationResponse,
-                    ratingResponse,
+                    rankData,
+                    popularityData,
+                    allTimeData,
+                    scoreData,
+                    actionData,
+                    movieData,
+                    episodesData,
+                    premieredData,
+                    statusData,
+                    producerData,
+                    licensorData,
+                    studioData,
+                    sourceData,
+                    durationData,
+                    ratingData,
                 ] = await Promise.all([
-                    fetch('/api/animes/ranked'),
-                    fetch('/api/animes/popularity'),
-                    fetch('/api/animes/favorites'),
-                    fetch('/api/animes/score'),
-                    fetch('/api/animes/animesByGenre?genre=Action'),
-                    fetch('/api/animes/animesByType?type=Movie'),
-                    fetch('/api/animes/animesByEpisodes?episodes=12'),
-                    fetch('/api/animes/animesByPremiered?year=2000'),
-                    fetch('/api/animes/animesByStatus?status=Finished Airing'),
-                    fetch('/api/animes/animesByProducer?producer=Shueisha'),
-                    fetch('/api/animes/animesByLicensor?licensor=AnimEigo'),
-                    fetch('/api/animes/animesByStudio?studio=Madhouse'),
-                    fetch('/api/animes/animesBySource?source=Manga'),
-                    fetch(
-                        '/api/animes/animesByDuration?duration=27%20min%20per%20ep'
+                    fetchData('/api/animes/ranked', 'rankData'),
+                    fetchData('/api/animes/popularity', 'popularityData'),
+                    fetchData('/api/animes/favorites', 'allTimeData'),
+                    fetchData('/api/animes/score', 'scoreData'),
+                    fetchData(
+                        '/api/animes/animesByGenre?genre=Action',
+                        'actionData'
                     ),
-                    fetch(
-                        '/api/animes/animesByRating?rating=PG-13%20-%20Teens%2013%20or%20older'
+                    fetchData(
+                        '/api/animes/animesByType?type=Movie',
+                        'movieData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByEpisodes?episodes=12',
+                        'episodesData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByPremiered?year=2000',
+                        'premieredData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByStatus?status=Finished Airing',
+                        'statusData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByProducer?producer=Shueisha',
+                        'producerData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByLicensor?licensor=AnimEigo',
+                        'licensorData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByStudio?studio=Madhouse',
+                        'studioData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesBySource?source=Manga',
+                        'sourceData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByDuration?duration=27%20min%20per%20ep',
+                        'durationData'
+                    ),
+                    fetchData(
+                        '/api/animes/animesByRating?rating=PG-13%20-%20Teens%2013%20or%20older',
+                        'ratingData'
                     ),
                 ]);
-
-                if (
-                    !rankResponse.ok ||
-                    !popularityResponse.ok ||
-                    !allTimeResponse.ok ||
-                    !scoreResponse.ok ||
-                    !actionResponse.ok ||
-                    !movieResponse.ok ||
-                    !episodesResponse.ok ||
-                    !premieredResponse.ok ||
-                    !statusReponse.ok ||
-                    !producerResponse.ok ||
-                    !licensorResponse.ok ||
-                    !studioResponse.ok ||
-                    !sourceResponse.ok ||
-                    !durationResponse.ok ||
-                    !ratingResponse.ok
-                ) {
-                    throw new Error('Failed to fetch animes');
-                }
-
-                const rankData = await rankResponse.json();
-                const popularityData = await popularityResponse.json();
-                const allTimeData = await allTimeResponse.json();
-                const scoreData = await scoreResponse.json();
-                const actionData = await actionResponse.json();
-                const movieData = await movieResponse.json();
-                const episodesData = await episodesResponse.json();
-                const premieredData = await premieredResponse.json();
-                const statusData = await statusReponse.json();
-                const producerData = await producerResponse.json();
-                const licensorData = await licensorResponse.json();
-                const studioData = await studioResponse.json();
-                const sourceData = await sourceResponse.json();
-                const durationData = await durationResponse.json();
-                const ratingData = await ratingResponse.json();
 
                 setTopAnimes(rankData);
                 setPopularAnimes(popularityData);
@@ -164,57 +173,55 @@ export default function Home() {
 
         const fetchMangas = async () => {
             try {
+                setLoading(true);
                 const [
-                    rankResponse,
-                    nsfwResponse,
-                    popularityResponse,
-                    startDateResponse,
-                    mediaTypeResponse,
-                    statusResponse,
-                    volumesResponse,
-                    authorResponse,
-                    chaptersResponse,
+                    rankData,
+                    nsfwData,
+                    popularityData,
+                    startDateData,
+                    mediaTypeData,
+                    statusData,
+                    volumesData,
+                    authorData,
+                    chaptersData,
                 ] = await Promise.all([
-                    fetch('http://localhost:3000/api/mangas/mangasByRank'),
-                    fetch('http://localhost:3000/api/mangas/mangasByNSFW'),
-                    fetch(
-                        'http://localhost:3000/api/mangas/mangasByPopularity'
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByRank',
+                        'rankedMangasData'
                     ),
-                    fetch(
-                        'http://localhost:3000/api/mangas/mangasByStartDate?year=1989'
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByNSFW',
+                        'nsfwMangasData'
                     ),
-                    fetch('http://localhost:3000/api/mangas/mangasByMediaType'),
-                    fetch('http://localhost:3000/api/mangas/mangasByStatus'),
-                    fetch('http://localhost:3000/api/mangas/mangasByVolumes'),
-                    fetch(
-                        'http://localhost:3000/api/mangas/mangasByAuthor?author=Shunsaku%20Tomose'
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByPopularity',
+                        'popularMangasData'
                     ),
-                    fetch('http://localhost:3000/api/mangas/mangasByChapters'),
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByStartDate?year=1989',
+                        'startDateMangasData'
+                    ),
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByMediaType',
+                        'mediaTypeMangasData'
+                    ),
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByStatus',
+                        'statusMangasData'
+                    ),
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByVolumes',
+                        'volumesMangasData'
+                    ),
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByAuthor?author=Shunsaku%20Tomose',
+                        'authorMangasData'
+                    ),
+                    fetchData(
+                        'http://localhost:3000/api/mangas/mangasByChapters',
+                        'chaptersMangasData'
+                    ),
                 ]);
-
-                if (
-                    !rankResponse.ok ||
-                    !nsfwResponse.ok ||
-                    !popularityResponse.ok ||
-                    !startDateResponse.ok ||
-                    !mediaTypeResponse.ok ||
-                    !statusResponse.ok ||
-                    !volumesResponse.ok ||
-                    !authorResponse.ok ||
-                    !chaptersResponse.ok
-                ) {
-                    throw new Error('Failed to fetch mangas');
-                }
-
-                const rankData = await rankResponse.json();
-                const nsfwData = await nsfwResponse.json();
-                const popularityData = await popularityResponse.json();
-                const startDateData = await startDateResponse.json();
-                const mediaTypeData = await mediaTypeResponse.json();
-                const statusData = await statusResponse.json();
-                const volumesData = await volumesResponse.json();
-                const authorData = await authorResponse.json();
-                const chaptersData = await chaptersResponse.json();
 
                 setRankedMangas(rankData.mangas);
                 setNsfwMangas(nsfwData.mangas);
@@ -234,7 +241,7 @@ export default function Home() {
 
         fetchAnimes();
         fetchMangas();
-    }, [selectedTab]);
+    }, []);
 
     const animeCategories = [
         { title: 'Trending Now', items: topAnimes },

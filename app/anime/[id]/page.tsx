@@ -4,6 +4,7 @@ import useAnimeCharacters from '@/app/hooks/useAnimeCharacters';
 import useAnimeRelations from '@/app/hooks/useAnimeRelations';
 import useAnimeReviews from '@/app/hooks/useAnimeReviews';
 import useAnimeStaff from '@/app/hooks/useAnimeStaff';
+import useAnimeTrailer from '@/app/hooks/useAnimeTrailer';
 import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
 import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
@@ -16,11 +17,12 @@ import TrailerModal from '@/components/TrailerModal';
 import { Anime } from '@/types';
 import { Button } from '@nextui-org/button';
 import { useDisclosure } from '@nextui-org/react';
+import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 
 interface AnimeDetailParams {
     params: {
-        id: string;
+        id: ObjectId;
     };
 }
 
@@ -28,10 +30,21 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     const { id } = params;
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [anime, setAnime] = useState<Anime | null>(null);
-    const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+    const { trailerUrl, errorModal, setErrorModal, fetchTrailer } =
+        useAnimeTrailer(anime, onOpen, setAnime);
     const [activeTab, setActiveTab] = useState<string>('overview');
-    const streamingEpisodes = useStreamingEpisodes(anime?.anime_id, activeTab);
-    const relations = useAnimeRelations(anime?.anime_id, activeTab);
+    const streamingEpisodes = useStreamingEpisodes(
+        anime?.anime_id,
+        anime,
+        setAnime,
+        activeTab
+    );
+    const relations = useAnimeRelations(
+        anime?.anime_id,
+        anime,
+        setAnime,
+        activeTab
+    );
     const characters = useAnimeCharacters(
         anime?.anime_id,
         anime,
@@ -45,10 +58,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         setAnime,
         activeTab
     );
-    const [errorModal, setErrorModal] = useState({
-        isOpen: false,
-        message: '',
-    });
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -68,69 +77,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
     }, [id]);
 
     const handleTrailerClick = async () => {
-        if (!anime) return;
-
-        // Si `trailer_url` existe déjà, utilise-le directement
-        if (anime.trailer_url) {
-            setTrailerUrl(anime.trailer_url);
-            onOpen();
-            return;
-        }
-
-        try {
-            // Requête à AniList pour récupérer le trailer
-            const query = `
-        query ($search: String) {
-          Media(search: $search, type: ANIME) {
-            trailer {
-              id
-              site
-            }
-          }
-        }
-      `;
-            const variables = { search: anime.Name };
-
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query, variables }),
-            });
-
-            const { data } = await response.json();
-            if (data?.Media?.trailer?.site === 'youtube') {
-                const fetchedTrailerUrl = `https://www.youtube.com/embed/${data.Media.trailer.id}`;
-
-                // Mets à jour le trailer dans la base de données
-                await fetch(`/api/animes/editAnime?id=${anime._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ trailer_url: fetchedTrailerUrl }),
-                });
-
-                // Mets à jour localement
-                setAnime((prev) =>
-                    prev ? { ...prev, trailer_url: fetchedTrailerUrl } : prev
-                );
-                setTrailerUrl(fetchedTrailerUrl);
-                onOpen();
-            } else {
-                setErrorModal({
-                    isOpen: true,
-                    message: 'Trailer not available for this anime.',
-                });
-            }
-        } catch (error) {
-            setErrorModal({
-                isOpen: true,
-                message: 'Failed to fetch the trailer. Please try again later.',
-            });
-            console.error('Failed to fetch trailer:', error);
-        }
+        fetchTrailer();
     };
 
     const renderContent = () => {
@@ -167,7 +114,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         loading={!relations}
                         items={relations}
                         getId={(relation) => relation.id}
-                        getName={(relation) => relation.title}
+                        getName={(relation) => relation.title.romaji}
                         getImage={(relation) => relation.image}
                     />
                 ) : (
@@ -236,6 +183,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         animeName={anime.Name}
                         animeScore={anime.Score}
                         animeImageUrl={anime.image_url}
+                        animeId={anime._id}
                         onTrailerClick={handleTrailerClick}
                     />
                     <TabsSection onTabChange={(key) => setActiveTab(key)} />
