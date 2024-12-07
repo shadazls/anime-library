@@ -21,6 +21,7 @@ import { ThemeSwitch } from '@/components/theme-switch';
 import { siteConfig } from '@/config/site';
 // import { useAuth } from '../lib/useAuth'; // Importer le hook d'authentification
 import { useAuth } from '@/app/context/AuthContext';
+import { Avatar } from '@nextui-org/avatar';
 
 export const Navbar = () => {
     const { isAuthenticated, user } = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
@@ -114,10 +115,29 @@ export const Navbar = () => {
                         </Button>
                     </NavbarItem>
                 ) : (
-                    <NavbarItem className="hidden md:flex gap-4">
-                        <p className="text-white">{user?.name}</p>
-                        {/* {user?.name} */}
-                    </NavbarItem>
+                    <>
+                        <NavbarItem className="ml-12">
+                            <NextLink
+                                className={clsx(
+                                    linkStyles({ color: 'foreground' }),
+                                    'data-[active=true]:text-primary data-[active=true]:font-medium'
+                                )}
+                                color="foreground"
+                                href={`/user/${user?.name}`}
+                            >
+                                My Library
+                            </NextLink>
+                        </NavbarItem>
+                        <NavbarItem className="hidden md:flex gap-4">
+                            {/* <p className="text-white">{user?.name}</p> */}
+                            <Avatar
+                                showFallback
+                                name={user?.name}
+                                src={user?.avatar}
+                            />
+                            {/* {user?.name} */}
+                        </NavbarItem>
+                    </>
                 )}
             </NavbarContent>
 

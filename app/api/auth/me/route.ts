@@ -29,6 +29,8 @@ export const GET = async (req: Request) => {
                 id: user._id,
                 email: user.email,
                 name: user.name,
+                avatar: user.avatar,
+                bannerImage: user.bannerImage,
             }),
             {
                 status: 200,
