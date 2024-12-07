@@ -22,6 +22,12 @@ import { siteConfig } from '@/config/site';
 // import { useAuth } from '../lib/useAuth'; // Importer le hook d'authentification
 import { useAuth } from '@/app/context/AuthContext';
 import { Avatar } from '@nextui-org/avatar';
+import {
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
+} from '@nextui-org/dropdown';
 
 export const Navbar = () => {
     const { isAuthenticated, user } = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
@@ -130,11 +136,47 @@ export const Navbar = () => {
                         </NavbarItem>
                         <NavbarItem className="hidden md:flex gap-4">
                             {/* <p className="text-white">{user?.name}</p> */}
-                            <Avatar
+                            <Dropdown placement="bottom-end">
+                                <DropdownTrigger>
+                                    <Avatar
+                                        showFallback
+                                        name={user?.name}
+                                        src={user?.avatar}
+                                        className="transition-transform cursor-pointer"
+                                    />
+                                </DropdownTrigger>
+                                <DropdownMenu
+                                    aria-label="Profile Actions"
+                                    variant="flat"
+                                >
+                                    {/* <DropdownItem
+                                        key="profile"
+                                        className="h-14 gap-2"
+                                    >
+                                        <p className="font-semibold">
+                                            Signed in as
+                                        </p>
+                                        <p className="font-semibold">
+                                            {user?.email}
+                                        </p>
+                                    </DropdownItem> */}
+                                    <DropdownItem key="settings">
+                                        Settings
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key="logout"
+                                        color="danger"
+                                        className="text-danger"
+                                    >
+                                        Log Out
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                            {/* <Avatar
                                 showFallback
                                 name={user?.name}
                                 src={user?.avatar}
-                            />
+                            /> */}
                             {/* {user?.name} */}
                         </NavbarItem>
                     </>
