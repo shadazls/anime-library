@@ -4,6 +4,7 @@ import CharacterSection from '@/components/CharacterSection';
 import ItemGrid from '@/components/ItemGrid';
 import { Image } from '@nextui-org/image';
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 interface Character {
     id: number;
@@ -178,17 +179,19 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
                             <h3 className="text-xl font-semibold mb-4">
                                 Description
                             </h3>
-                            <p className="text-gray-400">
-                                {character.description ||
-                                    'No description available.'}
-                            </p>
+                            <div className="text-gray-400">
+                                <ReactMarkdown>
+                                    {character.description ||
+                                        'No description available.'}
+                                </ReactMarkdown>
+                            </div>
                         </div>
                     </div>
                 );
             case 'appears_in':
                 return (
                     <ItemGrid
-                        loading={false} // Mettez `true` si les données sont encore en cours de chargement
+                        loading={false}
                         type="animev2"
                         items={character.media.edges.map((media) => media.node)}
                         getName={(item) => item.title.romaji}

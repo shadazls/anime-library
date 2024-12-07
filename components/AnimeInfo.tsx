@@ -5,11 +5,13 @@ import PlayIcon from '@/components/PlayIcon';
 import StarIcon from '@/components/StarIcon';
 import { Button } from '@nextui-org/button';
 import { Image } from '@nextui-org/image';
+import { ObjectId } from 'mongoose';
 
 interface AnimeInfoProps {
     animeName: string;
     animeScore: number;
     animeImageUrl: string;
+    animeId: ObjectId;
     onTrailerClick: () => void;
 }
 
@@ -17,8 +19,30 @@ const AnimeInfo = ({
     animeName,
     animeScore,
     animeImageUrl,
+    animeId,
     onTrailerClick,
 }: AnimeInfoProps) => {
+    const handleAddToList = async (listName: string) => {
+        try {
+            const response = await fetch('/api/users/addAnimeToList', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ animeId, listName }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add anime to list');
+            }
+
+            const data = await response.json();
+            console.log(`Anime added to ${listName}`, data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div className="flex justify-start gap-4">
             <Image
@@ -52,6 +76,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<EyeRegularIcon />}
+                        onPress={() => handleAddToList('watching')}
                     >
                         Watching
                     </Button>
@@ -60,6 +85,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<BookmarkIcon />}
+                        onPress={() => handleAddToList('to_watch')}
                     >
                         To Watch
                     </Button>
@@ -68,6 +94,7 @@ const AnimeInfo = ({
                         variant="flat"
                         radius="sm"
                         startContent={<CheckIcon />}
+                        onPress={() => handleAddToList('watched')}
                     >
                         Watched
                     </Button>
