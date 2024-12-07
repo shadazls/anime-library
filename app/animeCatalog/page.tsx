@@ -5,6 +5,7 @@ import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import FilterOptions from "@/components/FilterOptions"; // Composant des filtres
+import { Tabs, Tab } from "@nextui-org/tabs"; // Import pour les onglets
 import { Pagination } from "@nextui-org/pagination";
 import { useDisclosure } from "@nextui-org/react";
 import TrashIcon from "@/components/TrashIcon";
@@ -50,86 +51,68 @@ export default function AnimeCatalogPage() {
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>(""); //Texte de recherche
+  const [filters, setFilters] = useState<Record<string, string | number>>({});
+  
+  
 
-
-  // Fonction de récupération des animes avec pagination et recherche
-  const fetchAnimes = async (page: number, limit: number, name: string) => {
+   // Fonction de récupération des animes avec pagination, recherche et filtres
+   const fetchAnimes = async (
+    page: number,
+    limit: number,
+    name: string,
+    filters: Record<string, string | number>
+  ) => {
     try {
       setLoading(true);
+
+      const filterParams = Object.entries(filters)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join("&");
+
       const query = new URLSearchParams({
         page: String(page),
         limit: String(limit),
-        name: name || "",  // Si searchText est vide, on envoie une chaîne vide
+        name: name || "",
       }).toString();
 
-      const response = await fetch(`/api/animes?${query}`);
+      const response = await fetch(`/api/animes?${query}&${filterParams}`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch animes");
       }
 
       const data = await response.json();
-      console.log("Fetched animes data:", data); // Ajoutez ce log
-      setAnimes(data.animes);  // Mise à jour des animes récupérés
-      setTotalPages(data.pagination.totalPages);  // Mise à jour du nombre total de pages
-    } catch (error) {
 
+      // Log the response received from the backend
+      console.log("Animes data received from backend:", data);
+
+      setAnimes(data.animes);
+      setTotalPages(data.pagination.totalPages);
+    } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
-
-  // Utiliser le texte de recherche pour récupérer les animes chaque fois que searchText change
+  
+  // Charger les données à chaque changement de page, items par page, recherche ou filtres
   useEffect(() => {
-    fetchAnimes(currentPage, 18, searchText);  // Par exemple, 18 animes par page
-  }, [searchText, currentPage]);  // Déclenche à chaque changement de searchText
-
-  // Charger les animes quand la page ou le nombre d'animés par page change
-  useEffect(() => {
-    fetchAnimes(currentPage, itemsPerPage, searchText);
-  }, [currentPage, itemsPerPage]);
-
-  useEffect(() => {
-    document.body.style.background = '#121212';
-  }, []);
-
+    fetchAnimes(currentPage, itemsPerPage, searchText, filters);
+  }, [filters, currentPage, itemsPerPage, searchText]);
 
 
     // Fonction qui sera appelée lorsque l'utilisateur tape dans le champ de recherche
-    const handleSearch = (text: string) => {
-      setSearchText(text);  // Met à jour l'état du texte de recherche
-    };
-  
-
-  // Gérer l'ouverture du modal pour modifier un anime
-  const openEditAnimeModal = async (anime: Anime) => {
-    try {
-      const response = await fetch(`/api/animes/anime?id=${anime._id}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch anime details");
-      }
-      const fullAnime = await response.json(); // Anime avec tous les champs
-      console.log("Full anime data fetched for editing:", fullAnime); // Vérifiez ici si toutes les données sont présentes
-      setSelectedAnime(fullAnime); // Passe toutes les données récupérées
-      setModalMode("edit");
-      setModalOpen(true);
-    } catch (error) {
-      console.error("Error fetching anime for editing:", error);
-    }
+  const handleSearch = (text: string) => {
+    setSearchText(text); // Mise à jour du texte de recherche
+    setCurrentPage(1); // Réinitialiser la pagination
   };
-  
-  
 
-  const openAddAnimeModal = () => {
-    setModalMode("add");
-    setSelectedAnime(null); // Réinitialiser les données sélectionnées
-    setModalOpen(true); // Ouvrir le modal pour ajouter un nouvel anime
+   // Mettre à jour les filtres
+   const handleFiltersUpdate = (updatedFilters: Record<string, string | number>) => {
+    setFilters(updatedFilters);
+    setCurrentPage(1); // Réinitialiser à la première page
   };
-  
-  
-  
 
   // Fonction pour changer le nombre d'animés par page en fonction du Tab sélectionné
   const handleTabChange = (key: React.Key) => {
@@ -150,6 +133,35 @@ export default function AnimeCatalogPage() {
     setCurrentPage(1); // Réinitialise à la première page quand le nombre d'animés par page change
   };
 
+  useEffect(() => {
+    document.body.style.background = '#121212';
+  }, []);
+
+  
+
+  // Gérer l'ouverture du modal pour modifier un anime
+  const openEditAnimeModal = async (anime: Anime) => {
+    try {
+      const response = await fetch(`/api/animes/anime?id=${anime._id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch anime details");
+      }
+      const fullAnime = await response.json(); // Anime avec tous les champs
+      setSelectedAnime(fullAnime); // Passe toutes les données récupérées
+      setModalMode("edit");
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching anime for editing:", error);
+    }
+  };
+  
+
+
+  const openAddAnimeModal = () => {
+    setModalMode("add");
+    setSelectedAnime(null); // Réinitialiser les données sélectionnées
+    setModalOpen(true); // Ouvrir le modal pour ajouter un nouvel anime
+  };
 
    // Ajouter un nouvel anime
    const handleAddAnime = async (animeData: Partial<Anime>) => {
@@ -162,7 +174,7 @@ export default function AnimeCatalogPage() {
         body: JSON.stringify(animeData),
       });
       if (response.ok) {
-        fetchAnimes(currentPage, itemsPerPage, searchText);
+        fetchAnimes(currentPage, itemsPerPage, searchText, filters);
       }
     } catch (error) {
       console.error("Error adding anime:", error);
@@ -179,7 +191,7 @@ export default function AnimeCatalogPage() {
         body: JSON.stringify(animeData),
       });
       if (response.ok) {
-        fetchAnimes(currentPage, itemsPerPage, searchText);
+        fetchAnimes(currentPage, itemsPerPage, searchText, filters);
       }
     } catch (error) {
       console.error("Error editing anime:", error);
@@ -207,7 +219,16 @@ export default function AnimeCatalogPage() {
       <h1 className="text-6xl font-bold">Anime Catalog</h1>
 
       {/* Barre de filtres */}
-      <FilterOptions onSearch={handleSearch}/>
+      <FilterOptions onSearch={handleSearch} onFilterChange={handleFiltersUpdate} />
+
+      {/* Tabs pour gérer les items par page */}
+      <div className="flex justify-end">
+        <Tabs aria-label="Options" onSelectionChange={handleTabChange}>
+          <Tab key="18" title="18" />
+          <Tab key="36" title="36" />
+          <Tab key="54" title="54" />
+        </Tabs>
+      </div>
 
 
       {/* Bouton pour ajouter un anime */}

@@ -2,19 +2,21 @@ import { useState, useEffect } from "react";
 import { SearchInput } from "@/components/SearchInput";
 import { Button } from "@nextui-org/button";
 import AnimeFilter from "./AnimeFilter";
-import FilterIcon from "./FilterIcon";
 
 interface FilterOptionsProps {
   onSearch: (searchText: string) => void;
+  onFilterChange: (filters: Record<string, string | number>) => void;
 }
 
-const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
-  const [genres, setGenres] = useState<{ label: string, value: string }[]>([]); // Format des genres
-  const [producers, setProducers] = useState<{ label: string, value: string }[]>([]); // Format des producteurs
-  const [licensors, setLicensors] = useState<{ label: string, value: string }[]>([]); // Format des licensors
-  const [types, setTypes] = useState<{ label: string, value: string }[]>([]); // Format des types
-  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
-  const [searchText, setSearchText] = useState<string>("");
+const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch, onFilterChange }) => {
+  const [genres, setGenres] = useState<{ label: string; value: string }[]>([]); // Genres
+  const [producers, setProducers] = useState<{ label: string; value: string }[]>([]); // Producteurs
+  const [licensors, setLicensors] = useState<{ label: string; value: string }[]>([]); // Licensors
+  const [types, setTypes] = useState<{ label: string; value: string }[]>([]); // Types
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false); // Gestion des filtres avancés
+  const [searchText, setSearchText] = useState<string>(""); // Texte de recherche
+  const [filters, setFilters] = useState<Record<string, string | number>>({}); // Filtres appliqués
+
 
   const toggleFiltersVisibility = () => {
     setIsFiltersVisible((prevState) => !prevState);
@@ -23,6 +25,13 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
   const handleSearch = (text: string) => {
     setSearchText(text);  // Met à jour l'état local
     onSearch(text); // Passe le texte à la page parent (animeCatalog)
+  };
+
+  // Gestion des filtres individuels
+  const handleFilterChange = (key: string, value: string | number) => {
+    const updatedFilters = { ...filters, [key]: value }; // Mise à jour du filtre spécifique
+    setFilters(updatedFilters); // Mise à jour des filtres locaux
+    onFilterChange(updatedFilters); // Transmission au parent
   };
 
   const scoreOptions = [
@@ -40,6 +49,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
     { label: "Less than 24 episodes", value: "24-" },
     { label: "Less than 36 episodes", value: "36-" },
   ];
+  
 
   // Récupérer les genres depuis l'API
   useEffect(() => {
@@ -133,6 +143,11 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
     fetchTypes();
   }, []);
 
+   // Transmettre les filtres au parent lorsqu'ils changent
+   useEffect(() => {
+    onFilterChange(filters);
+  }, [filters, onFilterChange]);
+
   return (
     <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
       <SearchInput searchText={searchText} onSearch={handleSearch}/>
@@ -141,18 +156,21 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
         placeholder="Any"
         description="The genres of the anime"
         options={genres} // Passer les genres formatés
+        onChange={(value) => handleFilterChange("genres", value)}
       />
       <AnimeFilter 
         label="Scores"
         placeholder="Any"
         description="The score of the anime"
         options={scoreOptions}
+        onChange={(value) => handleFilterChange("scores", value)}
       />
       <AnimeFilter 
         label="Episodes"
         placeholder="Any"
         description="The number of episodes of the anime"
         options={episodeOptions}
+        onChange={(value) => handleFilterChange("episodes", value)}
       />
       <AnimeFilter 
         label="Status"
@@ -164,12 +182,14 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
           { label: "Not Yet Aired", value: "Not Yet Aired" },
           // Add more options as needed
         ]}
+        onChange={(value) => handleFilterChange("status", value)}
       />
       <AnimeFilter 
         label="Rating"
         placeholder="Any"
         description="The age rating of the anime"
         options={[]}
+        onChange={(value) => handleFilterChange("rating", value)}
       />
       <Button color="default" variant="bordered" className="self-center" onClick={toggleFiltersVisibility}>
         Advanced Filters
@@ -181,36 +201,42 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
             placeholder="Any"
             description="The production companies or producers of the anime"
             options={producers} // Passer les producteurs récupérés dynamiquement
+            onChange={(value) => handleFilterChange("producers", value)}
           />
           <AnimeFilter 
             label="Licensors"
             placeholder="Any"
             description="The licensors of the anime (e.g., streaming platforms)"
             options={licensors} // Passer les licensors récupérés dynamiquement
+            onChange={(value) => handleFilterChange("licensors", value)}
           />
           <AnimeFilter 
             label="Type"
             placeholder="Any"
             description="The type of the anime (e.g., TV series, movie, OVA, etc.)"
             options={types} // Passer les types récupérés dynamiquement
+            onChange={(value) => handleFilterChange("type", value)}
           />
           <AnimeFilter 
             label="Studios"
             placeholder="Any"
             description="The studios that produced the anime"
             options={[]}
+            onChange={(value) => handleFilterChange("studios", value)}
           />
           <AnimeFilter 
             label="Source"
             placeholder="Any"
             description="The original source material of the anime"
             options={[]}
+            onChange={(value) => handleFilterChange("source", value)}
           />
           <AnimeFilter 
             label="Duration"
             placeholder="Any"
             description="The duration of each episode"
             options={[]}
+            onChange={(value) => handleFilterChange("duration", value)}
           />
           <AnimeFilter 
             label="Aired"
@@ -221,6 +247,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
               { label: "Mar 1, 2010 to Mar 30, 2011", value: "Mar 1, 2010 to Mar 30, 2011" },
               // Add more options as needed
             ]}
+            onChange={(value) => handleFilterChange("aired", value)}
           />
 
           <AnimeFilter 
@@ -232,6 +259,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
               { label: "Winter 2010", value: "winter 2010" },
               // Add more options as needed
             ]}
+            onChange={(value) => handleFilterChange("premiered", value)}
           />
 
           <AnimeFilter 
@@ -244,6 +272,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
               { label: "< 1000", value: "1000" },
               // Add more options as needed
             ]}
+            onChange={(value) => handleFilterChange("rank", value)}
           />
 
           <AnimeFilter 
@@ -255,6 +284,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
               { label: "< 10000", value: "10000" },
               // Add more options as needed
             ]}
+            onChange={(value) => handleFilterChange("favorites", value)}
           />
 
           <AnimeFilter 
@@ -266,6 +296,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
               { label: "< 1000000", value: "1000000" },
               // Add more options as needed
             ]}
+            onChange={(value) => handleFilterChange("scored by", value)}
           />
 
           <AnimeFilter 
@@ -277,6 +308,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch }) => {
               { label: "< 100000", value: "100000" },
               // Add more options as needed
             ]}
+            onChange={(value) => handleFilterChange("members", value)}
           />
         </>
       )}

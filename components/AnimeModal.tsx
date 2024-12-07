@@ -47,10 +47,8 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
   // Pré-remplir les champs avec `initialData` ou réinitialiser
   useEffect(() => {
     if (mode === "edit" && initialData) {
-      console.log("Initial data received by AnimeModal:", initialData); // Ajoutez ce log
       setFormData({ ...defaultFormData, ...initialData });
     } else if (mode === "add") {
-      console.log("Switching to add mode, resetting form."); // Ajoutez ce log
       setFormData(defaultFormData);
     }
   }, [mode, initialData]);

@@ -153,8 +153,10 @@ export default function MangaCatalogPage() {
       <h1 className="text-6xl font-bold">Manga Catalog</h1>
 
       {/* Barre de filtres */}
-      <FilterOptions onSearch={handleSearch}/>
-      <div className="max-w-md"></div>
+      <FilterOptions 
+        onSearch={handleSearch} 
+        onFilterChange={(filters) => console.log(filters)} 
+      />      <div className="max-w-md"></div>
       <div className="flex h-10 space-x-4 justify-end">
         <Button onPress={onOpen} color="primary">
           Add a manga
