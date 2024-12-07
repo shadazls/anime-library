@@ -19,7 +19,8 @@ import NextLink from 'next/link';
 import { GithubIcon, SearchIcon } from '@/components/icons';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { siteConfig } from '@/config/site';
-import { useAuth } from '../lib/useAuth'; // Importer le hook d'authentification
+// import { useAuth } from '../lib/useAuth'; // Importer le hook d'authentification
+import { useAuth } from '@/app/context/AuthContext';
 
 export const Navbar = () => {
     const { isAuthenticated, user } = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté
