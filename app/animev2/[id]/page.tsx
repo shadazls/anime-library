@@ -184,6 +184,7 @@ const AnimeDetailsPageV2 = ({ params }: { params: { id: string } }) => {
             {!loading && anime && (
                 <>
                     <AnimeInfo
+                        animeId={anime.id}
                         animeName={anime.title.romaji}
                         animeScore={anime.averageScore}
                         animeImageUrl={anime.coverImage.large}
