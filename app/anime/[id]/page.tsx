@@ -6,6 +6,7 @@ import useAnimeReviews from '@/app/hooks/useAnimeReviews';
 import useAnimeStaff from '@/app/hooks/useAnimeStaff';
 import useAnimeTrailer from '@/app/hooks/useAnimeTrailer';
 import useStreamingEpisodes from '@/app/hooks/useStreamingEpisodes';
+import AddReviewModal from '@/components/AddReviewModal';
 import AnimeDescription from '@/components/AnimeDescription';
 import AnimeDetails from '@/components/AnimeDetails';
 import AnimeInfo from '@/components/AnimeInfo';
@@ -58,6 +59,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         setAnime,
         activeTab
     );
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -78,6 +80,40 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
 
     const handleTrailerClick = async () => {
         fetchTrailer();
+    };
+
+    const handleSaveReview = async (review: string) => {
+        if (!anime) return;
+
+        const userName = 'John Doe'; // Remplacer par le nom de l'utilisateur connecté
+        const avatar = 'https://example.com/avatar.jpg'; // Remplacer par l'URL de l'avatar de l'utilisateur
+        const score = 8; // Exemple de score, vous pouvez ajouter un champ pour cela dans le modal
+        const summary = 'Great anime!'; // Ajouter un résumé de la critique
+        const body = review; // Le corps de la critique
+        console.log('Saving review:', review);
+        const response = await fetch('/api/animes/reviews/addNewReview  ', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                animeId: anime.anime_id,
+                userName,
+                avatar,
+                score,
+                summary,
+                body,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Review added successfully', data);
+            setIsReviewModalOpen(false); // Fermer le modal
+        } else {
+            console.error('Failed to add review', data);
+        }
     };
 
     const renderContent = () => {
@@ -158,7 +194,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                                 variant="flat"
                                 radius="sm"
                                 size="lg"
-                                disabled
+                                onClick={() => setIsReviewModalOpen(true)}
                             >
                                 Write a review
                             </Button>
@@ -199,6 +235,11 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                             setErrorModal({ isOpen: false, message: '' })
                         }
                         errorMessage={errorModal.message}
+                    />
+                    <AddReviewModal
+                        isOpen={isReviewModalOpen}
+                        onClose={() => setIsReviewModalOpen(false)}
+                        onSave={handleSaveReview}
                     />
                 </>
             )}
