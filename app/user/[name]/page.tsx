@@ -116,8 +116,7 @@ const UserPage = ({ params }: UserPageProps) => {
                         {user.name}
                     </h1>
                     <h2 className="text-lg text-gray-400">
-                        This is a static description for the moment, the option
-                        of adding a description for users coming soon.
+                        {user.description}
                     </h2>
                 </div>
             </div>

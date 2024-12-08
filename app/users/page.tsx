@@ -35,6 +35,7 @@ const UsersPage = () => {
 
     // Récupérer les utilisateurs via l'API
     useEffect(() => {
+        document.body.style.background = '#121212';
         const fetchUsers = async () => {
             try {
                 const response = await fetch('/api/users/getAllUsers');
