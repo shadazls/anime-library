@@ -92,6 +92,7 @@ export interface AnimeRelation {
 }
 
 export interface User {
+    _id: ObjectId;
     name: string;
     email: string;
     avatar: string;

@@ -221,12 +221,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         }
                         errorMessage={errorModal.message}
                     />
-                    {/* <AddReviewModal
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                        animeId={anime.anime_id.toString()}
-                        onSuccess={handleSuccess}
-                    /> */}
                     <AddReviewModal
                         isOpen={isReviewModalOpen}
                         onClose={() => setIsReviewModalOpen(false)}

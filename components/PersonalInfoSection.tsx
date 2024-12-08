@@ -1,5 +1,5 @@
 import { User } from '@/types';
-import { DatePicker } from '@nextui-org/date-picker';
+import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
 import { Input, Textarea } from '@nextui-org/input';
 import { useState } from 'react';
@@ -9,7 +9,44 @@ interface PersonalInfoSectionProps {
 }
 
 const PersonalInfoSection = ({ user }: PersonalInfoSectionProps) => {
+    const [email, setEmail] = useState(user.email || '');
+    const [username, setUsername] = useState(user.name || '');
+    const [description, setDescription] = useState(user.description || '');
+    const [birthdate, setBirthdate] = useState(user.birthdate || '');
     const [avatarUrl, setAvatarUrl] = useState(user.avatar || '');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleUpdateUser = async () => {
+        setIsSubmitting(true);
+        try {
+            const response = await fetch(`/api/users/editUser?id=${user._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    name: username,
+                    description,
+                    birthdate,
+                    avatar: avatarUrl,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update user');
+            }
+
+            const data = await response.json();
+            console.log('User updated successfully:', data);
+            alert('User updated successfully!');
+        } catch (error) {
+            console.error('Error updating user:', error);
+            alert('An error occurred while updating the user.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <div className="flex flex-col w-full max-w-xs gap-2 my-4">
@@ -19,7 +56,8 @@ const PersonalInfoSection = ({ user }: PersonalInfoSectionProps) => {
             <Divider className="mb-4" />
             <Input
                 size="lg"
-                defaultValue={user.email}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 label="Email"
                 labelPlacement="outside"
                 type="email"
@@ -28,7 +66,8 @@ const PersonalInfoSection = ({ user }: PersonalInfoSectionProps) => {
             />
             <Input
                 size="lg"
-                defaultValue={user.name}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 label="Username"
                 labelPlacement="outside"
                 type="text"
@@ -37,20 +76,22 @@ const PersonalInfoSection = ({ user }: PersonalInfoSectionProps) => {
             />
             <Textarea
                 size="lg"
-                defaultValue={user.description}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 label="Description"
                 labelPlacement="outside"
                 variant="bordered"
                 placeholder="Enter your description"
             />
-            <DatePicker
+            {/* <DatePicker
                 showMonthAndYearPickers
                 size="lg"
-                defaultValue={user.birthdate}
+                value={birthdate.toDate()}
+                onChange={(date) => setBirthdate(date || '')}
                 label="Birthdate"
                 labelPlacement="outside"
                 variant="bordered"
-            />
+            /> */}
             <Input
                 size="lg"
                 value={avatarUrl}
@@ -75,6 +116,14 @@ const PersonalInfoSection = ({ user }: PersonalInfoSectionProps) => {
                     />
                 </div>
             )}
+            <Button
+                className="mt-4"
+                color="primary"
+                isLoading={isSubmitting}
+                onClick={handleUpdateUser}
+            >
+                Update User
+            </Button>
         </div>
     );
 };

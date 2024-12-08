@@ -1,5 +1,5 @@
-import connectDB from '../../../../lib/db';
-import User from '../../../../models/user';
+import connectDB from '@/lib/db';
+import User from '@/models/User';
 
 export const PUT = async (req) => {
     try {
