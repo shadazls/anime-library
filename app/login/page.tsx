@@ -53,7 +53,7 @@ export default function LoginPage() {
     };
 
     return (
-        <section className="flex justify-center items-center absolute inset-0">
+        <section className="flex justify-center items-center mx-24 p-4">
             <Card className="bg-test w-1/4 p-6 border border-stone-800">
                 <CardBody className="flex flex-col items-center gap-6">
                     <h1 className="text-3xl font-semibold">Log In</h1>
