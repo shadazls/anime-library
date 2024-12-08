@@ -149,35 +149,48 @@ export const Navbar = () => {
                                     aria-label="Profile Actions"
                                     variant="flat"
                                 >
-                                    {/* <DropdownItem
-                                        key="profile"
-                                        className="h-14 gap-2"
+                                    <DropdownItem
+                                        key="settings"
+                                        onClick={() => {
+                                            window.location.href = `/user/${user?.name}/settings`;
+                                        }}
                                     >
-                                        <p className="font-semibold">
-                                            Signed in as
-                                        </p>
-                                        <p className="font-semibold">
-                                            {user?.email}
-                                        </p>
-                                    </DropdownItem> */}
-                                    <DropdownItem key="settings">
                                         Settings
                                     </DropdownItem>
                                     <DropdownItem
                                         key="logout"
                                         color="danger"
                                         className="text-danger"
+                                        onClick={async () => {
+                                            try {
+                                                const response = await fetch(
+                                                    '/api/auth/logout',
+                                                    {
+                                                        method: 'POST',
+                                                    }
+                                                );
+
+                                                if (response.ok) {
+                                                    // Redirection vers la page d'accueil après déconnexion
+                                                    window.location.href = '/';
+                                                } else {
+                                                    console.error(
+                                                        'Failed to log out:',
+                                                        response.statusText
+                                                    );
+                                                }
+                                            } catch (error) {
+                                                console.error(
+                                                    'An error occurred during logout:',
+                                                    error
+                                                );
+                                            }
+                                        }}
                                     >
                                         Log Out
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            {/* <Avatar
-                                showFallback
-                                name={user?.name}
-                                src={user?.avatar}
-                            /> */}
-                            {/* {user?.name} */}
                         </NavbarItem>
                     </>
                 )}
