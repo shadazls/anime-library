@@ -82,40 +82,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         fetchTrailer();
     };
 
-    // const handleSaveReview = async (review: string) => {
-    //     if (!anime) return;
-
-    //     const userName = 'John Doe'; // Remplacer par le nom de l'utilisateur connecté
-    //     const avatar = 'https://example.com/avatar.jpg'; // Remplacer par l'URL de l'avatar de l'utilisateur
-    //     const score = 8; // Exemple de score, vous pouvez ajouter un champ pour cela dans le modal
-    //     const summary = 'Great anime!'; // Ajouter un résumé de la critique
-    //     const body = review; // Le corps de la critique
-    //     console.log('Saving review:', review);
-    //     const response = await fetch('/api/animes/reviews/addNewReview  ', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             animeId: anime.anime_id,
-    //             userName,
-    //             avatar,
-    //             score,
-    //             summary,
-    //             body,
-    //         }),
-    //     });
-
-    //     const data = await response.json();
-
-    //     if (response.ok) {
-    //         console.log('Review added successfully', data);
-    //         setIsReviewModalOpen(false); // Fermer le modal
-    //     } else {
-    //         console.error('Failed to add review', data);
-    //     }
-    // };
-
     const handleSuccess = () => {
         // Actualiser la page ou effectuer une autre action après la sauvegarde
         console.log('Review added successfully');
@@ -212,7 +178,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                                         // Utilisez le hook pour mettre à jour les avis
                                         setAnime((prevAnime) => ({
                                             ...prevAnime,
-                                            reviews: prevAnime.reviews.filter(
+                                            reviews: prevAnime?.reviews?.filter(
                                                 (review) =>
                                                     review.id !== reviewId
                                             ),
