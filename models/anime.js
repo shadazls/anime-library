@@ -29,7 +29,9 @@ const staffSchema = new mongoose.Schema({
 const reviewSchema = new mongoose.Schema({
     id: { type: Number, required: true },
     user: {
+        id: { type: String },
         name: { type: String, required: true },
+        email: { type: String },
         avatar: { type: String, required: true }, // URL de l'avatar
     },
     score: { type: Number, required: true },

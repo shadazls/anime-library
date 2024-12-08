@@ -60,7 +60,6 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         activeTab
     );
     const [isReviewModalOpen, setIsReviewModalOpen] = useState<boolean>(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -83,39 +82,39 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         fetchTrailer();
     };
 
-    const handleSaveReview = async (review: string) => {
-        if (!anime) return;
+    // const handleSaveReview = async (review: string) => {
+    //     if (!anime) return;
 
-        const userName = 'John Doe'; // Remplacer par le nom de l'utilisateur connecté
-        const avatar = 'https://example.com/avatar.jpg'; // Remplacer par l'URL de l'avatar de l'utilisateur
-        const score = 8; // Exemple de score, vous pouvez ajouter un champ pour cela dans le modal
-        const summary = 'Great anime!'; // Ajouter un résumé de la critique
-        const body = review; // Le corps de la critique
-        console.log('Saving review:', review);
-        const response = await fetch('/api/animes/reviews/addNewReview  ', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                animeId: anime.anime_id,
-                userName,
-                avatar,
-                score,
-                summary,
-                body,
-            }),
-        });
+    //     const userName = 'John Doe'; // Remplacer par le nom de l'utilisateur connecté
+    //     const avatar = 'https://example.com/avatar.jpg'; // Remplacer par l'URL de l'avatar de l'utilisateur
+    //     const score = 8; // Exemple de score, vous pouvez ajouter un champ pour cela dans le modal
+    //     const summary = 'Great anime!'; // Ajouter un résumé de la critique
+    //     const body = review; // Le corps de la critique
+    //     console.log('Saving review:', review);
+    //     const response = await fetch('/api/animes/reviews/addNewReview  ', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             animeId: anime.anime_id,
+    //             userName,
+    //             avatar,
+    //             score,
+    //             summary,
+    //             body,
+    //         }),
+    //     });
 
-        const data = await response.json();
+    //     const data = await response.json();
 
-        if (response.ok) {
-            console.log('Review added successfully', data);
-            setIsReviewModalOpen(false); // Fermer le modal
-        } else {
-            console.error('Failed to add review', data);
-        }
-    };
+    //     if (response.ok) {
+    //         console.log('Review added successfully', data);
+    //         setIsReviewModalOpen(false); // Fermer le modal
+    //     } else {
+    //         console.error('Failed to add review', data);
+    //     }
+    // };
 
     const handleSuccess = () => {
         // Actualiser la page ou effectuer une autre action après la sauvegarde
@@ -205,7 +204,21 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                                 Write a review
                             </Button>
                             {reviews.map((review) => (
-                                <ReviewItem key={review.id} review={review} />
+                                <ReviewItem
+                                    key={review.id}
+                                    review={review}
+                                    animeId={anime?._id.toString()}
+                                    onDelete={(reviewId) => {
+                                        // Utilisez le hook pour mettre à jour les avis
+                                        setAnime((prevAnime) => ({
+                                            ...prevAnime,
+                                            reviews: prevAnime.reviews.filter(
+                                                (review) =>
+                                                    review.id !== reviewId
+                                            ),
+                                        }));
+                                    }}
+                                />
                             ))}
                         </div>
                     </>
