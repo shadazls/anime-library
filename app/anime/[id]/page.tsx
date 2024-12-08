@@ -60,6 +60,7 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         activeTab
     );
     const [isReviewModalOpen, setIsReviewModalOpen] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         document.body.style.background = '#121212'; // Fond sombre
@@ -114,6 +115,11 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
         } else {
             console.error('Failed to add review', data);
         }
+    };
+
+    const handleSuccess = () => {
+        // Actualiser la page ou effectuer une autre action après la sauvegarde
+        console.log('Review added successfully');
     };
 
     const renderContent = () => {
@@ -236,10 +242,17 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         }
                         errorMessage={errorModal.message}
                     />
+                    {/* <AddReviewModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        animeId={anime.anime_id.toString()}
+                        onSuccess={handleSuccess}
+                    /> */}
                     <AddReviewModal
                         isOpen={isReviewModalOpen}
                         onClose={() => setIsReviewModalOpen(false)}
-                        onSave={handleSaveReview}
+                        animeId={anime._id.toString()}
+                        onSuccess={handleSuccess}
                     />
                 </>
             )}

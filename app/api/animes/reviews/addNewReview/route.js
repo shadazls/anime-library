@@ -9,8 +9,8 @@ export const POST = async (req) => {
 
         // Vérifier si l'utilisateur est connecté
         const token =
-            request.headers.get('Authorization')?.split('Bearer ')[1] ||
-            request.cookies.get('token')?.value;
+            req.headers.get('Authorization')?.split('Bearer ')[1] ||
+            req.cookies.get('token')?.value;
 
         if (!token) {
             console.log('No token found.');
@@ -44,7 +44,8 @@ export const POST = async (req) => {
         }
 
         // Trouver l'animé par ID
-        const anime = await Anime.findOne({ anime_id });
+        // const anime = await Anime.findOne({ anime_id });
+        const anime = await Anime.findById(anime_id);
         if (!anime) {
             return new Response('Anime not found', { status: 404 });
         }
