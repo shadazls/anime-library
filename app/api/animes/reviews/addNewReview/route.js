@@ -19,6 +19,7 @@ export const POST = async (req) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.userId);
+        console.log('user:', user);
 
         if (!user) {
             console.log('User not found.');
@@ -54,6 +55,8 @@ export const POST = async (req) => {
         const newReview = {
             id: Date.now(), // Vous pouvez utiliser une autre méthode pour générer un ID unique
             user: {
+                id: user._id, // ID de l'utilisateur connecté
+                email: user.email, // Email de l'utilisateur connecté
                 name: user.name, // Nom de l'utilisateur connecté
                 avatar: user.avatar, // Avatar de l'utilisateur connecté
             },
