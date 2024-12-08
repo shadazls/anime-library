@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     avatar: { type: String, default: '' }, // URL de l'avatar
     bannerImage: { type: String, default: '' }, // URL de la bannière
+    description: { type: String, default: '' }, // Description de l'utilisateur
+    birthdate: { type: Date },
+    preferences: {
+        titleLanguage: { type: String },
+        staffCharacterLanguage: { type: String },
+    },
 
     // Listes d'animés avec références
     to_watch: [

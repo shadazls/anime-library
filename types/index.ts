@@ -1,3 +1,4 @@
+import { DateValue } from '@nextui-org/react';
 import { ObjectId } from 'mongoose';
 import { SVGProps } from 'react';
 
@@ -88,4 +89,18 @@ export interface AnimeRelation {
     image: string;
     type: string;
     relationType: string;
+}
+
+export interface User {
+    name: string;
+    email: string;
+    avatar: string;
+    bannerImage: string;
+    to_watch: Anime[];
+    watching: Anime[];
+    watched: Anime[];
+    rewatching: Anime[];
+    abandoned: Anime[];
+    birthdate: DateValue;
+    description: string;
 }

@@ -2,31 +2,9 @@
 
 import ItemGrid from '@/components/ItemGrid';
 import UserSection from '@/components/UserSection';
+import { User } from '@/types';
 import { Avatar } from '@nextui-org/avatar';
 import { useEffect, useState } from 'react';
-
-interface Anime {
-    id: number;
-    title: {
-        romaji: string;
-        english?: string;
-    };
-    coverImage: {
-        large: string;
-    };
-}
-
-interface User {
-    name: string;
-    email: string;
-    avatar: string;
-    bannerImage: string;
-    to_watch: Anime[];
-    watching: Anime[];
-    watched: Anime[];
-    rewatching: Anime[];
-    abandoned: Anime[];
-}
 
 interface UserPageProps {
     params: {
@@ -119,64 +97,6 @@ const UserPage = ({ params }: UserPageProps) => {
                         getId={(item) => item._id}
                     />
                 );
-            // case 'overview':
-            //     return (
-            //         <div className="flex">
-            //             <div className="flex flex-col mr-32 min-w-96">
-            //                 <h3 className="text-xl font-semibold mb-4">
-            //                     Details
-            //                 </h3>
-            //                 <div className="flex gap-8">
-            //                     <ul className="space-y-2">
-            //                         <li>
-            //                             <p className="text-gray-400">Email</p>
-            //                         </li>
-            //                         <li>
-            //                             <p className="text-gray-400">Avatar</p>
-            //                         </li>
-            //                         <li>
-            //                             <p className="text-gray-400">
-            //                                 Banner Image
-            //                             </p>
-            //                         </li>
-            //                     </ul>
-            //                     <ul className="space-y-2">
-            //                         <li>
-            //                             <p>{user.email}</p>
-            //                         </li>
-            //                         <li>
-            //                             <Image
-            //                                 alt="User Avatar"
-            //                                 src={user.avatar}
-            //                                 width={50}
-            //                                 height={50}
-            //                                 // css={{ borderRadius: '50%' }}
-            //                             />
-            //                         </li>
-            //                         <li>
-            //                             <Image
-            //                                 alt="Banner"
-            //                                 src={user.bannerImage}
-            //                                 width={300}
-            //                                 height={100}
-            //                             />
-            //                         </li>
-            //                     </ul>
-            //                 </div>
-            //             </div>
-
-            //             <div className="flex flex-col">
-            //                 <h3 className="text-xl font-semibold mb-4">
-            //                     Description
-            //                 </h3>
-            //                 <div className="text-gray-400">
-            //                     <ReactMarkdown>
-            //                         {user.name || 'No description available.'}
-            //                     </ReactMarkdown>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     );
             default:
                 return null;
         }

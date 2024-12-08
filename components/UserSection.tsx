@@ -17,7 +17,7 @@ const UserSection = ({
 
     return (
         <Tabs
-            className="my-16 text-8xl"
+            className="my-16"
             size="lg"
             aria-label="Display"
             variant="underlined"
@@ -26,6 +26,7 @@ const UserSection = ({
         >
             <Tab
                 key="watching"
+                className="text-xl p-6"
                 title={
                     <div className="flex items-center space-x-2">
                         <EyeRegularIcon />
@@ -35,6 +36,7 @@ const UserSection = ({
             />
             <Tab
                 key="to_watch"
+                className="text-xl p-6"
                 title={
                     <div className="flex items-center space-x-2">
                         <BookmarkIcon />
@@ -44,6 +46,7 @@ const UserSection = ({
             />
             <Tab
                 key="watched"
+                className="text-xl p-6"
                 title={
                     <div className="flex items-center space-x-2">
                         <CheckIcon />
@@ -51,8 +54,8 @@ const UserSection = ({
                     </div>
                 }
             />
-            <Tab key="abandoned" title="Abandonned" />
-            <Tab key="rewatching" title="Rewatching" />
+            <Tab key="abandoned" title="Abandonned" className="text-xl p-6" />
+            <Tab key="rewatching" title="Rewatching" className="text-xl p-6" />
         </Tabs>
     );
 };
