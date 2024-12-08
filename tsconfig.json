@@ -28,7 +28,8 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "components/EyeSlashRegularIcon.tsx"
+        "components/EyeSlashRegularIcon.tsx",
+        "app/api/animes/reviews/addNewReview/route.js"
     ],
     "exclude": ["node_modules"]
 }
