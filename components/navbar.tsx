@@ -149,13 +149,43 @@ export const Navbar = () => {
                                     aria-label="Profile Actions"
                                     variant="flat"
                                 >
-                                    <DropdownItem key="settings">
+                                    <DropdownItem
+                                        key="settings"
+                                        onClick={() => {
+                                            window.location.href = `/user/${user?.name}/settings`;
+                                        }}
+                                    >
                                         Settings
                                     </DropdownItem>
                                     <DropdownItem
                                         key="logout"
                                         color="danger"
                                         className="text-danger"
+                                        onClick={async () => {
+                                            try {
+                                                const response = await fetch(
+                                                    '/api/auth/logout',
+                                                    {
+                                                        method: 'POST',
+                                                    }
+                                                );
+
+                                                if (response.ok) {
+                                                    // Redirection vers la page d'accueil après déconnexion
+                                                    window.location.href = '/';
+                                                } else {
+                                                    console.error(
+                                                        'Failed to log out:',
+                                                        response.statusText
+                                                    );
+                                                }
+                                            } catch (error) {
+                                                console.error(
+                                                    'An error occurred during logout:',
+                                                    error
+                                                );
+                                            }
+                                        }}
                                     >
                                         Log Out
                                     </DropdownItem>
