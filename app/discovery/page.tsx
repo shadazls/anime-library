@@ -41,6 +41,24 @@ const DiscoveryPage = () => {
                 getImage={(item) => item.image_url || ''}
                 type="anime"
             />
+            {anime && anime.Synopsis && (
+                <div className="flex">
+                    <div className="mt-4 px-6 py-4 max-w-3xl flex flex-col">
+                        <h2 className="text-2xl font-semibold mb-2">
+                            Synopsis
+                        </h2>
+                        <p className="text-lg text-gray-400 leading-relaxed">
+                            {anime.Synopsis}
+                        </p>
+                    </div>
+                    <div className="mt-4 px-6 py-4 max-w-3xl flex flex-col">
+                        <h2 className="text-2xl font-semibold mb-2">Genres</h2>
+                        <p className="text-lg text-gray-400 leading-relaxed">
+                            {anime.Genres.join(', ')}
+                        </p>
+                    </div>
+                </div>
+            )}
             <Button
                 onPress={fetchRandomAnime}
                 className="mt-4"
