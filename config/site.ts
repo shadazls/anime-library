@@ -21,6 +21,10 @@ export const siteConfig = {
             label: 'Users',
             href: '/users',
         },
+        {
+            label: 'Discovery',
+            href: '/discovery',
+        },
     ],
     navMenuItems: [
         {
