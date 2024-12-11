@@ -166,7 +166,6 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
                     className="mr-24"
                     alt={character.name.full}
                     src={character.image.large}
-                    isZoomed
                 />
                 <div className="flex flex-col justify-center items-center gap-8">
                     <h1 className="text-4xl mt-8 font-bold text-white">
