@@ -68,7 +68,19 @@ export interface Review {
     body: string;
 }
 
-interface Staff {
+// interface Staff {
+//     id: number;
+//     name: {
+//         full: string;
+//         native?: string;
+//     };
+//     image: {
+//         large: string;
+//     };
+//     role: string;
+// }
+
+export interface Staff {
     id: number;
     name: {
         full: string;
@@ -77,7 +89,37 @@ interface Staff {
     image: {
         large: string;
     };
-    role: string;
+    description: string;
+    age?: number;
+    bloodType?: string;
+    dateOfBirth?: {
+        year?: number;
+        month?: number;
+        day?: number;
+    };
+    dateOfDeath?: {
+        year?: number;
+        month?: number;
+        day?: number;
+    };
+    gender?: string;
+    homeTown?: string;
+    languageV2?: string;
+    primaryOccupations: string[];
+    staffMedia: {
+        edges: {
+            node: {
+                id: number;
+                title: {
+                    romaji: string;
+                    english?: string;
+                };
+                coverImage: {
+                    large: string;
+                };
+            };
+        }[];
+    };
 }
 
 export interface AnimeRelation {
