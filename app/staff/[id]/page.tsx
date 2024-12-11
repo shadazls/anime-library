@@ -2,51 +2,10 @@
 
 import CharacterSection from '@/components/CharacterSection';
 import ItemGrid from '@/components/ItemGrid';
+import { Staff } from '@/types/index';
 import { Image } from '@nextui-org/image';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-
-interface Staff {
-    id: number;
-    name: {
-        full: string;
-        native?: string;
-    };
-    image: {
-        large: string;
-    };
-    description: string;
-    age?: number;
-    bloodType?: string;
-    dateOfBirth?: {
-        year?: number;
-        month?: number;
-        day?: number;
-    };
-    dateOfDeath?: {
-        year?: number;
-        month?: number;
-        day?: number;
-    };
-    gender?: string;
-    homeTown?: string;
-    languageV2?: string;
-    primaryOccupations: string[];
-    staffMedia: {
-        edges: {
-            node: {
-                id: number;
-                title: {
-                    romaji: string;
-                    english?: string;
-                };
-                coverImage: {
-                    large: string;
-                };
-            };
-        }[];
-    };
-}
 
 interface StaffDetailParams {
     params: {
@@ -57,82 +16,31 @@ interface StaffDetailParams {
 const StaffPage = ({ params }: StaffDetailParams) => {
     const { id } = params;
     const [staff, setStaff] = useState<Staff | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
 
     useEffect(() => {
         document.body.style.background = '#121212';
-        if (!id) return;
-
         const fetchStaff = async () => {
-            const query = `
-                query ($id: Int) {
-                    Staff(id: $id) {
-                        id
-                        name {
-                            full
-                            native
-                        }
-                        image {
-                            large
-                        }
-                        description
-                        age
-                        bloodType
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        dateOfDeath {
-                            year
-                            month
-                            day
-                        }
-                        gender
-                        homeTown
-                        languageV2
-                        primaryOccupations
-                        staffMedia {
-                            edges {
-                                node {
-                                    id
-                                    title {
-                                        romaji
-                                        english
-                                    }
-                                    coverImage {
-                                        large
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            `;
-            const variables = { id: parseInt(id as string, 10) };
-
             try {
-                const response = await fetch('https://graphql.anilist.co', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ query, variables }),
-                });
-
-                const { data } = await response.json();
-                setStaff(data?.Staff || null);
+                const response = await fetch(
+                    `/api/staffs/getStaffDetails/${id}`
+                );
+                if (!response.ok) {
+                    throw new Error('Failed to fetch staff data');
+                }
+                const data = await response.json();
+                setStaff(data);
             } catch (error) {
-                console.error('Error fetching staff data:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchStaff();
     }, [id]);
-
-    if (!staff) {
-        return <div>Loading...</div>;
-    }
 
     const formatDate = (date?: {
         year?: number;
@@ -143,6 +51,10 @@ const StaffPage = ({ params }: StaffDetailParams) => {
         const { day, month, year } = date;
         return `${day || '??'}/${month || '??'}/${year || '????'}`;
     };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!staff) return <div>No data found</div>;
 
     const renderContent = () => {
         switch (activeTab) {
@@ -243,11 +155,9 @@ const StaffPage = ({ params }: StaffDetailParams) => {
             case 'appears_in':
                 return (
                     <ItemGrid
-                        loading={false} // Mettez `true` si les données sont encore en cours de chargement
+                        loading={false}
                         type="animev2"
-                        items={staff.staffMedia.edges.map(
-                            (media) => media.node
-                        )}
+                        items={staff.staffMedia} // Utilisation directe de staffMedia
                         getName={(item) => item.title.romaji}
                         getImage={(item) => item.coverImage.large}
                         getId={(item) => item.id}
@@ -265,7 +175,6 @@ const StaffPage = ({ params }: StaffDetailParams) => {
                     className="mr-24"
                     alt={staff.name.full}
                     src={staff.image.large}
-                    isZoomed
                 />
                 <div className="flex flex-col justify-center items-center gap-8">
                     <h1 className="text-4xl mt-8 font-bold text-white">
