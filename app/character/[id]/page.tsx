@@ -25,19 +25,15 @@ interface Character {
         day?: number;
     };
     media: {
-        edges: {
-            node: {
-                id: number;
-                title: {
-                    romaji: string;
-                    english?: string;
-                };
-                coverImage: {
-                    large: string;
-                };
-            };
-        }[];
-    };
+        id: number;
+        title: {
+            romaji: string;
+            english?: string;
+        };
+        coverImage: {
+            large: string;
+        };
+    }[];
 }
 
 interface CharacterDetailParams {
@@ -56,58 +52,17 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
         if (!id) return;
 
         const fetchCharacter = async () => {
-            const query = `
-                query ($id: Int) {
-                    Character(id: $id) {
-                        id
-                        name {
-                            full
-                            native
-                        }
-                        image {
-                            large
-                        }
-                        description
-                        age
-                        gender
-                        bloodType
-                        dateOfBirth {
-                            year
-                            month
-                            day
-                        }
-                        media {
-                            edges {
-                                node {
-                                    id
-                                    title {
-                                        romaji
-                                        english
-                                    }
-                                    coverImage {
-                                        large
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            `;
-            const variables = { id: parseInt(id as string, 10) };
-
             try {
-                const response = await fetch('https://graphql.anilist.co', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ query, variables }),
-                });
-
-                const { data } = await response.json();
-                setCharacter(data?.Character || null);
+                const response = await fetch(
+                    `/api/characters/getCharacterDetails/${id}`
+                );
+                if (!response.ok) {
+                    throw new Error('Failed to fetch character');
+                }
+                const data = await response.json();
+                setCharacter(data);
             } catch (error) {
-                console.error('Error fetching character data:', error);
+                console.error('Error fetching character:', error);
             }
         };
 
@@ -120,7 +75,7 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
 
     const formatDateOfBirth = (dob: Character['dateOfBirth']) => {
         if (!dob) return 'Unknown';
-        const { day, month, year } = dob;
+        const { day, month } = dob;
         return `${day || '??'}/${month || '??'}`;
     };
 
@@ -193,7 +148,7 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
                     <ItemGrid
                         loading={false}
                         type="animev2"
-                        items={character.media.edges.map((media) => media.node)}
+                        items={character.media}
                         getName={(item) => item.title.romaji}
                         getImage={(item) => item.coverImage.large}
                         getId={(item) => item.id}
