@@ -27,12 +27,14 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch, onFilterChange 
     onSearch(text); // Passe le texte à la page parent (animeCatalog)
   };
 
+
   // Gestion des filtres individuels
   const handleFilterChange = (key: string, value: string | number) => {
     const updatedFilters = { ...filters, [key]: value }; // Mise à jour du filtre spécifique
     setFilters(updatedFilters); // Mise à jour des filtres locaux
     onFilterChange(updatedFilters); // Transmission au parent
   };
+
 
   const scoreOptions = [
     { label: "> 2.5/10", value: ">2.5" },
@@ -142,6 +144,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({ onSearch, onFilterChange 
 
     fetchTypes();
   }, []);
+
 
    // Transmettre les filtres au parent lorsqu'ils changent
    useEffect(() => {

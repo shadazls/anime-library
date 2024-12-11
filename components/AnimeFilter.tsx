@@ -1,5 +1,6 @@
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
+
 interface AnimeFilterProps {
   label: string;
   placeholder: string;
