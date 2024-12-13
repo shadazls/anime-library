@@ -3,10 +3,12 @@
 import CharacterSection from '@/components/CharacterSection';
 import ItemGrid from '@/components/ItemGrid';
 import { Image } from '@nextui-org/image';
+import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface Character {
+    _id: ObjectId;
     id: number;
     name: {
         full: string;
@@ -46,6 +48,7 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
     const { id } = params;
     const [character, setCharacter] = useState<Character | null>(null);
     const [activeTab, setActiveTab] = useState<string>('overview');
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         document.body.style.background = '#121212';
@@ -68,6 +71,34 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
 
         fetchCharacter();
     }, [id]);
+
+    const handleDelete = async () => {
+        if (!character) return;
+
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/characters/deleteCharacter`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: character.id }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete character');
+            }
+
+            alert('Character deleted successfully!');
+            setCharacter(null); // Efface le personnage après suppression
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error deleting character:', error);
+            alert('An error occurred while deleting the character.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (!character) {
         return <div>Loading...</div>;
@@ -180,6 +211,13 @@ const CharacterPage = ({ params }: CharacterDetailParams) => {
             </div>
             <CharacterSection onTabChange={(key) => setActiveTab(key)} />
             {renderContent()}
+            <button
+                onClick={handleDelete}
+                disabled={loading}
+                className="mt-8 p-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+            >
+                {loading ? 'Deleting...' : 'Delete Character'}
+            </button>
         </section>
     );
 };
