@@ -139,6 +139,47 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                         getImage={(character) => character.image.large}
                     />
                 );
+            // case 'staff':
+            //     return (
+            //         <>
+            //             <Button
+            //                 className="mb-4"
+            //                 color="primary"
+            //                 onClick={() => setIsCharacterModalOpen(true)}
+            //             >
+            //                 Add Character
+            //             </Button>
+            //             {staff ? (
+            //                 <ItemGrid
+            //                     key="staff"
+            //                     type="staff"
+            //                     loading={!staff}
+            //                     items={staff}
+            //                     getId={(staffMember) => staffMember.id}
+            //                     getName={(staffMember) => staffMember.name.full}
+            //                     getImage={(staffMember) =>
+            //                         staffMember.image.large
+            //                     }
+            //                 />
+            //             ) : (
+            //                 <p>Loading staff...</p>
+            //             )}
+            //             <AddCharacterModal
+            //                 isOpen={isCharacterModalOpen}
+            //                 onClose={() => setIsCharacterModalOpen(false)}
+            //                 animeId={anime?._id.toString()}
+            //                 onSuccess={(newCharacter) =>
+            //                     setAnime((prevAnime) => ({
+            //                         ...prevAnime,
+            //                         staff: [
+            //                             ...(prevAnime?.staff || []),
+            //                             newCharacter,
+            //                         ],
+            //                     }))
+            //                 }
+            //             />
+            //         </>
+            //     );
             case 'staff':
                 return staff ? (
                     <ItemGrid
