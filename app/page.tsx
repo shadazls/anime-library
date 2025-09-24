@@ -1,8 +1,8 @@
 'use client';
 
 import ItemGrid from '@/components/ItemGrid';
-import { Button } from '@nextui-org/button';
-import { Tab, Tabs } from '@nextui-org/tabs';
+import { Button } from "@heroui/button";
+import { Tab, Tabs } from "@heroui/tabs";
 import { ObjectId } from 'mongoose';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

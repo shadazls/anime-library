@@ -4,28 +4,28 @@ import EditIcon from '@/components/EditIcon';
 import FilterOptions from '@/components/FilterOptions'; // Composant des filtres
 import { SortIcon } from '@/components/icons';
 import TrashIcon from '@/components/TrashIcon';
-import { Button } from '@nextui-org/button';
-import { Card, CardFooter, CardHeader } from '@nextui-org/card';
-import { Divider } from '@nextui-org/divider';
+import { Button } from "@heroui/button";
+import { Card, CardFooter, CardHeader } from "@heroui/card";
+import { Divider } from "@heroui/divider";
 import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-} from '@nextui-org/dropdown';
-import { Image } from '@nextui-org/image';
-import { Input, Textarea } from '@nextui-org/input';
+} from "@heroui/dropdown";
+import { Image } from "@heroui/image";
+import { Input, Textarea } from "@heroui/input";
 import {
     Modal,
     ModalBody,
     ModalContent,
     ModalFooter,
     ModalHeader,
-} from '@nextui-org/modal';
-import { Pagination } from '@nextui-org/pagination';
-import { useDisclosure } from '@nextui-org/react';
-import { Skeleton } from '@nextui-org/skeleton';
-import { Tab, Tabs } from '@nextui-org/tabs';
+} from "@heroui/modal";
+import { Pagination } from "@heroui/pagination";
+import { useDisclosure } from "@heroui/react";
+import { Skeleton } from "@heroui/skeleton";
+import { Tab, Tabs } from "@heroui/tabs";
 import { ObjectId } from 'mongodb';
 import { useEffect, useState } from 'react';
 

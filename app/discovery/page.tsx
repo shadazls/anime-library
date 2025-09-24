@@ -1,7 +1,7 @@
 'use client';
 
 import ItemGrid from '@/components/ItemGrid';
-import { Button } from '@nextui-org/button';
+import { Button } from "@heroui/button";
 import { useEffect, useState } from 'react';
 
 const DiscoveryPage = () => {

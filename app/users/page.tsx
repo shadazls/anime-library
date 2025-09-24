@@ -3,7 +3,7 @@
 import EditIcon from '@/components/EditIcon';
 import EyeRegularIcon from '@/components/EyeRegularIcon';
 import TrashIcon from '@/components/TrashIcon';
-import { Chip } from '@nextui-org/chip';
+import { Chip } from '@heroui/chip';
 import {
     Table,
     TableBody,
@@ -11,27 +11,27 @@ import {
     TableColumn,
     TableHeader,
     TableRow,
-} from '@nextui-org/table';
-import { Tooltip } from '@nextui-org/tooltip';
-import { User } from '@nextui-org/user';
+} from '@heroui/table';
+import { Tooltip } from '@heroui/tooltip';
+import { User } from '@heroui/user';
 import { useCallback, useEffect, useState } from 'react';
-
-export const columns = [
-    { name: 'NAME', uid: 'name' },
-    { name: 'EMAIL', uid: 'email' },
-    { name: 'STATUS', uid: 'status' },
-    { name: 'BIRTHDATE', uid: 'birthdate' },
-    { name: 'ACTIONS', uid: 'actions' },
-];
-
-const statusColorMap = {
-    active: 'success',
-    paused: 'danger',
-    vacation: 'warning',
-};
 
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
+
+    const columns = [
+        { name: 'NAME', uid: 'name' },
+        { name: 'EMAIL', uid: 'email' },
+        { name: 'STATUS', uid: 'status' },
+        { name: 'BIRTHDATE', uid: 'birthdate' },
+        { name: 'ACTIONS', uid: 'actions' },
+    ];
+
+    const statusColorMap = {
+        active: 'success',
+        paused: 'danger',
+        vacation: 'warning',
+    };
 
     // Récupérer les utilisateurs via l'API
     useEffect(() => {

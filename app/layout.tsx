@@ -1,5 +1,5 @@
 import '@/styles/globals.css';
-import { Link } from '@nextui-org/link';
+import { Link } from "@heroui/link";
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
 
@@ -8,7 +8,7 @@ import { Providers } from './providers';
 import { Navbar } from '@/components/navbar';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
-import { Divider } from '@nextui-org/divider';
+import { Divider } from "@heroui/divider";
 
 import { AuthProvider } from './context/AuthContext';
 

@@ -16,8 +16,8 @@ import ReviewItem from '@/components/ReviewItem';
 import TabsSection from '@/components/TabsSection';
 import TrailerModal from '@/components/TrailerModal';
 import { Anime } from '@/types';
-import { Button } from '@nextui-org/button';
-import { useDisclosure } from '@nextui-org/react';
+import { Button } from '@heroui/button';
+import { useDisclosure } from '@heroui/react';
 import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 
@@ -216,15 +216,29 @@ const AnimeDetailsPage = ({ params }: AnimeDetailParams) => {
                                     review={review}
                                     animeId={anime?._id.toString()}
                                     onDelete={(reviewId) => {
-                                        // Utilisez le hook pour mettre à jour les avis
-                                        setAnime((prevAnime) => ({
-                                            ...prevAnime,
-                                            reviews: prevAnime?.reviews?.filter(
-                                                (review) =>
-                                                    review.id !== reviewId
-                                            ),
-                                        }));
+                                        setAnime((prevAnime) => {
+                                            if (!prevAnime) return null;
+                                            return {
+                                                ...prevAnime,
+                                                reviews:
+                                                    prevAnime.reviews?.filter(
+                                                        (review) =>
+                                                            review.id !==
+                                                            reviewId
+                                                    ),
+                                            };
+                                        });
                                     }}
+                                    // onDelete={(reviewId) => {
+                                    //     // Utilisez le hook pour mettre à jour les avis
+                                    //     setAnime((prevAnime) => ({
+                                    //         ...prevAnime,
+                                    //         reviews: prevAnime?.reviews?.filter(
+                                    //             (review) =>
+                                    //                 review.id !== reviewId
+                                    //         ),
+                                    //     }));
+                                    // }}
                                 />
                             ))}
                         </div>

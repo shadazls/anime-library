@@ -1,5 +1,5 @@
+import Anime from '@/models/Anime'; // Importez le modèle Anime
 import User from '@/models/User';
-import Anime from '@/models/anime'; // Importez le modèle Anime
 import connectDB from '../../../../lib/db';
 
 export const GET = async (req) => {

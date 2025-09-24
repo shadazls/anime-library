@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@nextui-org/tabs';
+import { Tab, Tabs } from "@heroui/tabs";
 import { Key } from 'react';
 
 const CharacterSection = ({

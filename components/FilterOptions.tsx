@@ -1,5 +1,5 @@
 import { SearchInput } from '@/components/SearchInput';
-import { Button } from '@nextui-org/button';
+import { Button } from "@heroui/button";
 import { useEffect, useState } from 'react';
 import AnimeFilter from './AnimeFilter';
 

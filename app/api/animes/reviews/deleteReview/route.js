@@ -1,5 +1,5 @@
 import connectDB from '@/lib/db';
-import Anime from '@/models/anime';
+import Anime from '@/models/Anime';
 import jwt from 'jsonwebtoken';
 
 export const DELETE = async (req) => {

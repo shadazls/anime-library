@@ -4,8 +4,8 @@
 // import PlayIcon from '@/components/PlayIcon';
 // import StarIcon from '@/components/StarIcon';
 // import { useToast } from '@/hooks/use-toast';
-// import { Button } from '@nextui-org/button';
-// import { Image } from '@nextui-org/image';
+// import { Button } from '@heroui/button';
+// import { Image } from '@heroui/image';
 // import { ObjectId } from 'mongoose';
 
 // interface AnimeInfoProps {
@@ -134,8 +134,8 @@ import CheckIcon from '@/components/CheckIcon';
 import EyeRegularIcon from '@/components/EyeRegularIcon';
 import PlayIcon from '@/components/PlayIcon';
 import StarIcon from '@/components/StarIcon';
-import { Button } from '@nextui-org/button';
-import { Image } from '@nextui-org/image';
+import { Button } from "@heroui/button";
+import { Image } from "@heroui/image";
 import { ObjectId } from 'mongoose';
 
 interface AnimeInfoProps {

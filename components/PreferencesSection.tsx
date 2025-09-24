@@ -1,11 +1,11 @@
-import { Button } from '@nextui-org/button';
-import { Divider } from '@nextui-org/divider';
+import { Button } from "@heroui/button";
+import { Divider } from "@heroui/divider";
 import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-} from '@nextui-org/dropdown';
+} from "@heroui/dropdown";
 
 interface PreferencesSectionProps {
     selectedKeys: Set<string>;

@@ -1,5 +1,5 @@
+import Anime from '@/models/Anime';
 import User from '@/models/User';
-import Anime from '@/models/anime';
 import connectDB from '../../../../lib/db';
 
 export const GET = async (req) => {

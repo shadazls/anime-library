@@ -1,6 +1,6 @@
 import { SearchIcon } from '@/components/icons';
-import { Input } from '@nextui-org/input';
-import { Kbd } from '@nextui-org/kbd';
+import { Input } from "@heroui/input";
+import { Kbd } from "@heroui/kbd";
 import { ChangeEvent } from 'react';
 
 interface SearchInputProps {

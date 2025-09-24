@@ -2,10 +2,10 @@
 
 import EyeRegularIcon from '@/components/EyeRegularIcon';
 import EyeSlashRegularIcon from '@/components/EyeSlashRegularIcon';
-import { Button } from '@nextui-org/button';
-import { Card, CardBody } from '@nextui-org/card';
-import { Input } from '@nextui-org/input';
-import { Link } from '@nextui-org/link';
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { Input } from "@heroui/input";
+import { Link } from "@heroui/link";
 import { useRouter } from 'next/navigation'; // Pour redirection
 import { useEffect, useState } from 'react';
 

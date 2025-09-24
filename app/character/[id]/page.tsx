@@ -2,7 +2,7 @@
 
 import CharacterSection from '@/components/CharacterSection';
 import ItemGrid from '@/components/ItemGrid';
-import { Image } from '@nextui-org/image';
+import { Image } from "@heroui/image";
 import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
