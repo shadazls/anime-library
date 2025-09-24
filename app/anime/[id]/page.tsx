@@ -16,8 +16,8 @@ import ReviewItem from '@/components/ReviewItem';
 import TabsSection from '@/components/TabsSection';
 import TrailerModal from '@/components/TrailerModal';
 import { Anime } from '@/types';
-import { Button } from '@nextui-org/button';
-import { useDisclosure } from '@nextui-org/react';
+import { Button } from "@heroui/button";
+import { useDisclosure } from "@heroui/react";
 import { ObjectId } from 'mongoose';
 import { useEffect, useState } from 'react';
 

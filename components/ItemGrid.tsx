@@ -1,5 +1,5 @@
-import { Image } from '@nextui-org/image';
-import { Card, CardFooter, CardHeader, Skeleton } from '@nextui-org/react';
+import { Image } from "@heroui/image";
+import { Card, CardFooter, CardHeader, Skeleton } from "@heroui/react";
 import { ObjectId } from 'mongoose';
 import { useRouter } from 'next/navigation';
 import React from 'react';

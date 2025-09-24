@@ -1,4 +1,4 @@
-import { DateValue } from '@nextui-org/react';
+import { DateValue } from "@heroui/react";
 import { ObjectId } from 'mongoose';
 import { SVGProps } from 'react';
 

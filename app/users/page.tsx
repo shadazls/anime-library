@@ -3,7 +3,7 @@
 import EditIcon from '@/components/EditIcon';
 import EyeRegularIcon from '@/components/EyeRegularIcon';
 import TrashIcon from '@/components/TrashIcon';
-import { Chip } from '@nextui-org/chip';
+import { Chip } from "@heroui/chip";
 import {
     Table,
     TableBody,
@@ -11,9 +11,9 @@ import {
     TableColumn,
     TableHeader,
     TableRow,
-} from '@nextui-org/table';
-import { Tooltip } from '@nextui-org/tooltip';
-import { User } from '@nextui-org/user';
+} from "@heroui/table";
+import { Tooltip } from "@heroui/tooltip";
+import { User } from "@heroui/user";
 import { useCallback, useEffect, useState } from 'react';
 
 export const columns = [

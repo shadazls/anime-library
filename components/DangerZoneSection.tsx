@@ -1,5 +1,5 @@
-import { Button } from '@nextui-org/button';
-import { Divider } from '@nextui-org/divider';
+import { Button } from "@heroui/button";
+import { Divider } from "@heroui/divider";
 
 const DangerZoneSection = () => (
     <div className="flex flex-col gap-2 max-w-xs my-4">

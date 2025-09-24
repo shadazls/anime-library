@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@nextui-org/button';
-import { Input } from '@nextui-org/input';
-import { Link } from '@nextui-org/link';
+import { Button } from "@heroui/button";
+import { Input } from "@heroui/input";
+import { Link } from "@heroui/link";
 import {
     NavbarBrand,
     NavbarContent,
@@ -11,8 +11,8 @@ import {
     NavbarMenuItem,
     NavbarMenuToggle,
     Navbar as NextUINavbar,
-} from '@nextui-org/navbar';
-import { link as linkStyles } from '@nextui-org/theme';
+} from "@heroui/navbar";
+import { link as linkStyles } from "@heroui/theme";
 import clsx from 'clsx';
 import NextLink from 'next/link';
 
@@ -21,13 +21,13 @@ import { ThemeSwitch } from '@/components/theme-switch';
 import { siteConfig } from '@/config/site';
 // import { useAuth } from '../lib/useAuth'; // Importer le hook d'authentification
 import { useAuth } from '@/app/context/AuthContext';
-import { Avatar } from '@nextui-org/avatar';
+import { Avatar } from "@heroui/avatar";
 import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-} from '@nextui-org/dropdown';
+} from "@heroui/dropdown";
 
 export const Navbar = () => {
     const { isAuthenticated, user } = useAuth(); // Utiliser le hook pour savoir si l'utilisateur est connecté

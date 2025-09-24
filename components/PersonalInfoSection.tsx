@@ -1,7 +1,7 @@
 import { User } from '@/types';
-import { Button } from '@nextui-org/button';
-import { Divider } from '@nextui-org/divider';
-import { Input, Textarea } from '@nextui-org/input';
+import { Button } from "@heroui/button";
+import { Divider } from "@heroui/divider";
+import { Input, Textarea } from "@heroui/input";
 import { useState } from 'react';
 
 interface PersonalInfoSectionProps {

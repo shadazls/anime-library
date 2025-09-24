@@ -1,5 +1,5 @@
 import { Review } from '@/types';
-import { Avatar } from '@nextui-org/avatar';
+import { Avatar } from "@heroui/avatar";
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -82,7 +82,7 @@ const ReviewItem = ({ review, animeId, onDelete }: ReviewItemProps) => {
 export default ReviewItem;
 
 // import { Review } from '@/types';
-// import { Avatar } from '@nextui-org/avatar';
+// import { Avatar } from '@heroui/avatar';
 // import { useState } from 'react';
 // import ReactMarkdown from 'react-markdown';
 

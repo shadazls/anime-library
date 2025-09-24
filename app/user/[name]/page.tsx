@@ -3,7 +3,7 @@
 import ItemGrid from '@/components/ItemGrid';
 import UserSection from '@/components/UserSection';
 import { User } from '@/types';
-import { Avatar } from '@nextui-org/avatar';
+import { Avatar } from "@heroui/avatar";
 import { useEffect, useState } from 'react';
 
 interface UserPageProps {

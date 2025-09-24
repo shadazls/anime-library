@@ -6,8 +6,8 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-} from '@nextui-org/modal';
-import { Button, Input, Textarea } from '@nextui-org/react';
+} from "@heroui/modal";
+import { Button, Input, Textarea } from "@heroui/react";
 import { useState } from 'react';
 
 interface AddCharacterModalProps {

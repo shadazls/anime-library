@@ -3,7 +3,7 @@
 import CharacterSection from '@/components/CharacterSection';
 import ItemGrid from '@/components/ItemGrid';
 import { Staff } from '@/types/index';
-import { Image } from '@nextui-org/image';
+import { Image } from "@heroui/image";
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -235,7 +235,7 @@ export default StaffPage;
 // import CharacterSection from '@/components/CharacterSection';
 // import ItemGrid from '@/components/ItemGrid';
 // import { Staff } from '@/types/index';
-// import { Image } from '@nextui-org/image';
+// import { Image } from '@heroui/image';
 // import { useEffect, useState } from 'react';
 // import ReactMarkdown from 'react-markdown';
 
